@@ -2,10 +2,16 @@
     "private": true,
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "prepare": "husky install",
+        "analyze-php": "composer analyse",
+        "insight-php": "composer insight",
+        "pint-php": "composer pint",
+        "lint-php": "npm run pint-php & npm run analyze-php & npm run insight-php"
     },
     "devDependencies": {
         "axios": "^1.1.2",
+        "husky": "^8.0.3",
         "laravel-vite-plugin": "^0.7.2",
         "vite": "^4.0.0"
     }
