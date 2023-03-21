@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -42,5 +43,25 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_marketing' => 'boolean',
+        'is_admin' => 'boolean',
     ];
+
+    /**
+     * Get the current order status.
+     * @return HasMany<Order>
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    /**
+     * Get the current order status.
+     * @return HasMany<JwtToken>
+     */
+    public function jwt_tokens(): HasMany
+    {
+        return $this->hasMany(JwtToken::class);
+    }
 }

@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Promotion extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'metadata' => 'array'
+    ];
 }
