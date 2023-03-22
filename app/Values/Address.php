@@ -8,7 +8,7 @@ use JsonSerializable;
 /**
  * @implements Arrayable<string, string>
  */
-final class Address implements Arrayable, JsonSerializable
+final readonly class Address implements Arrayable, JsonSerializable
 {
     public function __construct(
         public string $shipping,
@@ -27,8 +27,8 @@ final class Address implements Arrayable, JsonSerializable
     public function toArray(): array
     {
         return [
-            "billing" => $this->shipping,
-            "shipping" => $this->billing,
+            "billing" => $this->billing,
+            "shipping" => $this->shipping,
         ];
     }
 }

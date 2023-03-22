@@ -24,7 +24,7 @@ abstract class PaymentTypeDetails implements JsonSerializable, Arrayable
      * @param PaymentType $type
      * @return static
      */
-    public static function fromArray(array $data, PaymentType $type): static
+    final public static function fromArray(array $data, PaymentType $type): static
     {
         foreach ($data as $key => $value) {
             if (!property_exists(static::class, $key)) {

@@ -8,7 +8,7 @@ use JsonSerializable;
 /**
  * @implements Arrayable<string, mixed>
  */
-final class Product implements Arrayable, JsonSerializable
+final readonly class Product implements Arrayable, JsonSerializable
 {
     public function __construct(
         public string $product,
