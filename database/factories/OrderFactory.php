@@ -25,10 +25,13 @@ class OrderFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'order_status_id' => fn () => OrderStatus::all()->random(),
+            'order_status_id' => fn () => OrderStatus::factory(),
             'payment_id' => Payment::factory(),
             'uuid' => fake()->unique()->uuid(),
-            'products' => Collection::times(rand(1, 4), fn () => new Product(ProductModel::all()->random()->uuid, rand(1, 200))),
+            'products' => Collection::times(
+                rand(1, 4),
+                fn () => new Product(ProductModel::factory()->create()->uuid, rand(1, 200))
+            ),
             'address' => new Address(fake()->streetAddress, fake()->address),
             'delivery_fee' => fake()->randomFloat(2, 0, 4),
             'amount' => fake()->randomFloat(2, 1, 20000),
