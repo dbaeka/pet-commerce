@@ -57,9 +57,9 @@
         ],
         "test": "@php artisan test",
         "coverage": "@php artisan test --coverage-clover=coverage.xml",
-        "analyse": "phpstan analyse --memory-limit 1G --configuration phpstan.neon.dist --ansi",
+        "analyse": "@php ./vendor/bin/phpstan analyse --memory-limit 1G --configuration phpstan.neon.dist --ansi",
         "insight": "@php artisan insight",
-        "pint": "./vendor/bin/pint"
+        "pint": "@php ./vendor/bin/pint"
     },
     "extra": {
         "laravel": {
