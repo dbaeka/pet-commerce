@@ -32,4 +32,9 @@ class JwtTokenRepository implements JwtTokenRepositoryInterface
     {
         return null;
     }
+
+    public function checkTokenExists(string $unique_id): bool
+    {
+        return false;
+    }
 }

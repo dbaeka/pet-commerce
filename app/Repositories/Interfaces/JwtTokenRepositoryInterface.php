@@ -11,6 +11,8 @@ interface JwtTokenRepositoryInterface
 
     public function getTokenByUniqueId(string $unique_id): ?Token;
 
+    public function checkTokenExists(string $unique_id): bool;
+
     public function updateTokenLastUsed(): bool;
 
     public function expireToken(string $unique_id): bool;

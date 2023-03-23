@@ -2,8 +2,8 @@
 
 namespace App\Exceptions\Jwt;
 
-use Exception;
+use Illuminate\Auth\AuthenticationException;
 
-class InvalidJwtTokenException extends Exception
+class InvalidJwtTokenException extends AuthenticationException
 {
 }
