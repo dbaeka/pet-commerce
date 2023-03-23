@@ -2,13 +2,13 @@
 
 namespace Tests\Unit\Services;
 
-use App\Dtos\Token;
 use App\Dtos\User;
 use App\Exceptions\InvalidPathException;
 use App\Exceptions\Jwt\InvalidJwtExpiryException;
 use App\Exceptions\Jwt\InvalidJwtIssuerException;
 use App\Exceptions\Jwt\InvalidJwtTokenException;
 use App\Repositories\Interfaces\JwtTokenRepositoryInterface;
+use App\Services\Interfaces\JwtTokenProviderInterface;
 use App\Services\JwtService;
 use Carbon\Carbon;
 use Mockery\MockInterface;
@@ -127,27 +127,34 @@ class JwtServiceTest extends TestCase
      * @return void
      * @throws InvalidJwtTokenException
      */
-    public function testValidatesValidTokenReturnTrue(): void
+    public function testAuthenticatesTokenReturnUser(): void
     {
         $token = $this->getValidToken();
 
-        $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
-            $mock->shouldReceive('getTokenByUniqueId')
+        $user_dto = new User(1, 'foo');
+
+        $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) use ($user_dto) {
+            $mock->shouldReceive('checkTokenExists')
                 ->once()
-                ->andReturn(new Token(1, 'foobar'));
+                ->andReturn(true);
 
             $mock->shouldReceive('updateTokenLastUsed')
                 ->once();
 
             $mock->shouldReceive('expireToken')
                 ->never();
+
+            $mock->shouldReceive('getUserByUniqueId')
+                ->once()
+                ->andReturn($user_dto);
         });
 
         $service = new JwtService();
 
-        $valid = $service->validateToken($token);
+        $user = $service->authenticate($token);
 
-        $this->assertTrue($valid);
+        $this->assertNotNull($user);
+        $this->assertSame($user_dto, $user);
     }
 
     protected function getValidToken(): string
@@ -157,26 +164,31 @@ class JwtServiceTest extends TestCase
         return trim($token);
     }
 
-    /**
-     * @return void
-     * @throws InvalidJwtTokenException
-     */
-    public function testFailsValidateExpiredTokenReturnFalse(): void
+    public function testValidateTokenReturnTrue(): void
     {
-        $token = $this->getValidToken();
+        $token = 'foobar';
 
-        Carbon::setTestNow(now()->addDay());
-
-        $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
-            $mock->shouldReceive('getTokenByUniqueId')
+        $this->mock(JwtTokenProviderInterface::class, function (MockInterface $mock) {
+            $mock->shouldReceive('authenticate')
                 ->once()
-                ->andReturn(new Token(1, 'foobar'));
+                ->andReturn(new User(1, 'foo'));
+        });
 
-            $mock->shouldReceive('updateTokenLastUsed')
-                ->once();
+        $service = new JwtService();
 
-            $mock->shouldReceive('expireToken')
-                ->once();
+        $valid = $service->validateToken($token);
+
+        $this->assertTrue($valid);
+    }
+
+    public function testFailValidateTokenFailedToAuthenticateReturnFalse(): void
+    {
+        $token = 'foobar';
+
+        $this->mock(JwtTokenProviderInterface::class, function (MockInterface $mock) {
+            $mock->shouldReceive('authenticate')
+                ->once()
+                ->andReturnNull();
         });
 
         $service = new JwtService();
@@ -190,14 +202,43 @@ class JwtServiceTest extends TestCase
      * @return void
      * @throws InvalidJwtTokenException
      */
-    public function testFailsValidateTokenNotAssociatedWithUserReturnFalse(): void
+    public function testFailsAuthenticateExpiredTokenReturnFalse(): void
+    {
+        $token = $this->getValidToken();
+
+        Carbon::setTestNow(now()->addDay());
+
+        $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
+            $mock->shouldReceive('checkTokenExists')
+                ->once()
+                ->andReturn(true);
+
+            $mock->shouldReceive('updateTokenLastUsed')
+                ->once();
+
+            $mock->shouldReceive('expireToken')
+                ->once();
+        });
+
+        $service = new JwtService();
+
+        $user = $service->authenticate($token);
+
+        $this->assertNull($user);
+    }
+
+    /**
+     * @return void
+     * @throws InvalidJwtTokenException
+     */
+    public function testFailsAuthenticateTokenNotAssociatedWithUserReturnFalse(): void
     {
         $token = $this->getValidToken();
 
         $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
-            $mock->shouldReceive('getTokenByUniqueId')
+            $mock->shouldReceive('checkTokenExists')
                 ->once()
-                ->andReturn(null);
+                ->andReturn(false);
 
             $mock->shouldReceive('updateTokenLastUsed')
                 ->never();
@@ -208,9 +249,24 @@ class JwtServiceTest extends TestCase
 
         $service = new JwtService();
 
-        $valid = $service->validateToken($token);
+        $user = $service->authenticate($token);
 
-        $this->assertFalse($valid);
+        $this->assertNull($user);
+    }
+
+    /**
+     * @param string $token
+     * @return void
+     * @throws InvalidJwtTokenException
+     * @dataProvider provideInvalidToken
+     */
+    public function testFailsAuthenticateInvalidTokenThrowsException(string $token): void
+    {
+        $this->expectException(InvalidJwtTokenException::class);
+
+        $service = new JwtService();
+
+        $service->authenticate($token);
     }
 
     /**
@@ -298,7 +354,7 @@ class JwtServiceTest extends TestCase
 
         $service = new JwtService();
 
-        $user = $service->getUser($token);
+        $user = $service->getUserFromToken($token);
 
         $this->assertNotNull($user);
         $this->assertInstanceOf(User::class, $user);
@@ -314,12 +370,12 @@ class JwtServiceTest extends TestCase
         $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
             $mock->shouldReceive('getUserByUniqueId')
                 ->once()
-                ->andReturn(null);
+                ->andReturnNull();
         });
 
         $service = new JwtService();
 
-        $user = $service->getUser($token);
+        $user = $service->getUserFromToken($token);
 
         $this->assertNull($user);
     }
@@ -336,7 +392,7 @@ class JwtServiceTest extends TestCase
 
         $service = new JwtService();
 
-        $service->getUser($token);
+        $service->getUserFromToken($token);
     }
 
     /**
