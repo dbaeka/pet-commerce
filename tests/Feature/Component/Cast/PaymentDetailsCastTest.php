@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Component;
+namespace Tests\Feature\Component\Cast;
 
 use App\Enums\PaymentType;
 use App\Models\Payment;

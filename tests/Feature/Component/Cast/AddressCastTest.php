@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Component;
+namespace Tests\Feature\Component\Cast;
 
 use App\Models\Order;
 use App\Values\Address as AddressVO;
