@@ -1,0 +1,393 @@
+<?php
+
+namespace Tests\Unit\Services;
+
+use App\Dtos\Token;
+use App\Dtos\User;
+use App\Exceptions\InvalidPathException;
+use App\Exceptions\Jwt\InvalidJwtExpiryException;
+use App\Exceptions\Jwt\InvalidJwtIssuerException;
+use App\Exceptions\Jwt\InvalidJwtTokenException;
+use App\Repositories\Interfaces\JwtTokenRepositoryInterface;
+use App\Services\JwtService;
+use Carbon\Carbon;
+use Mockery\MockInterface;
+use Tests\TestCase;
+
+class JwtServiceTest extends TestCase
+{
+    public const KEYS = __DIR__ . '/../../Fixtures';
+    public const PUBLIC_KEY = self::KEYS . '/jwt-public.key';
+    public const PRIVATE_KEY = self::KEYS . '/jwt-private.key';
+
+    public function testCreatesServiceWhenValidKeys(): void
+    {
+        config([
+            'jwt.private_key' => self::PRIVATE_KEY,
+            'jwt.public_key' => self::PUBLIC_KEY
+        ]);
+        $service = new JwtService();
+
+        $this->assertInstanceOf(JwtService::class, $service);
+    }
+
+    public function testFailsCreateServiceWhenInvalidPrivateKey(): void
+    {
+        $this->expectException(InvalidPathException::class);
+
+        config([
+            'jwt.private_key' => '',
+            'jwt.public_key' => self::PUBLIC_KEY
+        ]);
+        new JwtService();
+    }
+
+    public function testFailsCreateServiceWhenInvalidPublicKey(): void
+    {
+        $this->expectException(InvalidPathException::class);
+
+        config([
+            'jwt.private_key' => self::PRIVATE_KEY,
+            'jwt.public_key' => ''
+        ]);
+        new JwtService();
+    }
+
+    public function testFailsCreateServiceWhenInvalidIssuer(): void
+    {
+        $this->expectException(InvalidJwtIssuerException::class);
+
+        config([
+            'app.url' => '',
+        ]);
+        new JwtService();
+    }
+
+    public function testFailsCreateServiceWhenExpiryNotNumeric(): void
+    {
+        $this->expectException(InvalidJwtExpiryException::class);
+
+        config([
+            'jwt.expiry_seconds' => 'test'
+        ]);
+
+        new JwtService();
+    }
+
+    public function testFailsCreateServiceWhenExpiryIsZero(): void
+    {
+        $this->expectException(InvalidJwtExpiryException::class);
+
+        config([
+            'jwt.expiry_seconds' => 0
+        ]);
+
+        new JwtService();
+    }
+
+    public function testGeneratesTokenReturnTokenString(): void
+    {
+        $user_uuid = 'foobar';
+        $user = new User(
+            1,
+            $user_uuid
+        );
+
+        $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
+            $mock->shouldReceive('createToken')
+                ->once()
+                ->andReturn(true);
+        });
+
+        $service = new JwtService();
+
+        $token = $service->generateToken($user);
+
+        $this->assertNotEmpty($token);
+
+        $this->checkJwtToken($token, $user_uuid);
+    }
+
+    protected function checkJwtToken(string $token, string $user_uuid): void
+    {
+        $parts = explode('.', $token);
+        $this->assertCount(3, $parts);
+
+        $payload = base64_decode($parts[1]);
+        $this->assertJson($payload);
+
+        $payload = json_decode($payload, true);
+        $this->assertArrayHasKey('iss', $payload);
+        $this->assertArrayHasKey('user_uuid', $payload);
+
+        $this->assertSame($user_uuid, $payload['user_uuid']);
+    }
+
+    /**
+     * @return void
+     * @throws InvalidJwtTokenException
+     */
+    public function testValidatesValidTokenReturnTrue(): void
+    {
+        $token = $this->getValidToken();
+
+        $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
+            $mock->shouldReceive('getTokenByUniqueId')
+                ->once()
+                ->andReturn(new Token(1, 'foobar'));
+
+            $mock->shouldReceive('updateTokenLastUsed')
+                ->once();
+
+            $mock->shouldReceive('expireToken')
+                ->never();
+        });
+
+        $service = new JwtService();
+
+        $valid = $service->validateToken($token);
+
+        $this->assertTrue($valid);
+    }
+
+    protected function getValidToken(): string
+    {
+        /** @var non-empty-string $token */
+        $token = @file_get_contents(base_path('tests/Fixtures/Services/sample-jwt'));
+        return trim($token);
+    }
+
+    /**
+     * @return void
+     * @throws InvalidJwtTokenException
+     */
+    public function testFailsValidateExpiredTokenReturnFalse(): void
+    {
+        $token = $this->getValidToken();
+
+        Carbon::setTestNow(now()->addDay());
+
+        $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
+            $mock->shouldReceive('getTokenByUniqueId')
+                ->once()
+                ->andReturn(new Token(1, 'foobar'));
+
+            $mock->shouldReceive('updateTokenLastUsed')
+                ->once();
+
+            $mock->shouldReceive('expireToken')
+                ->once();
+        });
+
+        $service = new JwtService();
+
+        $valid = $service->validateToken($token);
+
+        $this->assertFalse($valid);
+    }
+
+    /**
+     * @return void
+     * @throws InvalidJwtTokenException
+     */
+    public function testFailsValidateTokenNotAssociatedWithUserReturnFalse(): void
+    {
+        $token = $this->getValidToken();
+
+        $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
+            $mock->shouldReceive('getTokenByUniqueId')
+                ->once()
+                ->andReturn(null);
+
+            $mock->shouldReceive('updateTokenLastUsed')
+                ->never();
+
+            $mock->shouldReceive('expireToken')
+                ->never();
+        });
+
+        $service = new JwtService();
+
+        $valid = $service->validateToken($token);
+
+        $this->assertFalse($valid);
+    }
+
+    /**
+     * @param string $token
+     * @return void
+     * @throws InvalidJwtTokenException
+     * @dataProvider provideInvalidToken
+     */
+    public function testFailsValidateInvalidTokenThrowsException(string $token): void
+    {
+        $this->expectException(InvalidJwtTokenException::class);
+
+        $service = new JwtService();
+
+        $service->validateToken($token);
+    }
+
+    /**
+     * @return void
+     * @throws InvalidJwtTokenException
+     */
+    public function testGetsPayloadTokenReturnArray(): void
+    {
+        $token = $this->getValidToken();
+
+        $service = new JwtService();
+
+        $payload = $service->getPayload($token);
+
+        $this->assertIsArray($payload);
+        $this->assertArrayHasKey('iss', $payload);
+        $this->assertArrayHasKey('jti', $payload);
+        $this->assertArrayHasKey('user_uuid', $payload);
+        $this->assertArrayHasKey('iat', $payload);
+        $this->assertArrayHasKey('exp', $payload);
+    }
+
+    /**
+     * @param string $token
+     * @return void
+     * @throws InvalidJwtTokenException
+     * @dataProvider provideInvalidToken
+     */
+    public function testFailsGetPayloadInvalidTokenThrowsException(string $token): void
+    {
+        $this->expectException(InvalidJwtTokenException::class);
+
+        $service = new JwtService();
+
+        $service->getPayload($token);
+    }
+
+    public function testFailsGeneratesTokenReturnNull(): void
+    {
+        $user = new User(
+            1,
+            'foobar'
+        );
+
+        $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
+            $mock->shouldReceive('createToken')
+                ->once()
+                ->andReturn(false);
+        });
+
+        $service = new JwtService();
+
+        $token = $service->generateToken($user);
+
+        $this->assertNull($token);
+    }
+
+    /**
+     * @throws InvalidJwtTokenException
+     */
+    public function testGetsUserFromValidTokenReturnUser(): void
+    {
+        $token = $this->getValidToken();
+
+        $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
+            $mock->shouldReceive('getUserByUniqueId')
+                ->once()
+                ->andReturn(new User(1, 'foobar'));
+        });
+
+        $service = new JwtService();
+
+        $user = $service->getUser($token);
+
+        $this->assertNotNull($user);
+        $this->assertInstanceOf(User::class, $user);
+    }
+
+    /**
+     * @throws InvalidJwtTokenException
+     */
+    public function testFailsGetsUserNoUserAssociatedWithValidTokenReturnNull(): void
+    {
+        $token = $this->getValidToken();
+
+        $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
+            $mock->shouldReceive('getUserByUniqueId')
+                ->once()
+                ->andReturn(null);
+        });
+
+        $service = new JwtService();
+
+        $user = $service->getUser($token);
+
+        $this->assertNull($user);
+    }
+
+    /**
+     * @param string $token
+     * @return void
+     * @throws InvalidJwtTokenException
+     * @dataProvider provideInvalidToken
+     */
+    public function testFailsGetUserInvalidTokenThrowsException(string $token): void
+    {
+        $this->expectException(InvalidJwtTokenException::class);
+
+        $service = new JwtService();
+
+        $service->getUser($token);
+    }
+
+    /**
+     * @return array<int, array<int,string>>
+     */
+    protected function provideInvalidToken(): array
+    {
+        return [
+            [''],
+            ['foobar']
+        ];
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+
+        $this->setKeyPaths();
+        $this->setIssuer();
+        $this->setExpiry();
+
+        Carbon::setTestNow('1997-02-20');
+    }
+
+    protected function setKeyPaths(): void
+    {
+        config([
+            'jwt.private_key' => self::PRIVATE_KEY,
+            'jwt.public_key' => self::PUBLIC_KEY
+        ]);
+    }
+
+    protected function setIssuer(string $default = 'https://example.com'): void
+    {
+        config([
+            'app.url' => $default,
+        ]);
+    }
+
+    protected function setExpiry(int $default = 20): void
+    {
+        config([
+            'jwt.expiry_seconds' => $default,
+        ]);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        Carbon::setTestNow();
+    }
+}
