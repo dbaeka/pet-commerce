@@ -7,6 +7,7 @@ use App\Http\Middleware\SecureApi;
 use App\Services\Interfaces\JwtTokenProviderInterface;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\UnauthorizedException;
 use Mockery;
 use Mockery\MockInterface;
@@ -26,10 +27,12 @@ class SecureApiMiddlewareTest extends TestCase
                 ->andReturn(new User(1, 'bar'));
         });
 
+        Auth::shouldReceive('loginUsingId');
+
         $middleware = new SecureApi();
 
         $response = Mockery::mock(Response::class);
-        $next = static fn() => $response;
+        $next = static fn () => $response;
 
         self::assertSame($response, $middleware->handle($request, $next));
     }
@@ -45,10 +48,12 @@ class SecureApiMiddlewareTest extends TestCase
                 ->andReturn(new User(1, 'bar', true));
         });
 
+        Auth::shouldReceive('loginUsingId');
+
         $middleware = new SecureApi();
 
         $response = Mockery::mock(Response::class);
-        $next = static fn() => $response;
+        $next = static fn () => $response;
 
         self::assertSame($response, $middleware->handle($request, $next, 'admin'));
     }
@@ -65,10 +70,12 @@ class SecureApiMiddlewareTest extends TestCase
                 ->andReturn(new User(1, 'bar', false));
         });
 
+        Auth::shouldReceive('loginUsingId');
+
         $middleware = new SecureApi();
 
         $response = Mockery::mock(Response::class);
-        $next = static fn() => $response;
+        $next = static fn () => $response;
 
         $middleware->handle($request, $next, 'admin');
     }
@@ -82,7 +89,7 @@ class SecureApiMiddlewareTest extends TestCase
         $middleware = new SecureApi();
 
         $response = Mockery::mock(Response::class);
-        $next = static fn() => $response;
+        $next = static fn () => $response;
 
         $middleware->handle($request, $next);
     }
@@ -102,9 +109,8 @@ class SecureApiMiddlewareTest extends TestCase
         $middleware = new SecureApi();
 
         $response = Mockery::mock(Response::class);
-        $next = static fn() => $response;
+        $next = static fn () => $response;
 
         $middleware->handle($request, $next);
     }
-
 }
