@@ -19,6 +19,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public const HOME = '/home';
 
+    private string $api_namespace ='App\Http\Controllers\Api';
+
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      */
@@ -27,13 +29,19 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/api.php'));
+            $this->mapApiRoutes();
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
+    }
+
+    private function mapApiRoutes(): void
+    {
+        Route::middleware('api')
+            ->prefix('api/v1')
+            ->namespace($this->api_namespace . '\v1')
+            ->group(base_path('routes/api/v1.php'));
     }
 
     /**
