@@ -7,6 +7,7 @@ use App\Services\Interfaces\JwtTokenProviderInterface;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\UnauthorizedException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -49,6 +50,7 @@ class SecureApi
             throw new AuthenticationException('invalid bearer token');
         }
         $this->user = $user;
+        Auth::loginUsingId($user->id);
     }
 
     /**
