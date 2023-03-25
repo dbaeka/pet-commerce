@@ -10,6 +10,15 @@ class JwtToken extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'unique_id',
+        'token_title',
+        'restrictions',
+        'permissions',
+        'expires_at'
+    ];
+
     protected $casts = [
         'restrictions' => 'array',
         'permissions' => 'array',

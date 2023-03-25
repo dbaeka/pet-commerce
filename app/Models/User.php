@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,7 +12,7 @@ class User extends Authenticatable
 {
     use HasFactory;
     use Notifiable;
-
+    use HasUuid;
     /**
      * The attributes that are mass assignable.
      *
@@ -23,6 +24,9 @@ class User extends Authenticatable
         'last_name',
         'email',
         'password',
+        'address',
+        'is_admin',
+        'phone_number'
     ];
 
     /**
@@ -32,7 +36,7 @@ class User extends Authenticatable
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint
      */
     protected $hidden = [
-        'password',
+        'password', 'id', 'is_admin'
     ];
 
     /**
