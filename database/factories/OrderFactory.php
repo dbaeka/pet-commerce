@@ -29,7 +29,12 @@ class OrderFactory extends Factory
                 function () {
                     /** @var \App\Models\Product $product */
                     $product = ProductFactory::new()->create();
-                    return new Product($product->uuid, rand(1, 200));
+                    return new Product(
+                        $product->uuid,
+                        rand(1, 200),
+                        fake()->uuid(),
+                        fake()->randomFloat(2, 2)
+                    );
                 }
             ),
             'address' => new Address(fake()->streetAddress, fake()->address),

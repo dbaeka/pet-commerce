@@ -12,7 +12,9 @@ final readonly class Product implements Arrayable, JsonSerializable
 {
     public function __construct(
         public string $product,
-        public int    $quantity
+        public int    $quantity,
+        public string $uuid,
+        public float $price
     ) {
     }
 
@@ -29,6 +31,8 @@ final readonly class Product implements Arrayable, JsonSerializable
         return [
             "product" => $this->product,
             "quantity" => $this->quantity,
+            "uuid" => $this->uuid,
+            "price" => number_format($this->price, 2)
         ];
     }
 }

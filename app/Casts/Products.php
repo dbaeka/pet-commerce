@@ -26,6 +26,7 @@ class Products implements CastsAttributes
         /** @var array<int, mixed> $products */
         $products = json_decode($value, true);
         return collect($products)->map(function ($product) {
+            $product['price'] = floatval($product['price']);
             return new Product(...$product);
         });
     }
