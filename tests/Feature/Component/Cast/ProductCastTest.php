@@ -18,7 +18,12 @@ class ProductCastTest extends TestCase
         /** @var Order $order */
         $order = OrderFactory::new()->create([
             'products' => [
-                new Product('foo', 20)
+                new Product(
+                    'foo',
+                    20,
+                    fake()->uuid(),
+                    fake()->randomFloat(2)
+                )
             ],
         ]);
 
@@ -28,7 +33,9 @@ class ProductCastTest extends TestCase
 
         $products = collect([new Product(
             'one',
-            50
+            50,
+            fake()->uuid(),
+            fake()->randomFloat(2)
         )]);
         $order->products = $products;
         $order->save();
