@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Repositories\Interfaces\JwtTokenRepositoryInterface;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\JwtTokenRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -14,7 +16,8 @@ class RepositoryServiceProvider extends ServiceProvider
      * @var array<string, string>
      */
     public array $bindings = [
-        JwtTokenRepositoryInterface::class =>  JwtTokenRepository::class
+        JwtTokenRepositoryInterface::class =>  JwtTokenRepository::class,
+        UserRepositoryInterface::class => UserRepository::class
     ];
 
 
