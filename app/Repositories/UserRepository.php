@@ -4,9 +4,9 @@ namespace App\Repositories;
 
 use App\Dtos\User as UserDto;
 use App\Models\User;
-use App\Repositories\Interfaces\SupportsPaginationTraitInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\Traits\SupportsPagination;
+use App\Repositories\Traits\SupportsPaginationTraitInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Psr\Container\ContainerExceptionInterface;
@@ -84,5 +84,12 @@ class UserRepository implements UserRepositoryInterface, SupportsPaginationTrait
         $user = $this->forUserByUuid($uuid)->first();
         $updated = $user->update($data);
         return $updated ? UserDto::make($user->getAttributes()) : null;
+    }
+
+    public function findUserByEmail(string $email): ?UserDto
+    {
+        /** @var User|null $user */
+        $user = User::query()->where('email', $email)->first();
+        return $user ? UserDto::make($user->getAttributes()) : null;
     }
 }
