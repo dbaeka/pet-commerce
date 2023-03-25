@@ -19,6 +19,7 @@
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.13",
+        "brianium/paratest": "6.*",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.6",
         "laravel/sail": "^1.18",
