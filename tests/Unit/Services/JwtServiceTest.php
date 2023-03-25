@@ -16,9 +16,9 @@ use Tests\TestCase;
 
 class JwtServiceTest extends TestCase
 {
-    public const KEYS = __DIR__ . '/../../Fixtures';
-    public const PUBLIC_KEY = self::KEYS . '/jwt-public.key';
-    public const PRIVATE_KEY = self::KEYS . '/jwt-private.key';
+    protected const KEYS = __DIR__ . '/../../Fixtures';
+    protected const PUBLIC_KEY = self::KEYS . '/jwt-public.key';
+    protected const PRIVATE_KEY = self::KEYS . '/jwt-private.key';
 
     public function testCreatesServiceWhenValidKeys(): void
     {
@@ -88,24 +88,16 @@ class JwtServiceTest extends TestCase
     public function testGeneratesTokenReturnTokenString(): void
     {
         $user_uuid = 'foobar';
-        $user = new User(
-            1,
-            $user_uuid
-        );
-
-        $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
-            $mock->shouldReceive('createToken')
-                ->once()
-                ->andReturn(true);
-        });
+        $user = User::make([
+            'id' => 1,
+            'uuid' => $user_uuid
+        ]);
 
         $service = new JwtService();
 
         $token = $service->generateToken($user);
 
-        $this->assertNotEmpty($token);
-
-        $this->checkJwtToken($token, $user_uuid);
+        $this->checkJwtToken($token->getTokenValue(), $user_uuid);
     }
 
     protected function checkJwtToken(string $token, string $user_uuid): void
@@ -131,7 +123,7 @@ class JwtServiceTest extends TestCase
     {
         $token = $this->getValidToken();
 
-        $user_dto = new User(1, 'foo');
+        $user_dto = User::make();
 
         $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) use ($user_dto) {
             $mock->shouldReceive('checkTokenExists')
@@ -171,7 +163,7 @@ class JwtServiceTest extends TestCase
         $this->mock(JwtTokenProviderInterface::class, function (MockInterface $mock) {
             $mock->shouldReceive('authenticate')
                 ->once()
-                ->andReturn(new User(1, 'foo'));
+                ->andReturn(User::make());
         });
 
         $service = new JwtService();
@@ -216,7 +208,7 @@ class JwtServiceTest extends TestCase
             $mock->shouldReceive('updateTokenLastUsed')
                 ->once();
 
-            $mock->shouldReceive('expireToken')
+            $mock->shouldReceive('deleteToken')
                 ->once();
         });
 
@@ -272,7 +264,6 @@ class JwtServiceTest extends TestCase
     /**
      * @param string $token
      * @return void
-     * @throws InvalidJwtTokenException
      * @dataProvider provideInvalidToken
      */
     public function testFailsValidateInvalidTokenThrowsException(string $token): void
@@ -319,27 +310,7 @@ class JwtServiceTest extends TestCase
         $service->getPayload($token);
     }
 
-    public function testFailsGeneratesTokenReturnNull(): void
-    {
-        $user = new User(
-            1,
-            'foobar'
-        );
-
-        $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
-            $mock->shouldReceive('createToken')
-                ->once()
-                ->andReturn(false);
-        });
-
-        $service = new JwtService();
-
-        $token = $service->generateToken($user);
-
-        $this->assertNull($token);
-    }
-
-    /**
+        /**
      * @throws InvalidJwtTokenException
      */
     public function testGetsUserFromValidTokenReturnUser(): void
@@ -349,7 +320,7 @@ class JwtServiceTest extends TestCase
         $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
             $mock->shouldReceive('getUserByUniqueId')
                 ->once()
-                ->andReturn(new User(1, 'foobar'));
+                ->andReturn(User::make());
         });
 
         $service = new JwtService();
