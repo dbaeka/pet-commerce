@@ -7,15 +7,13 @@ use App\Dtos\User;
 
 interface JwtTokenRepositoryInterface
 {
-    public function createToken(Token $token): bool;
-
-    public function getTokenByUniqueId(string $unique_id): ?Token;
+    public function createToken(Token $token): ?int;
 
     public function checkTokenExists(string $unique_id): bool;
 
-    public function updateTokenLastUsed(): bool;
+    public function updateTokenLastUsed(string $unique_id): bool;
 
-    public function expireToken(string $unique_id): bool;
+    public function deleteToken(string $unique_id): bool;
 
-    public function getUserByUniqueId(mixed $unique_id): ?User;
+    public function getUserByUniqueId(string $unique_id): ?User;
 }
