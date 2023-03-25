@@ -24,6 +24,8 @@ interface UserRepositoryInterface
 
     public function findUserByUuid(string $uuid): ?User;
 
+    public function findUserByEmail(string $email): ?User;
+
     /**
      * @param string $uuid
      * @param array<string, mixed> $data
