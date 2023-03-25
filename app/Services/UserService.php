@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Repositories\Interfaces\JwtTokenRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Services\Interfaces\JwtTokenProviderInterface;
+use Hash;
 
 readonly class UserService
 {
@@ -26,6 +27,16 @@ readonly class UserService
     public function createAdmin(array $data): ?array
     {
         $data['is_admin'] = true;
+        return $this->storeUser($data);
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>|null
+     */
+    private function storeUser(array $data): ?array
+    {
+        $data['password'] = Hash::make($data['password']);
         $user = $this->user_repository->createUser($data);
         if ($user) {
             $token = $this->jwt_service->generateToken($user);
@@ -38,5 +49,15 @@ readonly class UserService
         }
 
         return null;
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>|null
+     */
+    public function createUser(array $data): ?array
+    {
+        $data['is_admin'] = false;
+        return $this->storeUser($data);
     }
 }
