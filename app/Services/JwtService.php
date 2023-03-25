@@ -105,7 +105,7 @@ class JwtService implements JwtTokenProviderInterface
         throw_if($expiry_seconds <= 0 || !is_numeric($expiry_seconds), InvalidJwtExpiryException::class);
     }
 
-    public function generateToken(User $user): ?string
+    public function generateToken(User $user): Token
     {
         $config = $this->config;
 
@@ -113,7 +113,6 @@ class JwtService implements JwtTokenProviderInterface
         $expires_at = now()->addSeconds($this->expiry_seconds);
 
         $unique_id = hash('sha256', strval(now()->timestamp));
-
 
         $jwt = $config->builder()
             ->issuedBy($this->issuer)
@@ -127,13 +126,9 @@ class JwtService implements JwtTokenProviderInterface
             'user_id' => $user->id,
             'unique_id' => $unique_id,
             'token_title' => 'Access Token',
-            'expires_at' => $expires_at
+            'expires_at' => $expires_at,
         ];
-        $token = new Token(...$data);
-
-        $saved = $this->jwt_token_repository->createToken($token);
-
-        return $saved ? $jwt->toString() : null;
+        return Token::make($data)->withToken($jwt->toString());
     }
 
     /**
@@ -195,19 +190,34 @@ class JwtService implements JwtTokenProviderInterface
         }
 
         $unique_id = $parsed_token->claims()->get('jti');
-        $jwt_token = $this->jwt_token_repository->checkTokenExists($unique_id);
+        $jwt_token_exists = $this->jwt_token_repository->checkTokenExists($unique_id);
 
-        if ($jwt_token) {
-            $this->jwt_token_repository->updateTokenLastUsed();
+        if ($jwt_token_exists) {
+            // TODO change to event
+            $this->jwt_token_repository->updateTokenLastUsed($unique_id);
         }
 
         $is_expired = $parsed_token->isExpired(now());
-        if ($jwt_token && !$is_expired) {
+        if ($jwt_token_exists && !$is_expired) {
             return $this->jwt_token_repository->getUserByUniqueId($unique_id);
         }
         if ($is_expired) {
-            $this->jwt_token_repository->expireToken($unique_id);
+            $this->jwt_token_repository->deleteToken($unique_id);
         }
         return null;
+    }
+
+    /**
+     * @throws InvalidJwtTokenException
+     */
+    public function inValidateToken(string $token): bool
+    {
+        $parsed_token = $this->parseToken($token);
+        if (empty($parsed_token)) {
+            throw new InvalidJwtTokenException();
+        }
+
+        $unique_id = $parsed_token->claims()->get('jti');
+        return $this->jwt_token_repository->deleteToken($unique_id);
     }
 }
