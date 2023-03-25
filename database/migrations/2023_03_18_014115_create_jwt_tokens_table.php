@@ -12,7 +12,7 @@ return new class () extends Migration {
     {
         Schema::create('jwt_tokens', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->text('unique_id');
             $table->string('token_title');
             $table->json('restrictions')->nullable();

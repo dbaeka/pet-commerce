@@ -12,7 +12,7 @@ return new class () extends Migration {
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('order_status_id')->constrained();
             $table->foreignId('payment_id')->constrained();
             $table->string('uuid')->unique();
