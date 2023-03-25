@@ -15,4 +15,6 @@ class Payment extends Model
         'type' => PaymentType::class,
         'details' => PaymentDetails::class
     ];
+
+    protected $hidden = ['id'];
 }

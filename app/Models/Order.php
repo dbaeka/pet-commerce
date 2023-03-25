@@ -19,13 +19,15 @@ class Order extends Model
         'shipped_at' => 'datetime',
     ];
 
+    protected $hidden = ['id', 'user_id', 'payment_id', 'order_status_id'];
+
     /**
      * Get the current order status.
      * @return HasOne<OrderStatus>`
      */
     public function order_status(): HasOne
     {
-        return $this->hasOne(OrderStatus::class);
+        return $this->hasOne(OrderStatus::class, 'id', 'order_status_id');
     }
 
     /**
@@ -43,6 +45,6 @@ class Order extends Model
      */
     public function payment(): HasOne
     {
-        return $this->hasOne(Payment::class);
+        return $this->hasOne(Payment::class, 'id', 'payment_id');
     }
 }

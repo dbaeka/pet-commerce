@@ -10,6 +10,9 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $hidden = ['id'];
+
+
     /**
      * Get the products for the category.
      * @return HasMany<Product>

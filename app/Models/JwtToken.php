@@ -27,6 +27,9 @@ class JwtToken extends Model
         'refreshed_at' => 'datetime',
     ];
 
+    protected $hidden = ['id'];
+
+
 
     /**
      * Get the user owning the jwt token.

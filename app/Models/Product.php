@@ -16,6 +16,9 @@ class Product extends Model
         'metadata' => 'array',
     ];
 
+    protected $hidden = ['id'];
+
+
     /**
      * Get the category that has the product.
      * @return BelongsTo<Category, Product>
