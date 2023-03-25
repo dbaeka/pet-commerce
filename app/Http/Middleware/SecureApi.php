@@ -50,7 +50,7 @@ class SecureApi
             throw new AuthenticationException('invalid bearer token');
         }
         $this->user = $user;
-        Auth::loginUsingId($user->id);
+        Auth::onceUsingId($user->id);
     }
 
     /**
