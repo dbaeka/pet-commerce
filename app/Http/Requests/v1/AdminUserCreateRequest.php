@@ -20,6 +20,11 @@ use Illuminate\Foundation\Http\FormRequest;
  *     type="string",
  *     description="User lastname",
  *    ),
+ *     @OA\Property(
+ *     property="email",
+ *     type="string",
+ *     description="User email",
+ *    ),
  *    @OA\Property(
  *     property="password",
  *     type="string",
