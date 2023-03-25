@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +17,7 @@ class JwtTokenFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            'user_id' => UserFactory::new(),
             'unique_id' => fake()->unique()->uuid(),
             'token_title' => fake()->text(),
             'expires_at' => fake()->dateTime('+ 10 hours')

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\OrderStatus;
+use Database\Factories\OrderStatusFactory;
 use Illuminate\Database\Seeder;
 
 class OrderStatusSeeder extends Seeder
@@ -12,7 +12,7 @@ class OrderStatusSeeder extends Seeder
      */
     public function run(): void
     {
-        OrderStatus::factory()->count(5)->sequence(
+        OrderStatusFactory::new()->count(5)->sequence(
             ...array_map(
                 fn ($value) => ['title' => $value],
                 ['open', 'pending payment', 'paid', 'shipped', 'cancelled']

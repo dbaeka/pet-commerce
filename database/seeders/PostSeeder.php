@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\File;
-use App\Models\Post;
+use Database\Factories\PostFactory;
 use Illuminate\Database\Seeder;
 
 class PostSeeder extends Seeder
@@ -13,7 +13,7 @@ class PostSeeder extends Seeder
      */
     public function run(): void
     {
-        Post::factory()->count(10)->sequence(
+        PostFactory::new()->count(10)->sequence(
             fn () => ['metadata' => [
                 "image" => File::all()->random()->uuid,
                 "author" => fake()->name()

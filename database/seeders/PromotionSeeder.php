@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\File;
-use App\Models\Promotion;
+use Database\Factories\PromotionFactory;
 use Illuminate\Database\Seeder;
 
 class PromotionSeeder extends Seeder
@@ -13,7 +13,7 @@ class PromotionSeeder extends Seeder
      */
     public function run(): void
     {
-        Promotion::factory()->count(10)->sequence(
+        PromotionFactory::new()->count(10)->sequence(
             fn () => ['metadata' => [
                 "image" => File::all()->random()->uuid,
                 "valid_from" => fake()->date('Y-m-d', '-2 days'),

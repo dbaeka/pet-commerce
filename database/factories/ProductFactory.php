@@ -19,15 +19,22 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
+        /** @var Category $category */
+        $category = CategoryFactory::new()->create();
+        /** @var Brand $brand */
+        $brand = BrandFactory::new()->create();
+        /** @var File $image */
+        $image = FileFactory::new()->create();
+
         return [
-            'category_uuid' => Category::factory()->create()->uuid,
+            'category_uuid' => $category->uuid,
             'uuid' => fake()->unique()->uuid(),
             'title' => fake()->sentence(),
             'price' => fake()->randomFloat(2, 10, 1000),
             'description' => fake()->paragraph(),
             'metadata' => [
-                'brand' => Brand::factory()->create()->uuid,
-                'image' => File::factory()->create()->uuid,
+                'brand' => $brand->uuid,
+                'image' => $image->uuid,
             ],
         ];
     }

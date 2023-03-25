@@ -2,10 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\OrderStatus;
-use App\Models\Payment;
-use App\Models\Product as ProductModel;
-use App\Models\User;
 use App\Values\Address;
 use App\Values\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -24,13 +20,17 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
-            'order_status_id' => fn () => OrderStatus::factory(),
-            'payment_id' => Payment::factory(),
+            'user_id' => UserFactory::new(),
+            'order_status_id' => fn () => OrderStatusFactory::new(),
+            'payment_id' => PaymentFactory::new(),
             'uuid' => fake()->unique()->uuid(),
             'products' => Collection::times(
                 rand(1, 4),
-                fn () => new Product(ProductModel::factory()->create()->uuid, rand(1, 200))
+                function () {
+                    /** @var \App\Models\Product $product */
+                    $product = ProductFactory::new()->create();
+                    return new Product($product->uuid, rand(1, 200));
+                }
             ),
             'address' => new Address(fake()->streetAddress, fake()->address),
             'delivery_fee' => fake()->randomFloat(2, 0, 4),

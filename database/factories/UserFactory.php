@@ -20,11 +20,17 @@ class UserFactory extends Factory
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
+            'is_admin' => false,
             'uuid' => fake()->unique()->uuid(),
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
             'address' => fake()->streetAddress(),
             'phone_number' => fake()->e164PhoneNumber()
         ];
+    }
+
+    public function admin(): self
+    {
+        return $this->state(fn () => ['is_admin' => true]);
     }
 }
