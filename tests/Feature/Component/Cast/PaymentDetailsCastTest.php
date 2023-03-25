@@ -25,7 +25,7 @@ class PaymentDetailsCastTest extends TestCase
         self::assertInstanceOf(CreditCardDetails::class, $payment->details);
         self::assertNotEmpty($payment->details->holder_name);
         self::assertNotEmpty($payment->details->number);
-        self::assertNotEmpty($payment->details->ccv);
+        self::assertNotEmpty($payment->details->cvv);
         self::assertNotEmpty($payment->details->expire_date);
 
         /** @var Payment $payment */

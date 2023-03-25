@@ -30,7 +30,7 @@ class PaymentTypeDetailsTest extends TestCase
         $data = [
             'holder_name' => 'foo',
             'number' => 'bar',
-            'ccv' => 'baz',
+            'cvv' => 'baz',
             'expire_date' => '2022-01-01'
         ];
 
@@ -97,7 +97,7 @@ class PaymentTypeDetailsTest extends TestCase
         $data = [
             'holder_name' => 'foo',
             'numbered' => 'bar',
-            'ccv' => 'baz',
+            'cvv' => 'baz',
             'expire_date' => '2022-01-01'
         ];
 

@@ -10,7 +10,7 @@ class CreditCardDetails extends PaymentTypeDetails
 
     public function __construct(
         public readonly string $number,
-        public readonly string $ccv,
+        public readonly string $cvv,
         public readonly string $holder_name,
         string                 $expire_date,
     ) {
@@ -23,7 +23,7 @@ class CreditCardDetails extends PaymentTypeDetails
         return [
             "holder_name" => $this->holder_name,
             "number" => $this->number,
-            "ccv" => $this->ccv,
+            "cvv" => $this->cvv,
             "expire_date" => $this->expire_date->format('Y-m-d'),
         ];
     }

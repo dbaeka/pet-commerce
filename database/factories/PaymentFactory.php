@@ -40,7 +40,7 @@ class PaymentFactory extends Factory
                 $details = [
                     "holder_name" => fake()->name(),
                     "number" => fake()->creditCardNumber(),
-                    "ccv" => fake()->randomNumber(3),
+                    "cvv" => fake()->randomNumber(3),
                     "expire_date" => fake()->date(),
                 ];
                 break;
