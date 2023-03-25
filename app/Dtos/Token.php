@@ -2,25 +2,31 @@
 
 namespace App\Dtos;
 
-use Carbon\Carbon;
-
 class Token extends BaseDto
 {
-    /**
-     * @param int $user_id
-     * @param string $unique_id
-     * @param string $token_title
-     * @param array<string> $restrictions
-     * @param array<string> $permissions
-     * @param Carbon|null $expires_at
-     */
-    public function __construct(
-        public int  $user_id,
-        public string  $unique_id,
-        public string  $token_title = '',
-        public array   $restrictions = [],
-        public array   $permissions = [],
-        public ?Carbon $expires_at = null
-    ) {
+    public int $user_id = 0;
+    public string $unique_id = '';
+    public string $token_title = '';
+    /** @var array<string> $restrictions */
+    public array $restrictions = [];
+    /** @var array<string> $permissions */
+    public array $permissions = [];
+    public ?string $expires_at = null;
+    private string $token_value = '';
+
+    public function getTokenValue(): string
+    {
+        return $this->token_value;
+    }
+
+    public function setTokenValue(string $value): void
+    {
+        $this->token_value = $value;
+    }
+
+    public function withToken(string $value): Token
+    {
+        $this->setTokenValue($value);
+        return $this;
     }
 }
