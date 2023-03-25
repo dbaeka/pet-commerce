@@ -24,10 +24,10 @@ class SecureApiMiddlewareTest extends TestCase
         $this->mock(JwtTokenProviderInterface::class, function (MockInterface $mock) {
             $mock->shouldReceive('authenticate')
                 ->once()
-                ->andReturn(new User(1, 'bar'));
+                ->andReturn(User::make());
         });
 
-        Auth::shouldReceive('loginUsingId');
+        Auth::shouldReceive('onceUsingId');
 
         $middleware = new SecureApi();
 
@@ -45,10 +45,10 @@ class SecureApiMiddlewareTest extends TestCase
         $this->mock(JwtTokenProviderInterface::class, function (MockInterface $mock) {
             $mock->shouldReceive('authenticate')
                 ->once()
-                ->andReturn(new User(1, 'bar', true));
+                ->andReturn(User::make(['is_admin' => true]));
         });
 
-        Auth::shouldReceive('loginUsingId');
+        Auth::shouldReceive('onceUsingId');
 
         $middleware = new SecureApi();
 
@@ -67,10 +67,10 @@ class SecureApiMiddlewareTest extends TestCase
         $this->mock(JwtTokenProviderInterface::class, function (MockInterface $mock) {
             $mock->shouldReceive('authenticate')
                 ->once()
-                ->andReturn(new User(1, 'bar', false));
+                ->andReturn(User::make(['is_admin' => false]));
         });
 
-        Auth::shouldReceive('loginUsingId');
+        Auth::shouldReceive('onceUsingId');
 
         $middleware = new SecureApi();
 
@@ -82,6 +82,8 @@ class SecureApiMiddlewareTest extends TestCase
 
     public function testFailHandleEmptyTokenException(): void
     {
+        $this->mock(JwtTokenProviderInterface::class);
+
         $this->expectException(AuthenticationException::class);
         $request = Mockery::mock(Request::class);
         $request->shouldReceive('bearerToken')->andReturn('');

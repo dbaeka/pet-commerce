@@ -7,6 +7,7 @@ use App\Models\Payment;
 use App\Values\PaymentType\BankTransferDetails;
 use App\Values\PaymentType\CashOnDeliveryDetails;
 use App\Values\PaymentType\CreditCardDetails;
+use Database\Factories\PaymentFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use InvalidArgumentException;
 use Tests\TestCase;
@@ -17,7 +18,8 @@ class PaymentDetailsCastTest extends TestCase
 
     public function testCastsPaymentDetailsToPaymentDetailsValue(): void
     {
-        $payment = Payment::factory()->create([
+        /** @var Payment $payment */
+        $payment = PaymentFactory::new()->create([
             'type' => PaymentType::CREDIT_CARD,
         ]);
         self::assertInstanceOf(CreditCardDetails::class, $payment->details);
@@ -26,7 +28,8 @@ class PaymentDetailsCastTest extends TestCase
         self::assertNotEmpty($payment->details->ccv);
         self::assertNotEmpty($payment->details->expire_date);
 
-        $payment = Payment::factory()->create([
+        /** @var Payment $payment */
+        $payment = PaymentFactory::new()->create([
             'type' => PaymentType::BANK_TRANSFER,
         ]);
         self::assertInstanceOf(BankTransferDetails::class, $payment->details);
@@ -34,7 +37,8 @@ class PaymentDetailsCastTest extends TestCase
         self::assertNotEmpty($payment->details->iban);
         self::assertNotEmpty($payment->details->swift);
 
-        $payment = Payment::factory()->create([
+        /** @var Payment $payment */
+        $payment = PaymentFactory::new()->create([
             'type' => PaymentType::CASH_ON_DELIVERY,
         ]);
         self::assertInstanceOf(CashOnDeliveryDetails::class, $payment->details);
@@ -60,7 +64,7 @@ class PaymentDetailsCastTest extends TestCase
     public function testFailsCastDetailsWhenWrongValueType(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        Payment::factory()->create([
+        PaymentFactory::new()->create([
             'type' => PaymentType::CASH_ON_DELIVERY,
             'details' => [
                 "first_name" => fake()->firstName(),

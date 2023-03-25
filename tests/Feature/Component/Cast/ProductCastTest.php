@@ -4,6 +4,7 @@ namespace Tests\Feature\Component\Cast;
 
 use App\Models\Order;
 use App\Values\Product;
+use Database\Factories\OrderFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use InvalidArgumentException;
 use Tests\TestCase;
@@ -14,7 +15,8 @@ class ProductCastTest extends TestCase
 
     public function testCastsProductsToCollectionOfProductValues(): void
     {
-        $order = Order::factory()->create([
+        /** @var Order $order */
+        $order = OrderFactory::new()->create([
             'products' => [
                 new Product('foo', 20)
             ],
@@ -38,7 +40,7 @@ class ProductCastTest extends TestCase
     public function testFailsCastProductsWhenWrongValueType(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        Order::factory()->create([
+        OrderFactory::new()->create([
             'products' => [
                 "product" => fake()->streetAddress(),
                 "quantity" => fake()->randomNumber()

@@ -4,6 +4,7 @@ namespace Tests\Feature\Component\Cast;
 
 use App\Models\Order;
 use App\Values\Address as AddressVO;
+use Database\Factories\OrderFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use InvalidArgumentException;
 use Tests\TestCase;
@@ -14,7 +15,8 @@ class AddressCastTest extends TestCase
 
     public function testCastsAddressToAddressValue(): void
     {
-        $order = Order::factory()->create([
+        /** @var Order $order */
+        $order = OrderFactory::new()->create([
             'address' => new AddressVO(
                 'foo',
                 'bar'
@@ -37,7 +39,7 @@ class AddressCastTest extends TestCase
     public function testFailsCastAddressWhenWrongValueType(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        Order::factory()->create([
+        OrderFactory::new()->create([
             'address' => [
                 "shipping" => fake()->streetAddress(),
                 "billing" => fake()->streetAddress()
