@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\v1\AdminLoginRequest;
-use App\Http\Requests\v1\AdminUserCreateRequest;
-use App\Http\Requests\v1\AdminUserEditRequest;
-use App\Http\Requests\v1\AdminUserListingRequest;
+use App\Http\Requests\v1\Admin\AdminLoginRequest;
+use App\Http\Requests\v1\Admin\AdminUserCreateRequest;
+use App\Http\Requests\v1\Admin\AdminUserEditRequest;
+use App\Http\Requests\v1\Admin\AdminUserListingRequest;
 use App\Http\Resources\v1\BaseCollection;
 use App\Http\Resources\v1\LoginResource;
 use App\Http\Resources\v1\UserCreateResource;

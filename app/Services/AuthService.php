@@ -37,7 +37,7 @@ readonly class AuthService
     {
         if (Auth::attempt($credentials)) {
             $user = $this->userDtoFromModel();
-            if ($user->is_admin) {
+            if ($user->getIsAdmin()) {
                 return $this->generateToken($user);
             }
         }
@@ -57,7 +57,7 @@ readonly class AuthService
         $token_id = $this->jwt_token_repository->createToken($token);
         if (!empty($token_id)) {
             // TODO change to event
-            $this->user_repository->updateLastLogin($user->id);
+            $this->user_repository->updateLastLogin($user->getId());
             return $token->getTokenValue();
         }
         return null;
@@ -71,7 +71,7 @@ readonly class AuthService
     {
         if (Auth::attempt($credentials)) {
             $user = $this->userDtoFromModel();
-            if (!$user->is_admin) {
+            if (!$user->getIsAdmin()) {
                 return $this->generateToken($user);
             }
         }
@@ -112,7 +112,7 @@ readonly class AuthService
             throw new ModelNotFoundException();
         }
 
-        if ($user->is_admin) {
+        if ($user->getIsAdmin()) {
             throw new UnauthorizedException();
         }
 
@@ -136,7 +136,7 @@ readonly class AuthService
             throw new ModelNotFoundException();
         }
 
-        if ($user->is_admin) {
+        if ($user->getIsAdmin()) {
             throw new UnauthorizedException();
         }
         $data['password'] = Hash::make($data['password']);

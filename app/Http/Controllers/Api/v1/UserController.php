@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\v1\ForgotPasswordRequest;
 use App\Http\Requests\v1\OrderListingRequest;
-use App\Http\Requests\v1\ResetPasswordTokenRequest;
-use App\Http\Requests\v1\UserCreateRequest;
-use App\Http\Requests\v1\UserEditRequest;
-use App\Http\Requests\v1\UserLoginRequest;
+use App\Http\Requests\v1\User\ForgotPasswordRequest;
+use App\Http\Requests\v1\User\ResetPasswordTokenRequest;
+use App\Http\Requests\v1\User\UserCreateRequest;
+use App\Http\Requests\v1\User\UserEditRequest;
+use App\Http\Requests\v1\User\UserLoginRequest;
 use App\Http\Resources\v1\BaseCollection;
-use App\Http\Resources\v1\LoginResource;
 use App\Http\Resources\v1\ForgotPasswordResource;
+use App\Http\Resources\v1\LoginResource;
 use App\Http\Resources\v1\MessageResource;
 use App\Http\Resources\v1\UserCreateResource;
 use App\Http\Resources\v1\UserResource;
