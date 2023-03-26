@@ -10,6 +10,7 @@
 
 use App\Http\Controllers\Api\v1\AdminController;
 use App\Http\Controllers\Api\v1\BrandController;
+use App\Http\Controllers\Api\v1\CategoryController;
 use App\Http\Controllers\Api\v1\UserController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -40,4 +41,5 @@ Route::prefix('user')->name('user.')->group(function () {
 Route::apiResources([
     'brands' => BrandController::class,
 
+    'categories' => CategoryController::class
 ]);
