@@ -9,6 +9,7 @@
 // Admin only routes
 
 use App\Http\Controllers\Api\v1\AdminController;
+use App\Http\Controllers\Api\v1\BrandController;
 use App\Http\Controllers\Api\v1\UserController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -34,3 +35,9 @@ Route::prefix('user')->name('user.')->group(function () {
     Route::post('reset-password-token', [UserController::class, 'resetPasswordToken'])->name('reset-password-token');
     Route::get('orders', [UserController::class, 'getOrders'])->name('orders');
 });
+
+
+Route::apiResources([
+    'brands' => BrandController::class,
+
+]);
