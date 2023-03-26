@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Http\Requests\v1;
+namespace App\Http\Requests\v1\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * @OA\Schema(
- *    schema="UserLoginRequest",
+ *    schema="AdminLoginRequest",
  *    required={"email","password"},
  *    @OA\Property(
  *     property="email",
  *     type="string",
- *     description="User email",
+ *     description="Admin email",
  *    ),
  *    @OA\Property(
  *     property="password",
  *     type="string",
- *     description="User password",
+ *     description="Admin password",
  *    ),
  * )
  */
-class UserLoginRequest extends FormRequest
+class AdminLoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests\v1;
+namespace App\Http\Requests\v1\Admin;
 
+use App\Http\Requests\v1\DefaultPaginationRequest;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 

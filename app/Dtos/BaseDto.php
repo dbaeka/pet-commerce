@@ -28,6 +28,11 @@ abstract class BaseDto implements Arrayable
         return $obj;
     }
 
+    /**
+     * Use public for visible values and protected values. You can implement getter for hidden values if needed
+     *
+     * @return array<string, mixed>
+     */
     final public function toArray(): array
     {
         return get_object_vars($this);

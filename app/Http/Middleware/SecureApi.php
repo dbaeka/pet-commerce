@@ -50,7 +50,7 @@ class SecureApi
             throw new AuthenticationException('invalid bearer token');
         }
         $this->user = $user;
-        Auth::onceUsingId($user->id);
+        Auth::onceUsingId($user->getId());
     }
 
     /**
@@ -62,7 +62,7 @@ class SecureApi
     private function handleAuthorization(Request $request, Closure $next, string $guard): Response
     {
         if ($guard === 'admin') {
-            if ($this->user->is_admin) {
+            if ($this->user->getIsAdmin()) {
                 return $next($request);
             } else {
                 throw new UnauthorizedException('not authorized to access admin');

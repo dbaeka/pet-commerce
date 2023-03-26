@@ -4,7 +4,8 @@ namespace App\Dtos;
 
 class Token extends BaseDto
 {
-    public int $user_id = 0;
+    protected ?int $id = null;
+    public ?int $user_id = null;
     public string $unique_id = '';
     public string $token_title = '';
     /** @var array<string> $restrictions */

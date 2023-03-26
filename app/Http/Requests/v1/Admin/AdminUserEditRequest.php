@@ -1,20 +1,29 @@
 <?php
 
-namespace App\Http\Requests\v1;
+namespace App\Http\Requests\v1\Admin;
 
+use App\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * @OA\Schema(
- *    schema="UserEditRequest",
- *    ref="#/components/schemas/UserCreateRequest"
+ *    schema="AdminUserEditRequest",
+ *    ref="#/components/schemas/AdminUserCreateRequest"
  * )
  */
-class UserEditRequest extends FormRequest
+class AdminUserEditRequest extends FormRequest
 {
-    public function authorize(): bool
+    /**
+     * @param Authenticatable $user
+     * Determine if the user is authorized to make this request.
+     * @return bool
+     */
+    public function authorize(Authenticatable $user): bool
     {
-        return true;
+        /** @var User $user_model */
+        $user_model = $user;
+        return $user_model->is_admin;
     }
 
     /**

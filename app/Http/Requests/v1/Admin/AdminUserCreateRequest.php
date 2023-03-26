@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\v1;
+namespace App\Http\Requests\v1\Admin;
 
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;

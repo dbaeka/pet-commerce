@@ -4,9 +4,9 @@ namespace App\Dtos;
 
 class User extends BaseDto
 {
-    public int $id = 0;
+    protected ?int $id = null;
     public string $uuid = '';
-    public bool $is_admin = false;
+    protected bool $is_admin = false;
     public string $first_name = '';
     public string $last_name = '';
     public string $email = '';
@@ -18,4 +18,14 @@ class User extends BaseDto
     public string $updated_at = '';
     public string $created_at = '';
     public ?string $last_login_at = '';
+
+    public function getId(): int
+    {
+        return $this->id ?: 0;
+    }
+
+    public function getIsAdmin(): bool
+    {
+        return $this->is_admin;
+    }
 }
