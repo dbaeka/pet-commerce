@@ -85,7 +85,7 @@ class OrderStatusController extends Controller
      * @OA\Get(
      *     path="/api/v1/order-statuses/{uuid}",
      *     operationId="view-order-status",
-     *     summary="Fetch a order status",
+     *     summary="Fetch an order status",
      *     tags={"Order Statuses"},
      *     security={{}},
      *     @OA\Parameter(ref="#/components/parameters/uuid_path"),
@@ -106,7 +106,7 @@ class OrderStatusController extends Controller
      * @OA\Put(
      *     path="/api/v1/order-statuses/{uuid}",
      *     operationId="order-status-edit",
-     *     summary="Edit a order status",
+     *     summary="Edit an order status",
      *     tags={"Order Statuses"},
      *     @OA\Parameter(ref="#/components/parameters/uuid_path"),
      *     @OA\RequestBody(
@@ -137,7 +137,7 @@ class OrderStatusController extends Controller
      * @OA\Delete(
      *     path="/api/v1/order-statuses/{uuid}",
      *     operationId="order-status-delete",
-     *     summary="Delete a order status",
+     *     summary="Delete an order status",
      *     tags={"Order Statuses"},
      *     @OA\Parameter(ref="#/components/parameters/uuid_path"),
      *     @OA\Response(response=204, ref="#/components/responses/NoContent"),
