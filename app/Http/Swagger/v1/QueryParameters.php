@@ -82,6 +82,46 @@ namespace App\Http\Swagger\v1;
  *     required=false,
  *     @OA\Schema(type="string", enum={"1", "2"}),
  * ),
+ *
+ * @OA\Parameter(
+ *     name="category_uuid",
+ *     parameter="category_uuid_query",
+ *     in="query",
+ *     required=false,
+ *     @OA\Schema(type="string"),
+ * ),
+ *
+ * @OA\Parameter(
+ *     name="price",
+ *     parameter="price_query",
+ *     in="query",
+ *     required=false,
+ *     @OA\Schema(type="float"),
+ * ),
+ *
+ * @OA\Parameter(
+ *     name="brand_uuid",
+ *     parameter="brand_uuid_query",
+ *     in="query",
+ *     required=false,
+ *     @OA\Schema(type="string"),
+ * ),
+ *
+ * @OA\Parameter(
+ *     name="title",
+ *     parameter="title_query",
+ *     in="query",
+ *     required=false,
+ *     @OA\Schema(type="string"),
+ * ),
+ *
+ * @OA\Parameter(
+ *     name="uuid",
+ *     parameter="uuid_query",
+ *     in="query",
+ *     required=false,
+ *     @OA\Schema(type="string"),
+ * ),
  */
 class QueryParameters
 {

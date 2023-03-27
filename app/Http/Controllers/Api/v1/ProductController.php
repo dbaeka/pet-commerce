@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\v1\Product\ProductListingRequest;
 use App\Http\Requests\v1\Product\StoreProductRequest;
 use App\Http\Requests\v1\Product\UpdateProductRequest;
-use App\Http\Resources\v1\DefaultCollection;
 use App\Http\Resources\v1\BaseResource;
+use App\Http\Resources\v1\DefaultCollection;
 use App\Models\Product;
 use App\Repositories\ProductRepository;
 use App\Values\ProductMetadata;
@@ -39,6 +40,11 @@ class ProductController extends Controller
      *     @OA\Parameter(ref="#/components/parameters/limit_query"),
      *     @OA\Parameter(ref="#/components/parameters/sort_by_query"),
      *     @OA\Parameter(ref="#/components/parameters/desc_query"),
+     *     @OA\Parameter(ref="#/components/parameters/category_uuid_query"),
+     *     @OA\Parameter(ref="#/components/parameters/price_query"),
+     *     @OA\Parameter(ref="#/components/parameters/brand_uuid_query"),
+     *     @OA\Parameter(ref="#/components/parameters/title_query"),
+     *     @OA\Parameter(ref="#/components/parameters/uuid_query"),
      *     @OA\Response(response=200, ref="#/components/responses/OK"),
      *     @OA\Response(response=401, ref="#/components/responses/Unauthorized"),
      *     @OA\Response(response=404, ref="#/components/responses/NotFound"),
@@ -46,7 +52,7 @@ class ProductController extends Controller
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function index(): DefaultCollection
+    public function index(ProductListingRequest $request): DefaultCollection
     {
         $products = $this->product_repository->getList();
         return new DefaultCollection($products);

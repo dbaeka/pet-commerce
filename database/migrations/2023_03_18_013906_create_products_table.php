@@ -20,19 +20,22 @@ return new class () extends Migration {
             $table->text('description');
             $table->json('metadata');
 
-            if ($driver == 'mysql') {
-                $brand = DB::connection()->getQueryGrammar()->wrap('metadata->brand');
-                $table->uuid('brand_uuid')->storedAs($brand);
-                $table->foreign('brand_uuid')->references('uuid')->on('brands')->cascadeOnDelete();
-            }
+            switch ($driver) {
+                case 'mysql':
+                case 'sqlite':
+                case 'pgsql':
+                    $brand = DB::connection()->getQueryGrammar()->wrap('metadata->brand');
+                    $table->uuid('brand_uuid')->storedAs($brand);
+                    $table->foreign('brand_uuid')->references('uuid')->on('brands')->cascadeOnDelete();
+                    break;
 
-            if ($driver == 'sqlsrv') {
-                $brand = DB::connection()->getQueryGrammar()->wrap('metadata->brand');
-                $brand_uuid = 'CAST(' . $brand . ' AS VARCHAR)';
-                $table->computed('brand_uuid', $brand_uuid)->persisted();
-                $table->foreign('brand_uuid')->references('uuid')->on('brands')->cascadeOnDelete();
+                case 'sqlsrv':
+                    $brand = DB::connection()->getQueryGrammar()->wrap('metadata->brand');
+                    $brand_uuid = 'CAST(' . $brand . ' AS VARCHAR)';
+                    $table->computed('brand_uuid', $brand_uuid)->persisted();
+                    $table->foreign('brand_uuid')->references('uuid')->on('brands')->cascadeOnDelete();
+                    break;
             }
-
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrentOnUpdate();
         });

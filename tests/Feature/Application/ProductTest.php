@@ -2,8 +2,13 @@
 
 namespace Application;
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
+use App\Values\ProductMetadata;
+use Database\Factories\BrandFactory;
+use Database\Factories\CategoryFactory;
 use Database\Factories\ProductFactory;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -140,5 +145,34 @@ class ProductTest extends ApiTestCase
             ->assertJsonFragment([
                 'current_page' => 2,
             ]);
+
+        /** @var Category $category */
+        $category = CategoryFactory::new()->create();
+        ProductFactory::new()->count(5)->create([
+            'category_uuid' => $category->uuid
+        ]);
+
+        $this->get($endpoint . '?limit=100&category_uuid=' . $category->uuid)
+            ->assertOk()
+            ->assertJsonCount(5, 'data');
+
+        ProductFactory::new()->create([
+            'uuid' => 'foobar'
+        ]);
+
+        $this->get($endpoint . '?limit=100&uuid=foobar')
+            ->assertOk()
+            ->assertJsonCount(1, 'data');
+
+        /** @var Brand $brand */
+        $brand = BrandFactory::new()->create();
+        ProductFactory::new()->count(14)->create([
+           'metadata' => new ProductMetadata(
+               $brand->uuid, fake()->uuid()
+           )
+        ]);
+        $this->get($endpoint . '?limit=100&brand_uuid=' . $brand->uuid)
+            ->assertOk()
+            ->assertJsonCount(14, 'data');
     }
 }
