@@ -80,8 +80,9 @@ readonly class AuthService
 
     public function loginUsingId(int $id): ?string
     {
-        if ($user = Auth::onceUsingId($id)) {
-            /** @var \App\Models\User $user */
+        /** @var \App\Models\User $user */
+        $user = Auth::onceUsingId($id);
+        if ($user) {
             $user_dto = User::make($user->getAttributes());
             $token = $this->jwt_service->generateToken($user_dto);
             $token_id = $this->jwt_token_repository->createToken($token);
