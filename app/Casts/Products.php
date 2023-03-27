@@ -15,13 +15,13 @@ class Products implements CastsAttributes
 {
     /**
      * Cast the given value.
-     * @param Model $model
+     * @param Model|null $model
      * @param string $key
      * @param mixed $value
      * @param array<string, mixed> $attributes
-     * @return Collection<int, Product>
+     * @return Collection
      */
-    public function get(Model $model, string $key, mixed $value, array $attributes): Collection
+    public function get(?Model $model, string $key, mixed $value, array $attributes): Collection
     {
         /** @var array<int, mixed> $products */
         $products = json_decode($value, true);
@@ -37,7 +37,7 @@ class Products implements CastsAttributes
      * @param Collection<int, Product>|array<int, Product> $value
      * @param array<string, mixed> $attributes
      */
-    public function set(Model $model, string $key, mixed $value, array $attributes): false|string
+    public function set(?Model $model, string $key, mixed $value, array $attributes): false|string
     {
         if (is_array($value)) {
             $value = collect($value);

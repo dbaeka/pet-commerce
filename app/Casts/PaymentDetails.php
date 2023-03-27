@@ -19,7 +19,7 @@ class PaymentDetails implements CastsAttributes
      *
      * @param array<string, mixed> $attributes
      */
-    public function get(Model $model, string $key, mixed $value, array $attributes): PaymentTypeDetails
+    public function get(?Model $model, string $key, mixed $value, array $attributes): PaymentTypeDetails
     {
         $details = json_decode($value, true);
         $type = PaymentType::from($attributes['type']);
@@ -31,7 +31,7 @@ class PaymentDetails implements CastsAttributes
      *
      * @param array<string, mixed> $attributes
      */
-    public function set(Model $model, string $key, mixed $value, array $attributes): string|false
+    public function set(?Model $model, string $key, mixed $value, array $attributes): string|false
     {
         if (!$value instanceof PaymentTypeDetails) {
             throw new InvalidArgumentException('The given value is not an PaymentTypeDetails instance.');
