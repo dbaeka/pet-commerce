@@ -3,36 +3,11 @@
 namespace App\Casts;
 
 use App\Values\Address as AddressVO;
-use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
-use Illuminate\Database\Eloquent\Model;
-use InvalidArgumentException;
 
 /**
- * @implements CastsAttributes<AddressVO, AddressVO>
+ * @extends SimpleValueCast<AddressVO>
  */
-class Address implements CastsAttributes
+class Address extends SimpleValueCast
 {
-    /**
-     * Cast the given value.
-     *
-     * @param array<string, mixed> $attributes
-     */
-    public function get(Model $model, string $key, mixed $value, array $attributes): AddressVO
-    {
-        $value = json_decode($value, true);
-        return new AddressVO(...$value);
-    }
-
-    /**
-     * Prepare the given value for storage.
-     *
-     * @param array<string, mixed> $attributes
-     */
-    public function set(Model $model, string $key, mixed $value, array $attributes): false|string
-    {
-        if (!$value instanceof AddressVO) {
-            throw new InvalidArgumentException('The given value is not an Address instance.');
-        }
-        return json_encode($value);
-    }
+    protected string $value_class = AddressVO::class;
 }
