@@ -9,6 +9,9 @@ use Illuminate\Contracts\Support\Arrayable;
  */
 abstract class BaseDto implements Arrayable
 {
+    /** @var array<int, string> */
+    protected array $casts = [];
+
     final private function __construct()
     {
     }
@@ -22,7 +25,11 @@ abstract class BaseDto implements Arrayable
         $obj = new static();
         foreach ($attributes as $key => $value) {
             if (property_exists(static::class, $key)) {
-                $obj->$key = $value;
+                if (array_key_exists($key, $obj->casts)) {
+                    $obj->$key = (new $obj->casts[$key]())->get(null, $key, $value, $attributes);
+                } else {
+                    $obj->$key = $value;
+                }
             }
         }
         return $obj;
