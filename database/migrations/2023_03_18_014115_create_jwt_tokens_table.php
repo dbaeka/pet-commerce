@@ -12,8 +12,8 @@ return new class () extends Migration {
     {
         Schema::create('jwt_tokens', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_uuid')->constrained('users', 'uuid')->onDelete('cascade');
-            $table->text('unique_id');
+            $table->foreignUuid('user_uuid')->constrained('users', 'uuid')->cascadeOnDelete();
+            $table->string('unique_id', 100)->unique();
             $table->string('token_title');
             $table->json('restrictions')->nullable();
             $table->json('permissions')->nullable();
