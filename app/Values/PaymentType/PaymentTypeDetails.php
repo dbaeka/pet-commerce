@@ -3,15 +3,13 @@
 namespace App\Values\PaymentType;
 
 use App\Enums\PaymentType;
-use Illuminate\Contracts\Support\Arrayable;
+use App\Values\BaseValueObject;
 use InvalidArgumentException;
-use JsonSerializable;
 
 /**
- * @implements Arrayable<string, mixed>
  * @phpstan-consistent-constructor
  */
-abstract class PaymentTypeDetails implements JsonSerializable, Arrayable
+abstract class PaymentTypeDetails extends BaseValueObject
 {
     private PaymentType $type;
 
@@ -44,13 +42,5 @@ abstract class PaymentTypeDetails implements JsonSerializable, Arrayable
     public function getType(): PaymentType
     {
         return $this->type;
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function jsonSerialize(): array
-    {
-        return $this->toArray();
     }
 }

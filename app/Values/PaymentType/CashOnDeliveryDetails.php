@@ -11,13 +11,4 @@ class CashOnDeliveryDetails extends PaymentTypeDetails
     ) {
         parent::__construct();
     }
-
-    public function toArray(): array
-    {
-        return [
-            "first_name" => $this->first_name,
-            "last_name" => $this->last_name,
-            "address" => $this->address,
-        ];
-    }
 }

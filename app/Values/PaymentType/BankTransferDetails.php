@@ -11,13 +11,4 @@ class BankTransferDetails extends PaymentTypeDetails
     ) {
         parent::__construct();
     }
-
-    public function toArray(): array
-    {
-        return [
-            "swift" => $this->name,
-            "iban" => $this->iban,
-            "name" => $this->name,
-        ];
-    }
 }
