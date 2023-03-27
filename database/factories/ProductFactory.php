@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\File;
+use App\Values\ProductMetadata;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -32,10 +33,10 @@ class ProductFactory extends Factory
             'title' => fake()->sentence(),
             'price' => fake()->randomFloat(2, 10, 1000),
             'description' => fake()->paragraph(),
-            'metadata' => [
-                'brand' => $brand->uuid,
-                'image' => $image->uuid,
-            ],
+            'metadata' => new ProductMetadata(
+                $brand->uuid,
+                $image->uuid,
+            ),
         ];
     }
 }
