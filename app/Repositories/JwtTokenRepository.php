@@ -13,14 +13,17 @@ class JwtTokenRepository implements JwtTokenRepositoryInterface
     public function createToken(Token $token): ?int
     {
         /** @var JwtToken|null $jwt_token */
-        $jwt_token = JwtToken::query()->create([
-            'user_uuid' => $token->user_uuid,
-            'unique_id' => $token->unique_id,
-            'token_title' => $token->token_title,
-            'restrictions' => $token->restrictions,
-            'permissions' => $token->permissions,
-            'expires_at' => $token->expires_at,
-        ]);
+        $jwt_token = JwtToken::query()->updateOrCreate(
+            ['unique_id' => $token->unique_id],
+            [
+                'user_uuid' => $token->user_uuid,
+                'unique_id' => $token->unique_id,
+                'token_title' => $token->token_title,
+                'restrictions' => $token->restrictions,
+                'permissions' => $token->permissions,
+                'expires_at' => $token->expires_at,
+            ]
+        );
         return $jwt_token?->id;
     }
 
