@@ -12,9 +12,9 @@ return new class () extends Migration {
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('order_status_id')->constrained();
-            $table->foreignId('payment_id')->constrained();
+            $table->foreignId('user_uuid')->constrained('users', 'uuid')->onDelete('cascade');
+            $table->foreignId('order_status_uuid')->constrained('order_statuses', 'uuid');
+            $table->foreignId('payment_uuid')->constrained('payments', 'uuid');
             $table->string('uuid')->unique();
             $table->json('products');
             $table->json('address');

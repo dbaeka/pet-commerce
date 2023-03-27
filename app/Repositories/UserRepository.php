@@ -27,21 +27,12 @@ class UserRepository implements UserRepositoryInterface, SupportsPaginationTrait
     }
 
 
-    public function updateLastLogin(int $id): bool
+    public function updateLastLogin(string $uuid): bool
     {
-        $update = $this->forUserById($id)->update([
+        $update = $this->forUserByUuid($uuid)->update([
             'last_login_at' => now()
         ]);
         return $update == 1;
-    }
-
-    /**
-     * @param int $id
-     * @return Builder<User>
-     */
-    private function forUserById(int $id): Builder
-    {
-        return User::query()->where('id', $id);
     }
 
     /**

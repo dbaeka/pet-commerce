@@ -13,7 +13,7 @@ interface UserRepositoryInterface
      */
     public function createUser(array $data): ?User;
 
-    public function updateLastLogin(int $id): bool;
+    public function updateLastLogin(string $uuid): bool;
 
     /**
      * @return LengthAwarePaginator<\App\Models\User>

@@ -19,7 +19,7 @@ class Order extends Model
         'shipped_at' => 'datetime',
     ];
 
-    protected $hidden = ['id', 'user_id', 'payment_id', 'order_status_id'];
+    protected $hidden = ['id', 'user_uuid', 'payment_uuid', 'order_status_uuid'];
 
     /**
      * Get the current order status.
@@ -27,7 +27,7 @@ class Order extends Model
      */
     public function order_status(): HasOne
     {
-        return $this->hasOne(OrderStatus::class, 'id', 'order_status_id');
+        return $this->hasOne(OrderStatus::class, 'uuid', 'order_status_uuid');
     }
 
     /**
@@ -36,7 +36,7 @@ class Order extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_uuid', 'uuid');
     }
 
     /**
@@ -45,6 +45,6 @@ class Order extends Model
      */
     public function payment(): HasOne
     {
-        return $this->hasOne(Payment::class, 'id', 'payment_id');
+        return $this->hasOne(Payment::class, 'uuid', 'payment_uuid');
     }
 }

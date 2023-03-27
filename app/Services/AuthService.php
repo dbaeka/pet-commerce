@@ -57,7 +57,7 @@ readonly class AuthService
         $token_id = $this->jwt_token_repository->createToken($token);
         if (!empty($token_id)) {
             // TODO change to event
-            $this->user_repository->updateLastLogin($user->getId());
+            $this->user_repository->updateLastLogin($user->uuid);
             return $token->getTokenValue();
         }
         return null;
@@ -87,7 +87,7 @@ readonly class AuthService
             $token_id = $this->jwt_token_repository->createToken($token);
             if (!empty($token_id)) {
                 // TODO change to event
-                $this->user_repository->updateLastLogin($user->id);
+                $this->user_repository->updateLastLogin($user->uuid);
                 return $token->getTokenValue();
             }
         }

@@ -123,7 +123,7 @@ class JwtService implements JwtTokenProviderInterface
             ->getToken($config->signer(), $config->signingKey());
 
         $data = [
-            'user_id' => $user->getId(),
+            'user_uuid' => $user->uuid,
             'unique_id' => $unique_id,
             'token_title' => 'Access Token',
             'expires_at' => $expires_at,

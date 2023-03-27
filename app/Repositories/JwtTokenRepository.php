@@ -14,7 +14,7 @@ class JwtTokenRepository implements JwtTokenRepositoryInterface
     {
         /** @var JwtToken|null $jwt_token */
         $jwt_token = JwtToken::query()->create([
-            'user_id' => $token->user_id,
+            'user_uuid' => $token->user_uuid,
             'unique_id' => $token->unique_id,
             'token_title' => $token->token_title,
             'restrictions' => $token->restrictions,

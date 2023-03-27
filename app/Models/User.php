@@ -66,6 +66,6 @@ class User extends Authenticatable
      */
     public function jwt_tokens(): HasMany
     {
-        return $this->hasMany(JwtToken::class);
+        return $this->hasMany(JwtToken::class, 'user_uuid', 'uuid');
     }
 }

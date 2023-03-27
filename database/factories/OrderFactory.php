@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\OrderStatus;
+use App\Models\Payment;
+use App\Models\User;
 use App\Values\Address;
 use App\Values\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -19,10 +22,16 @@ class OrderFactory extends Factory
      */
     public function definition(): array
     {
+        /** @var User $user */
+        $user = UserFactory::new()->create();
+        /** @var Payment $payment */
+        $payment = PaymentFactory::new()->create();
+        /** @var OrderStatus $order_status */
+        $order_status = OrderStatusFactory::new()->create();
         return [
-            'user_id' => UserFactory::new(),
-            'order_status_id' => fn () => OrderStatusFactory::new(),
-            'payment_id' => PaymentFactory::new(),
+            'user_uuid' => $user->uuid,
+            'order_status_uuid' => $order_status->uuid,
+            'payment_uuid' => $payment->uuid,
             'uuid' => fake()->unique()->uuid(),
             'products' => Collection::times(
                 rand(1, 4),

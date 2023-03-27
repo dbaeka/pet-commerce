@@ -24,15 +24,15 @@ abstract class BaseCrudRepository implements CrudRepositoryInterface, SupportsPa
 
     protected BaseDto $dto;
     protected Model $model;
-    private string $modelClass;
+    private string $model_class;
 
     /**
      * @throws ReflectionException
      */
     public function __construct(?string $modelClass = null, ?string $dtoClass = null)
     {
-        $this->modelClass = $modelClass ?: self::guessModelClass();
-        $this->model = app($this->modelClass);
+        $this->model_class = $modelClass ?: self::guessModelClass();
+        $this->model = app($this->model_class);
 
         /** @var class-string<TObj> $dto_class */
         $dto_class = $dtoClass ?: self::guessDtoClass();
