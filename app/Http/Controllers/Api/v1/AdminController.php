@@ -7,7 +7,7 @@ use App\Http\Requests\v1\Admin\AdminLoginRequest;
 use App\Http\Requests\v1\Admin\AdminUserCreateRequest;
 use App\Http\Requests\v1\Admin\AdminUserEditRequest;
 use App\Http\Requests\v1\Admin\AdminUserListingRequest;
-use App\Http\Resources\v1\BaseCollection;
+use App\Http\Resources\v1\DefaultCollection;
 use App\Http\Resources\v1\LoginResource;
 use App\Http\Resources\v1\UserCreateResource;
 use App\Http\Resources\v1\UserResource;
@@ -16,6 +16,7 @@ use App\Services\AuthService;
 use App\Services\UserService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -59,10 +60,10 @@ class AdminController extends Controller
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function getUserListing(AdminUserListingRequest $request): BaseCollection
+    public function getUserListing(AdminUserListingRequest $request): DefaultCollection
     {
         $users = $this->user_repository->getNonAdminUsers();
-        return new BaseCollection($users);
+        return new DefaultCollection($users);
     }
 
     /**
@@ -80,19 +81,19 @@ class AdminController extends Controller
      *       )
      *      )
      *     ),
-     *     @OA\Response(response=200, ref="#/components/responses/OK"),
+     *     @OA\Response(response=201, ref="#/components/responses/Created"),
      *     @OA\Response(response=401, ref="#/components/responses/Unauthorized"),
      *     @OA\Response(response=404, ref="#/components/responses/NotFound"),
      *     @OA\Response(response=422, ref="#/components/responses/Unprocessable"),
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function store(AdminUserCreateRequest $request): UserCreateResource
+    public function store(AdminUserCreateRequest $request): JsonResponse
     {
         $data = $request->validated();
         $user = (new UserService())->createAdmin($data);
         if ($user) {
-            return new UserCreateResource((object)$user);
+            return (new UserCreateResource((object)$user))->response()->setStatusCode(201);
         }
         throw new UnprocessableEntityHttpException();
     }

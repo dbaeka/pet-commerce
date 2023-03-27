@@ -5,7 +5,7 @@ namespace App\Http\Resources\v1;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class BaseCollection extends ResourceCollection
+class DefaultCollection extends ResourceCollection
 {
 //    public $collects = UserResource::class;
     /**

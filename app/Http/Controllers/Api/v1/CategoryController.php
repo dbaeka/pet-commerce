@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\v1\Category\StoreCategoryRequest;
 use App\Http\Requests\v1\Category\UpdateCategoryRequest;
-use App\Http\Resources\v1\BaseCollection;
+use App\Http\Resources\v1\DefaultCollection;
 use App\Http\Resources\v1\BaseResource;
 use App\Models\Category;
 use App\Repositories\CategoryRepository;
@@ -45,10 +45,10 @@ class CategoryController extends Controller
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function index(): BaseCollection
+    public function index(): DefaultCollection
     {
         $categories = $this->category_repository->getList();
-        return new BaseCollection($categories);
+        return new DefaultCollection($categories);
     }
 
     /**
@@ -66,7 +66,7 @@ class CategoryController extends Controller
      *       )
      *      )
      *     ),
-     *     @OA\Response(response=200, ref="#/components/responses/OK"),
+     *     @OA\Response(response=201, ref="#/components/responses/Created"),
      *     @OA\Response(response=401, ref="#/components/responses/Unauthorized"),
      *     @OA\Response(response=404, ref="#/components/responses/NotFound"),
      *     @OA\Response(response=422, ref="#/components/responses/Unprocessable"),

@@ -9,7 +9,7 @@ use App\Http\Requests\v1\User\ResetPasswordTokenRequest;
 use App\Http\Requests\v1\User\UserCreateRequest;
 use App\Http\Requests\v1\User\UserEditRequest;
 use App\Http\Requests\v1\User\UserLoginRequest;
-use App\Http\Resources\v1\BaseCollection;
+use App\Http\Resources\v1\DefaultCollection;
 use App\Http\Resources\v1\ForgotPasswordResource;
 use App\Http\Resources\v1\LoginResource;
 use App\Http\Resources\v1\MessageResource;
@@ -22,6 +22,7 @@ use App\Services\AuthService;
 use App\Services\UserService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -85,12 +86,12 @@ class UserController extends Controller
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function getOrders(OrderListingRequest $request): BaseCollection
+    public function getOrders(OrderListingRequest $request): DefaultCollection
     {
         /** @var User $user */
         $user = Auth::user();
         $orders = $this->order_repository->getUserOrders($user->uuid);
-        return new BaseCollection($orders);
+        return new DefaultCollection($orders);
     }
 
     /**
@@ -109,19 +110,19 @@ class UserController extends Controller
      *       )
      *      )
      *     ),
-     *     @OA\Response(response=200, ref="#/components/responses/OK"),
+     *     @OA\Response(response=201, ref="#/components/responses/Created"),
      *     @OA\Response(response=401, ref="#/components/responses/Unauthorized"),
      *     @OA\Response(response=404, ref="#/components/responses/NotFound"),
      *     @OA\Response(response=422, ref="#/components/responses/Unprocessable"),
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function store(UserCreateRequest $request): UserCreateResource
+    public function store(UserCreateRequest $request): JsonResponse
     {
         $data = $request->validated();
         $user = (new UserService())->createUser($data);
         if ($user) {
-            return new UserCreateResource((object)$user);
+            return (new UserCreateResource((object)$user))->response()->setStatusCode(201);
         }
         throw new UnprocessableEntityHttpException();
     }

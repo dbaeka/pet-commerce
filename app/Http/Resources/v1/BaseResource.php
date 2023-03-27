@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @OA\Response(response="OK", description="OK"),
+ * @OA\Response(response="Created", description="Created"),
  * @OA\Response(response="NoContent", description="No Content"),
  * @OA\Response(response="Unauthorized", description="Unauthorized"),
  * @OA\Response(response="NotFound", description="Page not found"),

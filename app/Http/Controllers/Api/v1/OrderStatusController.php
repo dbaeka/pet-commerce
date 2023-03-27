@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\v1\OrderStatus\StoreOrderStatusRequest;
 use App\Http\Requests\v1\OrderStatus\UpdateOrderStatusRequest;
-use App\Http\Resources\v1\BaseCollection;
+use App\Http\Resources\v1\DefaultCollection;
 use App\Http\Resources\v1\BaseResource;
 use App\Models\OrderStatus;
 use App\Repositories\OrderStatusRepository;
@@ -45,10 +45,10 @@ class OrderStatusController extends Controller
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function index(): BaseCollection
+    public function index(): DefaultCollection
     {
         $order_statuses = $this->order_status_repository->getList();
-        return new BaseCollection($order_statuses);
+        return new DefaultCollection($order_statuses);
     }
 
     /**
@@ -66,7 +66,7 @@ class OrderStatusController extends Controller
      *       )
      *      )
      *     ),
-     *     @OA\Response(response=200, ref="#/components/responses/OK"),
+     *     @OA\Response(response=201, ref="#/components/responses/Created"),
      *     @OA\Response(response=401, ref="#/components/responses/Unauthorized"),
      *     @OA\Response(response=404, ref="#/components/responses/NotFound"),
      *     @OA\Response(response=422, ref="#/components/responses/Unprocessable"),
