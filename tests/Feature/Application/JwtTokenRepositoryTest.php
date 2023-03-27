@@ -73,13 +73,13 @@ class JwtTokenRepositoryTest extends TestCase
 
         /** @var JwtToken $jwt_token */
         $jwt_token = JwtTokenFactory::new()->create([
-            'user_id' => $user_model->id
+            'user_uuid' => $user_model->uuid
         ]);
 
         $user = $this->jwt_repository->getUserByUniqueId($jwt_token->unique_id);
         self::assertNotNull($user);
         self::assertInstanceOf(User::class, $user);
-        self::assertSame($user_model->id, $user->getId());
+        self::assertSame($user_model->uuid, $user->uuid);
     }
 
     public function testExpireToken(): void

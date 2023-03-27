@@ -224,13 +224,13 @@ class UserTest extends ApiTestCase
         $user = UserFactory::new()->create();
 
         OrderFactory::new()->count(40)->create([
-            'user_id' => $user->id
+            'user_uuid' => $user->uuid
         ]);
 
         /** @var User $user2 */
         $user2 = UserFactory::new()->create();
         OrderFactory::new()->count(10)->create([
-            'user_id' => $user2->id
+            'user_uuid' => $user2->uuid
         ]);
 
         $this->getAs($endpoint, $user)
