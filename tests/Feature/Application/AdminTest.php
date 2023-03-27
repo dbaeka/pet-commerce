@@ -218,7 +218,7 @@ class AdminTest extends ApiTestCase
             "phone_number" => fake()->e164PhoneNumber(),
         ];
 
-        $this->postAs($endpoint, $data, $user)->assertOk()
+        $this->postAs($endpoint, $data, $user)->assertCreated()
             ->assertJsonStructure($this->mergeDefaultFields(
                 "uuid",
                 "first_name",

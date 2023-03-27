@@ -39,7 +39,7 @@ class OrderStatusTest extends ApiTestCase
         self::assertSame($order_status->title, $data['title']);
     }
 
-    public function testDeleteUser(): void
+    public function testDeleteOrderStatus(): void
     {
         $endpoint = self::PREFIX . 'order-statuses/';
 
@@ -90,7 +90,7 @@ class OrderStatusTest extends ApiTestCase
 
         $response = $this->postAs($endpoint, $data, $user);
 
-        $response->assertOk()
+        $response->assertCreated()
             ->assertJsonStructure($this->mergeDefaultFields(
                 "uuid",
                 "title"
@@ -123,7 +123,7 @@ class OrderStatusTest extends ApiTestCase
         $this->get($endpoint)
             ->assertOk()
             ->assertJsonStructure(array_merge($this->mergeDefaultFields(), [
-                'meta' => ['total', 'to'], 'links',
+                'meta' => ['total', 'to'], 'links', 'data' => ['*' => ['title', 'uuid']]
             ]))
             ->assertJsonFragment([
                 'success' => 1,

@@ -184,7 +184,7 @@ class UserTest extends ApiTestCase
             "phone_number" => fake()->e164PhoneNumber(),
         ];
 
-        $this->post($endpoint, $data)->assertOk()
+        $this->post($endpoint, $data)->assertCreated()
             ->assertJsonStructure($this->mergeDefaultFields(
                 "uuid",
                 "first_name",

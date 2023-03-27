@@ -41,7 +41,7 @@ class BrandTest extends ApiTestCase
         self::assertSame($brand->slug, Str::slug($data['title']));
     }
 
-    public function testDeleteUser(): void
+    public function testDeleteBrand(): void
     {
         $endpoint = self::PREFIX . 'brands/';
 
@@ -92,7 +92,7 @@ class BrandTest extends ApiTestCase
 
         $response = $this->postAs($endpoint, $data, $user);
 
-        $response->assertOk()
+        $response->assertCreated()
             ->assertJsonStructure($this->mergeDefaultFields(
                 "uuid",
                 "slug",
@@ -126,7 +126,7 @@ class BrandTest extends ApiTestCase
         $this->get($endpoint)
             ->assertOk()
             ->assertJsonStructure(array_merge($this->mergeDefaultFields(), [
-                'meta' => ['total', 'to'], 'links',
+                'meta' => ['total', 'to'], 'links', 'data' => ['*' => ['title', 'uuid']]
             ]))
             ->assertJsonFragment([
                 'success' => 1,
