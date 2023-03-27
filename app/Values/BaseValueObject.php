@@ -19,7 +19,7 @@ abstract class BaseValueObject implements Arrayable, JsonSerializable
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<string, scalar>
      */
     public function toArray(): array
     {

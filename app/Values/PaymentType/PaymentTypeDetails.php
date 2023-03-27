@@ -18,7 +18,7 @@ abstract class PaymentTypeDetails extends BaseValueObject
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param array<string, scalar> $data
      * @param PaymentType $type
      * @return static
      */
