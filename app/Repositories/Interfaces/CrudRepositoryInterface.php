@@ -16,7 +16,7 @@ interface CrudRepositoryInterface
      * Create a model
      *
      * @param array<string, mixed> $data
-     * @return TObj|BaseDto|null
+     * @return TObj|BaseDto|TModel|null
      */
     public function create(array $data);
 
@@ -39,7 +39,7 @@ interface CrudRepositoryInterface
      * Find a model by uuid
      *
      * @param string $uuid
-     * @return TObj|BaseDto|null
+     * @return TObj|BaseDto|TModel|null
      */
     public function findByUuid(string $uuid);
 
@@ -48,7 +48,7 @@ interface CrudRepositoryInterface
      *
      * @param string $uuid
      * @param array<string, mixed> $data
-     * @return TObj|BaseDto|null
+     * @return TObj|BaseDto|TModel|null
      */
     public function updateByUuid(string $uuid, array $data);
 }

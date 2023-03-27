@@ -24,6 +24,8 @@ abstract class BaseCrudRepository implements CrudRepositoryInterface, SupportsPa
 
     protected BaseDto $dto;
     protected Model $model;
+    /** @var array<int, string> */
+    protected array $with = [];
     private string $model_class;
 
     /**
@@ -61,9 +63,7 @@ abstract class BaseCrudRepository implements CrudRepositoryInterface, SupportsPa
 
     public function create(array $data)
     {
-        /** @var TModel|null $model */
-        $model = $this->model::query()->create($data);
-        return $model ? $this->dto::make($model->getAttributes()) : null;
+        return $this->model::query()->create($data)->load($this->with);
     }
 
     /**
@@ -71,36 +71,47 @@ abstract class BaseCrudRepository implements CrudRepositoryInterface, SupportsPa
      */
     public function getList(): LengthAwarePaginator
     {
-        $query = $this->model::query();
+        $query = $this->withRelations($this->model::query());
 
         return $this->withPaginate($query);
     }
 
+    /**
+     * @param Builder<TModel> $query
+     * @return Builder<TModel>
+     */
+    private function withRelations(Builder $query): Builder
+    {
+        if (!empty($this->with)) {
+            return $query->with($this->with);
+        }
+        return $query;
+    }
+
     public function deleteByUuid(string $uuid): bool
     {
-        return $this->forUserByUuid($uuid)->delete();
+        return $this->byUuid($uuid)->delete() > 0;
     }
 
     /**
      * @param string $uuid
      * @return Builder<TModel>
      */
-    private function forUserByUuid(string $uuid): Builder
+    private function byUuid(string $uuid): Builder
     {
         return $this->model::query()->where('uuid', $uuid);
     }
 
     public function findByUuid(string $uuid)
     {
-        $model = $this->forUserByUuid($uuid)->first();
-        return $model ? $this->dto::make($model->getAttributes()) : null;
+        return $this->withRelations($this->byUuid($uuid))->first();
     }
 
     public function updateByUuid(string $uuid, array $data)
     {
         /** @var TModel|null $model */
-        $model = $this->forUserByUuid($uuid)->first();
+        $model = $this->byUuid($uuid)->first();
         $updated = $model?->update($data);
-        return $updated ? $this->dto::make($model->getAttributes()) : null;
+        return $updated ? $model->refresh() : null;
     }
 }
