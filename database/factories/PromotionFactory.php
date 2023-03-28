@@ -27,4 +27,26 @@ class PromotionFactory extends Factory
             ]
         ];
     }
+
+    public function invalid(): self
+    {
+        return $this->state(fn () => [
+            'metadata' => [
+                "valid_from" => fake()->date('Y-m-d', '-2 days'),
+                "valid_to" => now()->subDay()->format('Y-m-d'),
+                "image" => fake()->uuid()
+            ]
+        ]);
+    }
+
+    public function valid(): self
+    {
+        return $this->state(fn () => [
+            'metadata' => [
+                "valid_from" => fake()->date('Y-m-d', '-2 days'),
+                "valid_to" => now()->addDays(rand(1, 100))->format('Y-m-d'),
+                "image" => fake()->uuid()
+            ]
+        ]);
+    }
 }
