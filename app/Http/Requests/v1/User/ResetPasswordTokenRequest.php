@@ -21,11 +21,13 @@ use Illuminate\Foundation\Http\FormRequest;
  *    @OA\Property(
  *     property="password",
  *     type="string",
+ *     format="password",
  *     description="User password",
  *    ),
  *     @OA\Property(
  *     property="password_confirmation",
  *     type="string",
+ *     format="password",
  *     description="User password",
  *    ),
  * )

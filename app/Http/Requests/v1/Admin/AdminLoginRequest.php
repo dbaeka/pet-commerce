@@ -16,6 +16,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *    @OA\Property(
  *     property="password",
  *     type="string",
+ *     format="password",
  *     description="Admin password",
  *    ),
  * )

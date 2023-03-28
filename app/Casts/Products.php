@@ -19,7 +19,7 @@ class Products implements CastsAttributes
      * @param string $key
      * @param mixed $value
      * @param array<string, mixed> $attributes
-     * @return Collection
+     * @return Collection<int, Product>
      */
     public function get(?Model $model, string $key, mixed $value, array $attributes): Collection
     {

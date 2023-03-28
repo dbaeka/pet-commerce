@@ -16,7 +16,7 @@ use ReflectionException;
  * @template TModel of Model
  * @template TObj of BaseDto
  * @implements CrudRepositoryInterface<TModel, TObj>
- * @implements SupportsPaginationTraitInterface<Model|TModel>
+ * @implements SupportsPaginationTraitInterface<TModel|Model>
  */
 abstract class BaseCrudRepository implements CrudRepositoryInterface, SupportsPaginationTraitInterface
 {
@@ -78,9 +78,9 @@ abstract class BaseCrudRepository implements CrudRepositoryInterface, SupportsPa
 
     /**
      * @param Builder<TModel> $query
-     * @return Builder<TModel>
+     * @return Builder<TModel|Model>
      */
-    private function withRelations(Builder $query): Builder
+    final protected function withRelations(Builder $query): Builder
     {
         if (!empty($this->with)) {
             return $query->with($this->with);

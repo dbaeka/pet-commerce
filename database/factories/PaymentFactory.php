@@ -23,7 +23,7 @@ class PaymentFactory extends Factory
             'type' => fake()->randomElement(PaymentType::cases()),
             'details' => fn (array $attributes) => PaymentTypeDetailsFactory::make(
                 $attributes['type'],
-                $this->getSampleDetail($attributes['type'])
+                self::getSampleDetail($attributes['type'])
             ),
         ];
     }
@@ -32,7 +32,7 @@ class PaymentFactory extends Factory
      * @param PaymentType $type
      * @return array<string,mixed>
      */
-    private function getSampleDetail(PaymentType $type): array
+    public static function getSampleDetail(PaymentType $type): array
     {
         $details = array();
         switch ($type) {
@@ -41,14 +41,17 @@ class PaymentFactory extends Factory
                     "holder_name" => fake()->name(),
                     "number" => fake()->creditCardNumber(),
                     "cvv" => fake()->randomNumber(3),
-                    "expire_date" => fake()->date(),
+                    "expiry_date" => fake()->date('m/y'),
                 ];
                 break;
             case PaymentType::CASH_ON_DELIVERY:
                 $details = [
                     "first_name" => fake()->firstName(),
                     "last_name" => fake()->lastName(),
-                    "address" => fake()->streetAddress(),
+                    "address_line1" => fake()->streetAddress(),
+                    "address_line2" => fake()->city(),
+                    "text" => "Cash on delivery",
+                    "consent" => fake()->boolean()
                 ];
                 break;
             case PaymentType::BANK_TRANSFER:

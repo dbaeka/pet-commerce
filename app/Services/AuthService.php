@@ -80,7 +80,7 @@ readonly class AuthService
 
     public function loginUsingId(int $id): ?string
     {
-        /** @var \App\Models\User $user */
+        /** @var \App\Models\User|false $user */
         $user = Auth::onceUsingId($id);
         if ($user) {
             $user_dto = User::make($user->getAttributes());

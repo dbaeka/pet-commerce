@@ -31,5 +31,4 @@ class ProductListingRequest extends DefaultPaginationRequest
             'uuid' => ['string']
         ];
     }
-
 }
