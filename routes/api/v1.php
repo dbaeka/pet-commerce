@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\v1\AdminController;
 use App\Http\Controllers\Api\v1\BrandController;
 use App\Http\Controllers\Api\v1\CategoryController;
 use App\Http\Controllers\Api\v1\OrderStatusController;
+use App\Http\Controllers\Api\v1\PaymentController;
 use App\Http\Controllers\Api\v1\ProductController;
 use App\Http\Controllers\Api\v1\UserController;
 
@@ -39,6 +40,7 @@ Route::prefix('user')->name('user.')->group(function () {
     Route::get('orders', [UserController::class, 'getOrders'])->name('orders');
 });
 
+// CRUD routes
 
 Route::apiResources([
     'brands' => BrandController::class,
@@ -48,4 +50,6 @@ Route::apiResources([
     'order-statuses' => OrderStatusController::class,
 
     'products' => ProductController::class,
+
+    'payments' => PaymentController::class
 ]);
