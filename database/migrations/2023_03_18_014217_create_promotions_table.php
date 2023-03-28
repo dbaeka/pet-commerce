@@ -10,12 +10,30 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('promotions', function (Blueprint $table) {
+        $driver = Schema::getConnection()->getDriverName();
+        Schema::create('promotions', function (Blueprint $table) use ($driver) {
             $table->bigIncrements('id');
             $table->string('uuid')->unique();
             $table->string('title');
             $table->text('content');
             $table->json('metadata');
+
+            switch ($driver) {
+                case 'mysql':
+                case 'sqlite':
+                case 'pgsql':
+                    $valid = DB::connection()->getQueryGrammar()->wrap('metadata->valid_to');
+                    $table->timestamp('valid_to')->storedAs($valid);
+                    break;
+
+                case 'sqlsrv':
+                    $valid = DB::connection()->getQueryGrammar()->wrap('metadata->valid_to');
+                    $valid_to = 'CAST(' . $valid . ' AS DATETIME)';
+                    $table->computed('valid_to', $valid_to)->persisted();
+                    break;
+            }
+
+
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrentOnUpdate();
         });

@@ -6,16 +6,16 @@
 |--------------------------------------------------------------------------
 */
 
-// Admin only routes
-
 use App\Http\Controllers\Api\v1\AdminController;
 use App\Http\Controllers\Api\v1\BrandController;
 use App\Http\Controllers\Api\v1\CategoryController;
+use App\Http\Controllers\Api\v1\MainPageController;
 use App\Http\Controllers\Api\v1\OrderStatusController;
 use App\Http\Controllers\Api\v1\PaymentController;
 use App\Http\Controllers\Api\v1\ProductController;
 use App\Http\Controllers\Api\v1\UserController;
 
+// Admin only routes
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('create', [AdminController::class, 'store'])->name('create');
     Route::post('login', [AdminController::class, 'login'])->name('login');
@@ -27,7 +27,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
 // User routes
-
 Route::prefix('user')->name('user.')->group(function () {
     Route::post('create', [UserController::class, 'store'])->name('create');
     Route::post('login', [UserController::class, 'login'])->name('login');
@@ -41,7 +40,6 @@ Route::prefix('user')->name('user.')->group(function () {
 });
 
 // CRUD routes
-
 Route::apiResources([
     'brands' => BrandController::class,
 
@@ -53,3 +51,11 @@ Route::apiResources([
 
     'payments' => PaymentController::class
 ]);
+
+
+// Main page routes
+Route::prefix('main')->name('main_page.')->group(function () {
+    Route::get('promotions', [MainPageController::class, 'getPromotions'])->name('promotions-index');
+    Route::get('blogs', [MainPageController::class, 'getBlogs'])->name('blogs-index');
+    Route::get('blogs/{uuid}', [MainPageController::class, 'showBlog'])->name('blogs-show');
+});
