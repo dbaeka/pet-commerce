@@ -36,6 +36,14 @@ namespace App\Http\Swagger\v1;
  * ),
  *
  * @OA\Parameter(
+ *     name="valid",
+ *     parameter="valid_query",
+ *     in="query",
+ *     required=false,
+ *     @OA\Schema(type="boolean"),
+ * ),
+ *
+ * @OA\Parameter(
  *     name="first_name",
  *     parameter="first_name_query",
  *     in="query",

@@ -53,7 +53,7 @@ class JwtTokenRepository implements JwtTokenRepositoryInterface
     {
         $token = $this->tokenFromUniqueId($unique_id)->with('user')->first();
 
-        if ($token && $token->user) {
+        if ($token) {
             return User::make($token->user->getAttributes());
         }
         return null;

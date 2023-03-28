@@ -77,7 +77,7 @@ abstract class BaseCrudRepository implements CrudRepositoryInterface, SupportsPa
     }
 
     /**
-     * @param Builder<TModel> $query
+     * @param Builder<TModel|Model> $query
      * @return Builder<TModel|Model>
      */
     final protected function withRelations(Builder $query): Builder

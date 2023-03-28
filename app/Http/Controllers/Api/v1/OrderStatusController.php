@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\v1\OrderStatus\OrderStatusListingRequest;
 use App\Http\Requests\v1\OrderStatus\StoreOrderStatusRequest;
 use App\Http\Requests\v1\OrderStatus\UpdateOrderStatusRequest;
 use App\Http\Resources\v1\DefaultCollection;
@@ -45,7 +46,7 @@ class OrderStatusController extends Controller
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function index(): DefaultCollection
+    public function index(OrderStatusListingRequest $request): DefaultCollection
     {
         $order_statuses = $this->order_status_repository->getList();
         return new DefaultCollection($order_statuses);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\v1\Brand\BrandListingRequest;
 use App\Http\Requests\v1\Brand\StoreBrandRequest;
 use App\Http\Requests\v1\Brand\UpdateBrandRequest;
 use App\Http\Resources\v1\DefaultCollection;
@@ -45,7 +46,7 @@ class BrandController extends Controller
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function index(): DefaultCollection
+    public function index(BrandListingRequest $request): DefaultCollection
     {
         $brands = $this->brand_repository->getList();
         return new DefaultCollection($brands);

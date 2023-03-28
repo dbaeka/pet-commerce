@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\v1\Category\CategoryListingRequest;
 use App\Http\Requests\v1\Category\StoreCategoryRequest;
 use App\Http\Requests\v1\Category\UpdateCategoryRequest;
 use App\Http\Resources\v1\DefaultCollection;
@@ -45,7 +46,7 @@ class CategoryController extends Controller
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function index(): DefaultCollection
+    public function index(CategoryListingRequest $request): DefaultCollection
     {
         $categories = $this->category_repository->getList();
         return new DefaultCollection($categories);

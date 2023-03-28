@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\v1\OrderListingRequest;
+use App\Http\Requests\v1\Order\OrderListingRequest;
 use App\Http\Requests\v1\User\ForgotPasswordRequest;
 use App\Http\Requests\v1\User\ResetPasswordTokenRequest;
 use App\Http\Requests\v1\User\UserCreateRequest;
