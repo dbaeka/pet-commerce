@@ -168,7 +168,8 @@ class ProductTest extends ApiTestCase
         $brand = BrandFactory::new()->create();
         ProductFactory::new()->count(14)->create([
            'metadata' => new ProductMetadata(
-               $brand->uuid, fake()->uuid()
+               $brand->uuid,
+               fake()->uuid()
            )
         ]);
         $this->get($endpoint . '?limit=100&brand_uuid=' . $brand->uuid)

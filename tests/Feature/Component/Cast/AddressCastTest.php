@@ -33,7 +33,8 @@ class AddressCastTest extends TestCase
         );
         $order->address = $address2;
         $order->save();
-        self::assertSame('one', $order->refresh()->address->shipping);
+        $order->refresh();
+        self::assertSame('one', $order->address->shipping);
     }
 
     public function testFailsCastAddressWhenWrongValueType(): void
