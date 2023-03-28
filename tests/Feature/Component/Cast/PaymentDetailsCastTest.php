@@ -26,7 +26,7 @@ class PaymentDetailsCastTest extends TestCase
         self::assertNotEmpty($payment->details->holder_name);
         self::assertNotEmpty($payment->details->number);
         self::assertNotEmpty($payment->details->cvv);
-        self::assertNotEmpty($payment->details->expire_date);
+        self::assertNotEmpty($payment->details->expiry_date);
 
         /** @var Payment $payment */
         $payment = PaymentFactory::new()->create([
@@ -44,12 +44,15 @@ class PaymentDetailsCastTest extends TestCase
         self::assertInstanceOf(CashOnDeliveryDetails::class, $payment->details);
         self::assertNotEmpty($payment->details->first_name);
         self::assertNotEmpty($payment->details->last_name);
-        self::assertNotEmpty($payment->details->address);
+        self::assertNotEmpty($payment->details->address_line1);
 
         $payment_details = new CashOnDeliveryDetails(
             'foo',
             'bar',
-            'baz'
+            'baz',
+            'bae',
+            'here',
+            true
         );
         $payment->details = $payment_details;
         $payment->save();
@@ -58,7 +61,7 @@ class PaymentDetailsCastTest extends TestCase
         $new_details = $payment->refresh()->details;
         self::assertSame('foo', $new_details->first_name);
         self::assertSame('bar', $new_details->last_name);
-        self::assertSame('baz', $new_details->address);
+        self::assertSame('baz', $new_details->address_line1);
     }
 
     public function testFailsCastDetailsWhenWrongValueType(): void
@@ -69,7 +72,7 @@ class PaymentDetailsCastTest extends TestCase
             'details' => [
                 "first_name" => fake()->firstName(),
                 "last_name" => fake()->lastName(),
-                'address' => fake()->streetAddress
+                'address_line1' => fake()->streetAddress
             ]
         ]);
     }

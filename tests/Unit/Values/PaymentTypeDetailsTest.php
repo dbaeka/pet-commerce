@@ -31,7 +31,7 @@ class PaymentTypeDetailsTest extends TestCase
             'holder_name' => 'foo',
             'number' => 'bar',
             'cvv' => 'baz',
-            'expire_date' => '2022-01-01'
+            'expiry_date' => '2022-01-01'
         ];
 
         $payment_type = CreditCardDetails::fromArray(
@@ -45,7 +45,10 @@ class PaymentTypeDetailsTest extends TestCase
         $data = [
             'first_name' => 'foo',
             'last_name' => 'bar',
-            'address' => 'baz'
+            'address_line1' => 'baz',
+            'address_line2' => 'bae',
+            'consent' => false,
+            'text' => 'Yeehaw'
         ];
 
         $payment_type = CashOnDeliveryDetails::fromArray(
@@ -98,7 +101,7 @@ class PaymentTypeDetailsTest extends TestCase
             'holder_name' => 'foo',
             'numbered' => 'bar',
             'cvv' => 'baz',
-            'expire_date' => '2022-01-01'
+            'expiry_date' => '2022-01-01'
         ];
 
         CreditCardDetails::fromArray(
