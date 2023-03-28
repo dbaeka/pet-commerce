@@ -4,22 +4,20 @@ namespace App\Http\Requests\v1\Admin;
 
 use App\Http\Requests\v1\DefaultPaginationRequest;
 use App\Models\User;
-use Illuminate\Contracts\Auth\Authenticatable;
+use Auth;
 
 class AdminUserListingRequest extends DefaultPaginationRequest
 {
     protected string $table_name = 'users';
 
     /**
-     * @param Authenticatable $user
-     * Determine if the user is authorized to make this request.
      * @return bool
      */
-    public function authorize(Authenticatable $user): bool
+    public function authorize(): bool
     {
-        /** @var User $user_model */
-        $user_model = $user;
-        return $user_model->is_admin;
+        /** @var User $user */
+        $user = Auth::user();
+        return $user->is_admin;
     }
 
     /**
