@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\Address;
 use App\Casts\Products;
+use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -48,12 +49,15 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Order extends Model
 {
     use HasFactory;
+    use HasUuid;
 
     protected $casts = [
         'address' => Address::class,
         'products' => Products::class,
         'shipped_at' => 'datetime',
     ];
+
+    protected $fillable = ['order_status_uuid', 'payment_uuid', 'user_uuid', 'products', 'address', 'amount'];
 
     protected $hidden = ['id', 'user_uuid', 'payment_uuid', 'order_status_uuid'];
 

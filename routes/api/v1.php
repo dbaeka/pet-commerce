@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\v1\BrandController;
 use App\Http\Controllers\Api\v1\CategoryController;
 use App\Http\Controllers\Api\v1\FileController;
 use App\Http\Controllers\Api\v1\MainPageController;
+use App\Http\Controllers\Api\v1\OrderController;
 use App\Http\Controllers\Api\v1\OrderStatusController;
 use App\Http\Controllers\Api\v1\PaymentController;
 use App\Http\Controllers\Api\v1\ProductController;
@@ -50,8 +51,17 @@ Route::apiResources([
 
     'products' => ProductController::class,
 
-    'payments' => PaymentController::class
+    'payments' => PaymentController::class,
+
+    'orders' => OrderController::class
 ]);
+
+// Additional Order routes
+Route::prefix('orders')->name('orders.')->group(function () {
+    Route::get('dashboard', [OrderController::class, 'getDashboard'])->name('dashboard');
+    Route::get('shipment-locator', [OrderController::class, 'getShipmentLocator'])->name('shipment-locator');
+    Route::get('{uuid}/download', [OrderController::class, 'downloadOrder'])->name('download');
+});
 
 
 // Main page routes
@@ -63,6 +73,6 @@ Route::prefix('main')->name('main_page.')->group(function () {
 
 // File routes
 Route::prefix('files')->name('files.')->group(function () {
-    Route::get('/{uuid}', [FileController::class, 'show'])->name('read');
+    Route::get('{uuid}', [FileController::class, 'show'])->name('read');
     Route::post('upload', [FileController::class, 'store'])->name('upload');
 });
