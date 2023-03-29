@@ -158,7 +158,7 @@ class AdminTest extends ApiTestCase
         ]);
 
         $this->deleteAs($endpoint . 'non-existing', [], $admin)
-            ->assertNotFound();
+            ->assertUnprocessable();
     }
 
     public function testAdminUserListing(): void
