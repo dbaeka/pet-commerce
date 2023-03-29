@@ -39,10 +39,10 @@ class OrderFactory extends Factory
                     /** @var \App\Models\Product $product */
                     $product = ProductFactory::new()->create();
                     return new Product(
-                        $product->uuid,
-                        rand(1, 200),
-                        fake()->uuid(),
-                        fake()->randomFloat(2, 2)
+                        quantity: rand(1, 200),
+                        uuid: $product->uuid,
+                        price: fake()->randomFloat(2, 2),
+                        product: fake()->sentence(),
                     );
                 }
             ),

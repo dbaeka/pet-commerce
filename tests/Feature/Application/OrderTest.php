@@ -1,0 +1,341 @@
+<?php
+
+namespace Application;
+
+use App\Models\Order;
+use App\Models\OrderStatus;
+use App\Models\Payment;
+use App\Models\User;
+use App\Values\Address;
+use App\Values\Product;
+use Database\Factories\OrderFactory;
+use Database\Factories\OrderStatusFactory;
+use Database\Factories\PaymentFactory;
+use Database\Factories\ProductFactory;
+use Database\Factories\UserFactory;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Feature\Application\ApiTestCase;
+
+class OrderTest extends ApiTestCase
+{
+    use RefreshDatabase;
+
+    public function testAdminOrder(): void
+    {
+        $endpoint = self::PREFIX . 'orders/';
+
+        /** @var User $user */
+        $user = UserFactory::new()->admin()->create();
+
+        /** @var Order $order */
+        $order = OrderFactory::new()->create([
+            'user_uuid' => $user->uuid
+        ]);
+
+        /** @var OrderStatus $order_status */
+        $order_status = OrderStatusFactory::new()->create();
+
+        $data = [
+            'order_status_uuid' => $order_status->uuid,
+            'payment_uuid' => $order->payment_uuid,
+            'address' => $order->address,
+            'products' => $order->products
+        ];
+
+        self::assertNotSame($order->order_status_uuid, $data['order_status_uuid']);
+
+        $this->putAs($endpoint . $order->uuid, $data, $user)
+            ->assertForbidden();
+
+        $order->refresh();
+
+        self::assertNotSame($order->order_status_uuid, $data['order_status_uuid']);
+    }
+
+    public function testUserUpdateOrder(): void
+    {
+        $endpoint = self::PREFIX . 'orders/';
+
+        /** @var User $user */
+        $user = UserFactory::new()->regular()->create();
+
+        /** @var Order $order */
+        $order = OrderFactory::new()->create([
+            'user_uuid' => $user->uuid
+        ]);
+
+        /** @var OrderStatus $order_status */
+        $order_status = OrderStatusFactory::new()->create();
+
+        $data = [
+            'order_status_uuid' => $order_status->uuid,
+            'payment_uuid' => $order->payment_uuid,
+            'address' => $order->address,
+            'products' => $order->products
+        ];
+
+        self::assertNotSame($order->order_status_uuid, $data['order_status_uuid']);
+
+        $this->putAs($endpoint . $order->uuid, $data, $user)
+            ->assertOk();
+
+        $order->refresh();
+
+        self::assertSame($order->order_status_uuid, $data['order_status_uuid']);
+    }
+
+    public function testAdminDeleteOrder(): void
+    {
+        $endpoint = self::PREFIX . 'orders/';
+
+        /** @var User $user */
+        $user = UserFactory::new()->admin()->create();
+
+        /** @var Order $order */
+        $order = OrderFactory::new()->create();
+
+        self::assertDatabaseHas('orders', [
+            'uuid' => $order->uuid
+        ]);
+
+        $this->deleteAs($endpoint . $order->uuid, [], $user)
+            ->assertNoContent();
+
+        self::assertDatabaseMissing('orders', [
+            'uuid' => $order->uuid
+        ]);
+    }
+
+    public function testUserDeleteOrder(): void
+    {
+        $endpoint = self::PREFIX . 'orders/';
+
+        /** @var User $user */
+        $user = UserFactory::new()->regular()->create();
+
+        /** @var Order $order */
+        $order = OrderFactory::new()->create([
+            'user_uuid' => $user->uuid
+        ]);
+
+        self::assertDatabaseHas('orders', [
+            'uuid' => $order->uuid
+        ]);
+
+        $this->deleteAs($endpoint . $order->uuid, [], $user)
+            ->assertForbidden();
+
+        self::assertDatabaseHas('orders', [
+            'uuid' => $order->uuid
+        ]);
+    }
+
+    public function testUserFetchOrder(): void
+    {
+        $endpoint = self::PREFIX . 'orders/';
+
+        /** @var User $user */
+        $user = UserFactory::new()->regular()->create();
+
+        /** @var Order $order */
+        $order = OrderFactory::new()->create([
+            'user_uuid' => $user->uuid
+        ]);
+
+        $this->getAs($endpoint . $order->uuid, $user)
+            ->assertOk()
+            ->assertJsonStructure($this->mergeDefaultFields('amount', 'user', 'payment', 'order_status'))
+            ->assertJsonFragment([
+                'success' => 1,
+                'uuid' => $order->uuid
+            ]);
+
+        /** @var Order $order */
+        $order = OrderFactory::new()->create();
+
+        $this->getAs($endpoint . $order->uuid, $user)
+            ->assertForbidden();
+    }
+
+    public function testAdminFetchOrder(): void
+    {
+        $endpoint = self::PREFIX . 'orders/';
+
+        /** @var User $user */
+        $user = UserFactory::new()->admin()->create();
+
+        /** @var Order $order */
+        $order = OrderFactory::new()->create();
+
+        $this->getAs($endpoint . $order->uuid, $user)
+            ->assertOk()
+            ->assertJsonStructure($this->mergeDefaultFields('amount', 'user', 'payment', 'order_status'))
+            ->assertJsonFragment([
+                'success' => 1,
+                'uuid' => $order->uuid
+            ]);
+    }
+
+    public function testUserCreateOrder(): void
+    {
+        $endpoint = self::PREFIX . 'orders';
+
+        /** @var User $user */
+        $user = UserFactory::new()->regular()->create();
+
+        /** @var OrderStatus $order_status */
+        $order_status = OrderStatusFactory::new()->create();
+
+        /** @var Payment $payment */
+        $payment = PaymentFactory::new()->create();
+
+        $product_uuid = function () {
+            /** @var \App\Models\Product $product */
+            $product = ProductFactory::new()->create();
+            return $product->uuid;
+        };
+
+        $data = [
+            'order_status_uuid' => $order_status->uuid,
+            'payment_uuid' => $payment->uuid,
+            'address' => new Address(
+                shipping: fake()->streetAddress(),
+                billing: fake()->streetAddress()
+            ),
+            'products' => [
+                new Product(quantity: 10, uuid: $product_uuid()),
+                new Product(quantity: 200, uuid: $product_uuid())
+            ]
+        ];
+
+        $response = $this->postAs($endpoint, $data, $user);
+
+        $response->assertCreated()
+            ->assertJsonStructure($this->mergeDefaultFields(
+                "uuid",
+                "payment",
+                "products"
+            ))
+            ->assertJsonFragment([
+                'success' => 1,
+            ]);
+
+        self::assertDatabaseHas('orders', [
+            'uuid' => $response->json('data.uuid'),
+        ]);
+
+        $this->post($endpoint, [
+            'products' => 'regular@test.com',
+            'payment_uuid' => 'secret',
+        ])->assertUnprocessable()
+            ->assertJsonStructure($this->mergeDefaultFields())
+            ->assertJsonFragment([
+                'success' => 0
+            ]);
+    }
+
+    public function testAdminCreateOrder(): void
+    {
+        $endpoint = self::PREFIX . 'orders';
+
+        /** @var User $user */
+        $user = UserFactory::new()->admin()->create();
+
+        /** @var OrderStatus $order_status */
+        $order_status = OrderStatusFactory::new()->create();
+
+        /** @var Payment $payment */
+        $payment = PaymentFactory::new()->create();
+
+        $product_uuid = function () {
+            /** @var \App\Models\Product $product */
+            $product = ProductFactory::new()->create();
+            return $product->uuid;
+        };
+
+        $data = [
+            'order_status_uuid' => $order_status->uuid,
+            'payment_uuid' => $payment->uuid,
+            'address' => new Address(
+                shipping: fake()->streetAddress(),
+                billing: fake()->streetAddress()
+            ),
+            'products' => [
+                new Product(quantity: 10, uuid: $product_uuid()),
+                new Product(quantity: 200, uuid: $product_uuid())
+            ]
+        ];
+
+        $this->postAs($endpoint, $data, $user)
+            ->assertForbidden();
+    }
+
+    public function testUserGetOrderList(): void
+    {
+        $endpoint = self::PREFIX . 'orders';
+
+        /** @var User $user */
+        $user = UserFactory::new()->regular()->create();
+
+        OrderFactory::new()->count(6)->create([
+            'user_uuid' => $user->uuid
+        ]);
+
+
+        OrderFactory::new()->count(5)->create();
+
+        $this->getAs($endpoint, $user)
+            ->assertOk()
+            ->assertJsonStructure(array_merge($this->mergeDefaultFields(), [
+                'meta' => ['total', 'to'], 'links', 'data' => ['*' => ['products', 'uuid']]
+            ]))
+            ->assertJsonFragment([
+                'success' => 1,
+            ])->assertJsonCount(6, 'data');
+
+        $this->get($endpoint . '?limit=10')
+            ->assertOk()
+            ->assertJsonCount(6, 'data');
+
+        $this->get($endpoint . '?page=2&limit=2')
+            ->assertOk()
+            ->assertJsonFragment([
+                'current_page' => 2,
+            ]);
+    }
+
+    public function testAdminGetOrderList(): void
+    {
+        $endpoint = self::PREFIX . 'orders';
+
+        /** @var User $user */
+        $user = UserFactory::new()->admin()->create();
+
+        $orders = OrderFactory::new()->count(6)->create();
+
+        $user_uuids = $orders->pluck('user_uuid')->toArray();
+
+        // Check if the orders belong to different users
+        // Here, admin can see for different users
+        self::assertFalse(count(array_unique($user_uuids)) === 1);
+
+        $this->getAs($endpoint, $user)
+            ->assertOk()
+            ->assertJsonStructure(array_merge($this->mergeDefaultFields(), [
+                'meta' => ['total', 'to'], 'links', 'data' => ['*' => ['products', 'uuid']]
+            ]))
+            ->assertJsonFragment([
+                'success' => 1,
+            ])->assertJsonCount(6, 'data');
+
+        $this->get($endpoint . '?limit=10')
+            ->assertOk()
+            ->assertJsonCount(6, 'data');
+
+        $this->get($endpoint . '?page=2&limit=2')
+            ->assertOk()
+            ->assertJsonFragment([
+                'current_page' => 2,
+            ]);
+    }
+}
