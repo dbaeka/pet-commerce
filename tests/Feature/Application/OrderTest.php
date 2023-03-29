@@ -8,6 +8,7 @@ use App\Models\Payment;
 use App\Models\User;
 use App\Values\Address;
 use App\Values\Product;
+use Carbon\Carbon;
 use Database\Factories\OrderFactory;
 use Database\Factories\OrderStatusFactory;
 use Database\Factories\PaymentFactory;
@@ -20,7 +21,7 @@ class OrderTest extends ApiTestCase
 {
     use RefreshDatabase;
 
-    public function testAdminOrder(): void
+    public function testAdminUpdateOrder(): void
     {
         $endpoint = self::PREFIX . 'orders/';
 
@@ -337,5 +338,77 @@ class OrderTest extends ApiTestCase
             ->assertJsonFragment([
                 'current_page' => 2,
             ]);
+    }
+
+    public function testUserGetDashboardList(): void
+    {
+        $endpoint = self::PREFIX . 'orders/dashboard';
+
+        /** @var User $user */
+        $user = UserFactory::new()->regular()->create();
+
+        OrderFactory::new()->count(6)->create();
+
+        $this->getAs($endpoint, $user)
+            ->assertForbidden();
+    }
+
+    public function testAdminGetDashboardList(): void
+    {
+        $endpoint = self::PREFIX . 'orders/dashboard';
+
+        /** @var User $user */
+        $user = UserFactory::new()->admin()->create();
+
+        Carbon::setTestNow('2020-02-20');
+
+        $this->createOrderTimeRange();
+
+        $this->getAs($endpoint, $user)
+            ->assertOk()
+            ->assertJsonStructure(array_merge($this->mergeDefaultFields(), [
+                'meta' => ['total', 'to'], 'links', 'data' => ['*' => ['products', 'uuid']]
+            ]))
+            ->assertJsonFragment([
+                'success' => 1,
+            ])->assertJsonCount(13, 'data');
+
+        $this->get($endpoint . '?fixed_range=today')
+            ->assertOk()
+            ->assertJsonCount(3, 'data');
+
+        $this->get($endpoint . '?fixed_range=monthly')
+            ->assertOk()
+            ->assertJsonCount(7, 'data');
+
+        $this->get($endpoint . '?fixed_range=yearly')
+            ->assertOk()
+            ->assertJsonCount(13, 'data');
+
+        $this->get($endpoint . '?date_range[from]=2020-01-20&date_range[to]=2020-03-20')
+            ->assertOk()
+            ->assertJsonCount(7, 'data');
+    }
+
+    /**
+     * @param array<string, mixed> $attributes
+     * @return void
+     */
+    private function createOrderTimeRange(array $attributes = []): void
+    {
+        OrderFactory::new()->count(6)->create([
+            'created_at' => '01-01-2020',
+            ...$attributes
+        ]);
+
+        OrderFactory::new()->count(3)->create([
+            'created_at' => '20-02-2020',
+            ...$attributes
+        ]);
+
+        OrderFactory::new()->count(4)->create([
+            'created_at' => '01-02-2020',
+            ...$attributes
+        ]);
     }
 }
