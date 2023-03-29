@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\v1\Order\DashboardListingRequest;
 use App\Http\Requests\v1\Order\OrderListingRequest;
+use App\Http\Requests\v1\Order\ShipmentListingRequest;
 use App\Http\Requests\v1\Order\StoreOrderRequest;
 use App\Http\Requests\v1\Order\UpdateOrderRequest;
 use App\Http\Resources\v1\BaseResource;
@@ -187,6 +188,34 @@ class OrderController extends Controller
     public function getDashboard(DashboardListingRequest $request): DefaultCollection
     {
         $orders = $this->order_repository->getList();
+        return new DefaultCollection($orders);
+    }
+
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/orders/shipment-locator",
+     *     operationId="orders-shipment-locator-list",
+     *     summary="List all shipped orders",
+     *     tags={"Orders"},
+     *     @OA\Parameter(ref="#/components/parameters/page_query"),
+     *     @OA\Parameter(ref="#/components/parameters/limit_query"),
+     *     @OA\Parameter(ref="#/components/parameters/sort_by_query"),
+     *     @OA\Parameter(ref="#/components/parameters/desc_query"),
+     *     @OA\Parameter(ref="#/components/parameters/user_uuid_query"),
+     *     @OA\Parameter(ref="#/components/parameters/uuid_query"),
+     *     @OA\Parameter(ref="#/components/parameters/date_range_query"),
+     *     @OA\Parameter(ref="#/components/parameters/fixed_range_query"),
+     *     @OA\Response(response=200, ref="#/components/responses/OK"),
+     *     @OA\Response(response=401, ref="#/components/responses/Unauthorized"),
+     *     @OA\Response(response=404, ref="#/components/responses/NotFound"),
+     *     @OA\Response(response=422, ref="#/components/responses/Unprocessable"),
+     *     @OA\Response(response=500, ref="#/components/responses/ServerError")
+     * )
+     */
+    public function getShipmentLocator(ShipmentListingRequest $request): DefaultCollection
+    {
+        $orders = $this->order_repository->getShippedList();
         return new DefaultCollection($orders);
     }
 }

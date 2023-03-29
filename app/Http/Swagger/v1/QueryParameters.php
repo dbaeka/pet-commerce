@@ -130,6 +130,45 @@ namespace App\Http\Swagger\v1;
  *     required=false,
  *     @OA\Schema(type="string"),
  * ),
+ *
+ * @OA\Parameter(
+ *     name="user_uuid",
+ *     parameter="user_uuid_query",
+ *     in="query",
+ *     required=false,
+ *     @OA\Schema(type="string"),
+ * ),
+ *
+ * @OA\Parameter(
+ *     name="fixed_range",
+ *     parameter="fixed_range_query",
+ *     in="query",
+ *     required=false,
+ *     @OA\Schema(type="string", enum={"today", "monthly", "yearly"}),
+ * ),
+ *
+ * @OA\Parameter(
+ *     name="date_range",
+ *     parameter="date_range_query",
+ *     in="query",
+ *     required=false,
+ *     @OA\Schema(
+ *      type="object",
+ *      required={"from", "to"},
+ *      @OA\Property(
+ *       property="from",
+ *       type="string",
+ *       format="date",
+ *       description="from date",
+ *      ),
+ *      @OA\Property(
+ *       property="to",
+ *       type="string",
+ *       format="date",
+ *       description="to date",
+ *      ),
+ *     ),
+ * ),
  */
 class QueryParameters
 {

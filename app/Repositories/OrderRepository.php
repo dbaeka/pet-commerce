@@ -42,4 +42,15 @@ class OrderRepository extends BaseCrudRepository implements OrderRepositoryInter
 
         return $this->withPaginate($query);
     }
+
+    /**
+     * @return LengthAwarePaginator<Order|Model>
+     */
+    public function getShippedList(): LengthAwarePaginator
+    {
+        $query = $this->model::query()->whereNotNull('shipped_at');
+        $query = $this->withRelations($query);
+
+        return $this->withPaginate($query);
+    }
 }
