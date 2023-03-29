@@ -41,6 +41,13 @@ Route::prefix('user')->name('user.')->group(function () {
     Route::get('orders', [UserController::class, 'getOrders'])->name('orders');
 });
 
+// Additional Order routes
+Route::prefix('orders')->name('orders.')->group(function () {
+    Route::get('dashboard', [OrderController::class, 'getDashboard'])->name('dashboard');
+    Route::get('shipment-locator', [OrderController::class, 'getShipmentLocator'])->name('shipment-locator');
+    Route::get('{uuid}/download', [OrderController::class, 'downloadOrder'])->name('download');
+});
+
 // CRUD routes
 Route::apiResources([
     'brands' => BrandController::class,
@@ -55,14 +62,6 @@ Route::apiResources([
 
     'orders' => OrderController::class
 ]);
-
-// Additional Order routes
-Route::prefix('orders')->name('orders.')->group(function () {
-    Route::get('dashboard', [OrderController::class, 'getDashboard'])->name('dashboard');
-    Route::get('shipment-locator', [OrderController::class, 'getShipmentLocator'])->name('shipment-locator');
-    Route::get('{uuid}/download', [OrderController::class, 'downloadOrder'])->name('download');
-});
-
 
 // Main page routes
 Route::prefix('main')->name('main_page.')->group(function () {
