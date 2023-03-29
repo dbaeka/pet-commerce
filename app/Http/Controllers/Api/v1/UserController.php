@@ -17,7 +17,7 @@ use App\Http\Resources\v1\UserCreateResource;
 use App\Http\Resources\v1\UserResource;
 use App\Models\User;
 use App\Repositories\Interfaces\OrderRepositoryInterface;
-use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\UserRepository;
 use App\Services\AuthService;
 use App\Services\UserService;
 use Illuminate\Auth\AuthenticationException;
@@ -37,7 +37,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class UserController extends Controller
 {
     public function __construct(
-        private readonly UserRepositoryInterface  $user_repository,
+        private readonly UserRepository           $user_repository,
         private readonly OrderRepositoryInterface $order_repository
     ) {
         $this->middleware('secure')->except([
@@ -62,7 +62,7 @@ class UserController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-        $user_dto = $this->user_repository->findUserByUuid($user->uuid);
+        $user_dto = $this->user_repository->findByUuid($user->uuid);
         if ($user_dto) {
             return new UserResource($user_dto);
         }
@@ -221,12 +221,8 @@ class UserController extends Controller
         $data = $request->validated();
         /** @var User $user */
         $user = Auth::user();
-        $user_dto = $this->user_repository->findUserByUuid($user->uuid);
-        if (empty($user_dto)) {
-            throw new ModelNotFoundException();
-        }
-        $updated_user = $this->user_repository->editUserByUuid(
-            $user_dto->uuid,
+        $updated_user = $this->user_repository->updateByUuid(
+            $user->uuid,
             Arr::except($data, ['password_confirmation'])
         );
 
@@ -254,12 +250,8 @@ class UserController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-        $user_dto = $this->user_repository->findUserByUuid($user->uuid);
-        if ($user_dto) {
-            $deleted = $this->user_repository->deleteUserByUuid($user->uuid);
-            return $deleted ? response()->noContent() : throw new UnprocessableEntityHttpException();
-        }
-        throw new ModelNotFoundException();
+        $deleted = $this->user_repository->deleteByUuid($user->uuid);
+        return $deleted ? response()->noContent() : throw new UnprocessableEntityHttpException();
     }
 
     /**

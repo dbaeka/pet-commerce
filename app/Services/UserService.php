@@ -2,8 +2,9 @@
 
 namespace App\Services;
 
+use App\Dtos\User;
 use App\Repositories\Interfaces\JwtTokenRepositoryInterface;
-use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\UserRepository;
 use App\Services\Interfaces\JwtTokenProviderInterface;
 use Hash;
 
@@ -11,13 +12,13 @@ readonly class UserService
 {
     private JwtTokenProviderInterface $jwt_service;
     private JwtTokenRepositoryInterface $jwt_token_repository;
-    private UserRepositoryInterface $user_repository;
+    private UserRepository $user_repository;
 
     public function __construct()
     {
         $this->jwt_service = app(JwtTokenProviderInterface::class);
         $this->jwt_token_repository = app(JwtTokenRepositoryInterface::class);
-        $this->user_repository = app(UserRepositoryInterface::class);
+        $this->user_repository = app(UserRepository::class);
     }
 
     /**
@@ -37,8 +38,10 @@ readonly class UserService
     private function storeUser(array $data): ?array
     {
         $data['password'] = Hash::make($data['password']);
-        $user = $this->user_repository->createUser($data);
+        /** @var \App\Models\User|null $user */
+        $user = $this->user_repository->create($data);
         if ($user) {
+            $user = User::make($user->getAttributes());
             $token = $this->jwt_service->generateToken($user);
             $token_id = $this->jwt_token_repository->createToken($token);
             if (!empty($token_id)) {

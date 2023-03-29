@@ -109,7 +109,7 @@ abstract class BaseCrudRepository implements CrudRepositoryInterface, SupportsPa
      * @param string $uuid
      * @return Builder<TModel>
      */
-    private function byUuid(string $uuid): Builder
+    final protected function byUuid(string $uuid): Builder
     {
         return $this->model::query()->where('uuid', $uuid);
     }

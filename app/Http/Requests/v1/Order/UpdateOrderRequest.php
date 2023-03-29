@@ -3,9 +3,9 @@
 namespace App\Http\Requests\v1\Order;
 
 use App\Rules\CheckValueObject;
+use App\Rules\ExistsUuidsList;
 use App\Values\Address;
 use App\Values\Product;
-use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -31,19 +31,8 @@ class UpdateOrderRequest extends FormRequest
         return [
             'order_status_uuid' => ['required', 'exists:order_statuses,uuid'],
             'payment_uuid' => ['required', 'exists:payments,uuid'],
-            'products' => [
-                'required',
-                'array',
-                function (string $attribute, array $value, Closure $fail) {
-                    $product_uuids = collect($value)->pluck('uuid');
-                    $in_products = \App\Models\Product::query()->whereIn('uuid', $product_uuids);
-                    if ($product_uuids->count() != $in_products->count()) {
-                        $fail(':attribute has invalid product uuid provided');
-                    }
-                }
-            ],
-            'products.*' => [
-                'required', new CheckValueObject(Product::class),],
+            'products' => ['required', 'array', new ExistsUuidsList('products')],
+            'products.*' => ['required', new CheckValueObject(Product::class)],
             'address' => ['required', new CheckValueObject(Address::class)],
         ];
     }

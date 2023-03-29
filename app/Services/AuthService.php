@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Dtos\User;
 use App\Repositories\Interfaces\JwtTokenRepositoryInterface;
 use App\Repositories\Interfaces\ResetRepositoryInterface;
-use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\UserRepository;
 use App\Services\Interfaces\JwtTokenProviderInterface;
 use Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -18,14 +18,14 @@ readonly class AuthService
 {
     private JwtTokenProviderInterface $jwt_service;
     private JwtTokenRepositoryInterface $jwt_token_repository;
-    private UserRepositoryInterface $user_repository;
+    private UserRepository $user_repository;
     private ResetRepositoryInterface $reset_repository;
 
     public function __construct()
     {
         $this->jwt_service = app(JwtTokenProviderInterface::class);
         $this->jwt_token_repository = app(JwtTokenRepositoryInterface::class);
-        $this->user_repository = app(UserRepositoryInterface::class);
+        $this->user_repository = app(UserRepository::class);
         $this->reset_repository = app(ResetRepositoryInterface::class);
     }
 
@@ -141,7 +141,7 @@ readonly class AuthService
             throw new UnauthorizedException();
         }
         $data['password'] = Hash::make($data['password']);
-        $user = $this->user_repository->editUserByUuid($user->uuid, Arr::only($data, ['password']));
+        $user = $this->user_repository->updateByUuid($user->uuid, Arr::only($data, ['password']));
         $success = $this->reset_repository->deleteToken($data['email']);
         if ($user && $success) {
             return true;

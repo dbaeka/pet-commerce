@@ -48,7 +48,6 @@ class MainPageController extends Controller
     {
         if ($request->has('valid')) {
             $valid = $request->boolean('valid');
-            request()->replace($request->except(['valid']));
             if ($valid) {
                 $promotions = $this->promotion_repository->getValidList();
             } else {

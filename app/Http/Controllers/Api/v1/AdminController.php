@@ -11,7 +11,7 @@ use App\Http\Resources\v1\DefaultCollection;
 use App\Http\Resources\v1\LoginResource;
 use App\Http\Resources\v1\UserCreateResource;
 use App\Http\Resources\v1\UserResource;
-use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\UserRepository;
 use App\Services\AuthService;
 use App\Services\UserService;
 use Illuminate\Auth\AuthenticationException;
@@ -30,7 +30,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class AdminController extends Controller
 {
     public function __construct(
-        private readonly UserRepositoryInterface $user_repository
+        private readonly UserRepository $user_repository
     ) {
         $this->middleware('secure:admin')->except([
             'login',
@@ -124,11 +124,11 @@ class AdminController extends Controller
     public function editUser(AdminUserEditRequest $request, string $uuid): UserResource
     {
         $data = $request->validated();
-        $user = $this->user_repository->findUserByUuid($uuid);
+        $user = $this->user_repository->findByUuid($uuid);
         if (empty($user)) {
             throw new ModelNotFoundException();
         }
-        $updated_user = $this->user_repository->editUserByUuid(
+        $updated_user = $this->user_repository->updateByUuid(
             $uuid,
             Arr::except($data, ['password_confirmation'])
         );
@@ -155,12 +155,8 @@ class AdminController extends Controller
      */
     public function deleteUser(string $uuid): Response
     {
-        $user = $this->user_repository->findUserByUuid($uuid);
-        if ($user) {
-            $deleted = $this->user_repository->deleteUserByUuid($uuid);
-            return $deleted ? response()->noContent() : throw new UnprocessableEntityHttpException();
-        }
-        throw new ModelNotFoundException();
+        $deleted = $this->user_repository->deleteByUuid($uuid);
+        return $deleted ? response()->noContent() : throw new UnprocessableEntityHttpException();
     }
 
     /**
