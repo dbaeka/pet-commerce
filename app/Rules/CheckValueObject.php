@@ -35,7 +35,7 @@ class CheckValueObject implements ValidationRule, DataAwareRule
             } else {
                 new $this->value_class(...$value);
             }
-        } catch (Throwable) {
+        } catch (Throwable $e) {
             $fail('The :attribute must have the right fields');
         }
     }

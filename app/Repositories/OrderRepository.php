@@ -2,38 +2,44 @@
 
 namespace App\Repositories;
 
+use App\Dtos\Order as OrderDto;
 use App\Models\Order;
 use App\Models\User;
 use App\Repositories\Interfaces\OrderRepositoryInterface;
-use App\Repositories\Traits\SupportsPagination;
-use App\Repositories\Traits\SupportsPaginationTraitInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
- * @implements SupportsPaginationTraitInterface<Order>
+ * @extends BaseCrudRepository<Order, OrderDto>
  */
-class OrderRepository implements OrderRepositoryInterface, SupportsPaginationTraitInterface
+class OrderRepository extends BaseCrudRepository implements OrderRepositoryInterface
 {
-    use SupportsPagination;
-
+    protected array $with = ['user', 'payment', 'order_status'];
 
     /**
      * @param string $uuid
-     * @return LengthAwarePaginator<Order>
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @return LengthAwarePaginator<Order|Model>
      */
     public function getUserOrders(string $uuid): LengthAwarePaginator
     {
         $user = User::query()->where('uuid', $uuid)->first();
         if ($user) {
-            $query = Order::query()->with(['user', 'payment', 'order_status'])->whereBelongsTo($user);
+            $query = $this->model::query()->with(['user', 'payment', 'order_status'])->whereBelongsTo($user);
 
             return $this->withPaginate($query);
         }
         throw new ModelNotFoundException();
+    }
+
+    /**
+     * @return LengthAwarePaginator<Order|Model>
+     */
+    public function getListForUserUuid(string $uuid): LengthAwarePaginator
+    {
+        $query = $this->model::query()->where('user_uuid', $uuid);
+        $query = $this->withRelations($query);
+
+        return $this->withPaginate($query);
     }
 }

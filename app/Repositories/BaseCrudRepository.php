@@ -88,6 +88,18 @@ abstract class BaseCrudRepository implements CrudRepositoryInterface, SupportsPa
         return $query;
     }
 
+
+    /**
+     * @return LengthAwarePaginator<TModel|Model>
+     */
+    public function getListForUserUuid(string $uuid): LengthAwarePaginator
+    {
+        $query = $this->model::query()->whereRelation('user', 'users.uuid', $uuid);
+        $query = $this->withRelations($query);
+
+        return $this->withPaginate($query);
+    }
+
     public function deleteByUuid(string $uuid): bool
     {
         return $this->byUuid($uuid)->delete() > 0;
