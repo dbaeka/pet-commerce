@@ -19,10 +19,10 @@ class ProductCastTest extends TestCase
         $order = OrderFactory::new()->create([
             'products' => [
                 new Product(
-                    'foo',
-                    20,
-                    fake()->uuid(),
-                    fake()->randomFloat(2)
+                    quantity: 20,
+                    uuid: fake()->uuid(),
+                    price: fake()->randomFloat(2),
+                    product: 'foo'
                 )
             ],
         ]);
@@ -32,10 +32,10 @@ class ProductCastTest extends TestCase
         self::assertSame(20, $order->products->first()->quantity);
 
         $products = collect([new Product(
-            'one',
             50,
             fake()->uuid(),
-            fake()->randomFloat(2)
+            fake()->randomFloat(2),
+            'one',
         )]);
         $order->products = $products;
         $order->save();
