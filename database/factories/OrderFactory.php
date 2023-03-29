@@ -49,6 +49,7 @@ class OrderFactory extends Factory
             'address' => new Address(fake()->streetAddress, fake()->address),
             'delivery_fee' => fake()->randomFloat(2, 0, 4),
             'amount' => fake()->randomFloat(2, 1, 20000),
+            'shipped_at' => fn () => ($order_status->title === 'shipped' ? fake()->date() : null)
         ];
     }
 }

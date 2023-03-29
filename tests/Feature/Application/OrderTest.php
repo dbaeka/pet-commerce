@@ -411,4 +411,72 @@ class OrderTest extends ApiTestCase
             ...$attributes
         ]);
     }
+
+    public function testUserGetShipmentLocatorList(): void
+    {
+        $endpoint = self::PREFIX . 'orders/shipment-locator';
+
+        /** @var User $user */
+        $user = UserFactory::new()->regular()->create();
+
+        OrderFactory::new()->count(6)->create();
+
+        $this->getAs($endpoint, $user)
+            ->assertForbidden();
+    }
+
+    public function testAdminGetGetShipmentLocatorList(): void
+    {
+        $endpoint = self::PREFIX . 'orders/shipment-locator';
+
+        /** @var User $user */
+        $user = UserFactory::new()->admin()->create();
+
+        Carbon::setTestNow('2020-02-20');
+
+        $added_definition = [
+            'shipped_at' => fake()->date()
+        ];
+        $this->createOrderTimeRange($added_definition);
+
+        $this->getAs($endpoint, $user)
+            ->assertOk()
+            ->assertJsonStructure(array_merge($this->mergeDefaultFields(), [
+                'meta' => ['total', 'to'], 'links', 'data' => ['*' => ['products', 'uuid']]
+            ]))
+            ->assertJsonFragment([
+                'success' => 1,
+            ])->assertJsonCount(13, 'data');
+
+        $this->get($endpoint . '?fixed_range=today')
+            ->assertOk()
+            ->assertJsonCount(3, 'data');
+
+        $this->get($endpoint . '?fixed_range=monthly')
+            ->assertOk()
+            ->assertJsonCount(7, 'data');
+
+        $this->get($endpoint . '?fixed_range=yearly')
+            ->assertOk()
+            ->assertJsonCount(13, 'data');
+
+        $this->get($endpoint . '?date_range[from]=2020-01-20&date_range[to]=2020-03-20')
+            ->assertOk()
+            ->assertJsonCount(7, 'data');
+
+        /** @var Order $order */
+        $order = OrderFactory::new()->create([
+            'user_uuid' => $user->uuid,
+            'shipped_at' => fake()->date()
+        ]);
+
+        $this->get($endpoint . '?uuid=' . $order->uuid)
+            ->assertOk()
+            ->assertJsonCount(1, 'data');
+
+
+        $this->get($endpoint . '?user_uuid=' . $user->uuid)
+            ->assertOk()
+            ->assertJsonCount(1, 'data');
+    }
 }
