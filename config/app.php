@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool)env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -212,4 +212,14 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Pet Shop File Dir
+    |--------------------------------------------------------------------------
+    |
+    | Set this to a folder below the storage folder. Folder should be created before hand if not present
+    |
+    */
+    'pet_shop_file_dir' => env('PET_SHOP_FILE_DIR', 'app/pet_store_files')
 ];

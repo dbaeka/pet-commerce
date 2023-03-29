@@ -9,6 +9,7 @@
 use App\Http\Controllers\Api\v1\AdminController;
 use App\Http\Controllers\Api\v1\BrandController;
 use App\Http\Controllers\Api\v1\CategoryController;
+use App\Http\Controllers\Api\v1\FileController;
 use App\Http\Controllers\Api\v1\MainPageController;
 use App\Http\Controllers\Api\v1\OrderStatusController;
 use App\Http\Controllers\Api\v1\PaymentController;
@@ -58,4 +59,10 @@ Route::prefix('main')->name('main_page.')->group(function () {
     Route::get('promotions', [MainPageController::class, 'getPromotions'])->name('promotions-index');
     Route::get('blogs', [MainPageController::class, 'getBlogs'])->name('blogs-index');
     Route::get('blogs/{uuid}', [MainPageController::class, 'showBlog'])->name('blogs-show');
+});
+
+// File routes
+Route::prefix('files')->name('files.')->group(function () {
+    Route::get('/{uuid}', [FileController::class, 'show'])->name('read');
+    Route::post('upload', [FileController::class, 'store'])->name('upload');
 });
