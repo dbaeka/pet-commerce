@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\v1\Order\DashboardListingRequest;
 use App\Http\Requests\v1\Order\OrderListingRequest;
 use App\Http\Requests\v1\Order\StoreOrderRequest;
 use App\Http\Requests\v1\Order\UpdateOrderRequest;
@@ -162,5 +163,30 @@ class OrderController extends Controller
         $this->authorize('delete', Order::class);
         $success = $this->order_repository->deleteByUuid($uuid);
         return $success ? response()->noContent() : throw new UnprocessableEntityHttpException();
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/orders/dashboard",
+     *     operationId="orders-dashboard-list",
+     *     summary="List all orders to populate the dashboard",
+     *     tags={"Orders"},
+     *     @OA\Parameter(ref="#/components/parameters/page_query"),
+     *     @OA\Parameter(ref="#/components/parameters/limit_query"),
+     *     @OA\Parameter(ref="#/components/parameters/sort_by_query"),
+     *     @OA\Parameter(ref="#/components/parameters/desc_query"),
+     *     @OA\Parameter(ref="#/components/parameters/date_range_query"),
+     *     @OA\Parameter(ref="#/components/parameters/fixed_range_query"),
+     *     @OA\Response(response=200, ref="#/components/responses/OK"),
+     *     @OA\Response(response=401, ref="#/components/responses/Unauthorized"),
+     *     @OA\Response(response=404, ref="#/components/responses/NotFound"),
+     *     @OA\Response(response=422, ref="#/components/responses/Unprocessable"),
+     *     @OA\Response(response=500, ref="#/components/responses/ServerError")
+     * )
+     */
+    public function getDashboard(DashboardListingRequest $request): DefaultCollection
+    {
+        $orders = $this->order_repository->getList();
+        return new DefaultCollection($orders);
     }
 }

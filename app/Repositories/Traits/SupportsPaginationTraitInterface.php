@@ -13,7 +13,7 @@ interface SupportsPaginationTraitInterface
 {
     /**
      * @param Builder<T> $query
-     * @return LengthAwarePaginator<T>
+     * @return LengthAwarePaginator<Model|T>
      */
     public function withPaginate(Builder $query): LengthAwarePaginator;
 }
