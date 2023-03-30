@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Interfaces;
 
-use App\Dtos\User;
+use App\DataObjects\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 

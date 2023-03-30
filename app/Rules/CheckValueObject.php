@@ -10,11 +10,11 @@ use Throwable;
 
 class CheckValueObject implements ValidationRule, DataAwareRule
 {
-    /** @var array<string, mixed>  */
+    /** @var array<string, mixed> */
     private array $data;
 
     public function __construct(
-        protected string   $value_class,
+        protected string   $value_class = '',
         protected ?Closure $factory = null
     ) {
     }
@@ -33,9 +33,9 @@ class CheckValueObject implements ValidationRule, DataAwareRule
                 $factory = $this->factory;
                 $factory($this->data, $value);
             } else {
-                new $this->value_class(...$value);
+                $this->value_class::{'from'}($value);
             }
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             $fail('The :attribute must have the right fields');
         }
     }

@@ -2,8 +2,8 @@
 
 namespace App\Repositories\Interfaces;
 
-use App\Dtos\Token;
-use App\Dtos\User;
+use App\DataObjects\Token;
+use App\DataObjects\User;
 
 interface JwtTokenRepositoryContract
 {

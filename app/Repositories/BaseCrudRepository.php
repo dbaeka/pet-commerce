@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Dtos\BaseDto;
 use App\Repositories\Interfaces\CrudRepositoryContract;
 use App\Repositories\Traits\SupportsPagination;
 use App\Repositories\Traits\SupportsPaginationTraitContract;
@@ -11,12 +10,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use ReflectionClass;
 use ReflectionException;
+use Spatie\LaravelData\Data;
 
 abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPaginationTraitContract
 {
     use SupportsPagination;
 
-    protected BaseDto $dto;
+    protected Data $dto;
     protected Model $model;
     /** @var array<int, string> */
     protected array $with = [];
@@ -30,7 +30,7 @@ abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPag
         $this->model_class = $modelClass ?: self::guessModelClass();
         $this->model = app($this->model_class);
 
-        /** @var class-string<BaseDto> $dto_class */
+        /** @var class-string<Data> $dto_class */
         $dto_class = $dtoClass ?: self::guessDtoClass();
         $r = new ReflectionClass($dto_class);
         $this->dto = $r->newInstanceWithoutConstructor();
@@ -52,10 +52,10 @@ abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPag
 
     private static function guessDtoClass(): string
     {
-        return self::guessClass('Dtos');
+        return self::guessClass('DataObjects');
     }
 
-    public function create(array $data): Model|BaseDto|null
+    public function create(array $data): Model|Data|null
     {
         return $this->model::query()->create($data)->load($this->with);
     }
@@ -108,12 +108,12 @@ abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPag
         return $this->model::query()->where('uuid', $uuid);
     }
 
-    public function findByUuid(string $uuid): Model|BaseDto|null
+    public function findByUuid(string $uuid): Model|Data|null
     {
         return $this->withRelations($this->byUuid($uuid))->first();
     }
 
-    public function updateByUuid(string $uuid, array $data): Model|BaseDto|null
+    public function updateByUuid(string $uuid, array $data): Model|Data|null
     {
         /** @var null $model */
         $model = $this->byUuid($uuid)->first();

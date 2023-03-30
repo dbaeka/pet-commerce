@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use App\Casts\Address;
-use App\Casts\Products;
+use App\DataObjects\Address;
+use App\DataObjects\ProductItem;
 use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Spatie\LaravelData\DataCollection;
 
 /**
  * App\Models\Order
@@ -53,7 +54,7 @@ class Order extends Model
 
     protected $casts = [
         'address' => Address::class,
-        'products' => Products::class,
+        'products' => DataCollection::class . ':' . ProductItem::class,
         'shipped_at' => 'datetime',
     ];
 

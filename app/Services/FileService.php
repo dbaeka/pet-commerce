@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-use App\Dtos\BaseDto;
 use App\Models\File;
 use App\Repositories\Interfaces\FileRepositoryContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Spatie\LaravelData\Data;
 use Str;
 
 readonly class FileService
@@ -21,9 +21,9 @@ readonly class FileService
 
     /**
      * @param UploadedFile $file
-     * @return BaseDto|Builder<File>|Model|null
+     * @return Data|Builder<File>|Model|null
      */
-    public function saveFile(UploadedFile $file): Model|Builder|BaseDto|null
+    public function saveFile(UploadedFile $file): Model|Builder|Data|null
     {
         $dir = storage_path(config('app.pet_shop_file_dir'));
         $file_name = sha1(Str::random()) . '.' . $file->getClientOriginalExtension();

@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Dtos\User;
+use App\DataObjects\User;
 use App\Services\Jwt\AuthenticateWithToken;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
@@ -44,7 +44,7 @@ class SecureApi
             throw new AuthenticationException('invalid bearer token');
         }
         $this->user = $user;
-        Auth::onceUsingId($user->getId());
+        Auth::onceUsingId($user->id);
     }
 
     /**
@@ -56,7 +56,7 @@ class SecureApi
     private function handleAuthorization(Request $request, Closure $next, string $guard): Response
     {
         if ($guard === 'admin') {
-            if ($this->user->getIsAdmin()) {
+            if ($this->user->is_admin) {
                 return $next($request);
             } else {
                 throw new UnauthorizedException('not authorized to access admin');

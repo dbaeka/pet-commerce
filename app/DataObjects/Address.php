@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Values;
+namespace App\DataObjects;
+
+use Spatie\LaravelData\Data;
 
 /**
  *
@@ -20,12 +22,8 @@ namespace App\Values;
  *    )
  * )
  */
-
-final class Address extends BaseValueObject
+class Address extends Data
 {
-    public function __construct(
-        public string $shipping,
-        public string $billing
-    ) {
-    }
+    public string $shipping;
+    public string $billing;
 }

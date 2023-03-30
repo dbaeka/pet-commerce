@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Values\PaymentType;
+namespace App\DataObjects\PaymentType;
+
+use Spatie\LaravelData\Data;
 
 /**
  * @OA\Schema(
@@ -24,13 +26,12 @@ namespace App\Values\PaymentType;
  *    ),
  * )
  */
-class BankTransferDetails extends PaymentTypeDetails
+class BankTransferDetails extends Data
 {
     public function __construct(
-        public readonly string $swift,
-        public readonly string $iban,
-        public readonly string $name,
+        public string $swift,
+        public string $iban,
+        public string $name,
     ) {
-        parent::__construct();
     }
 }

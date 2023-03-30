@@ -2,7 +2,7 @@
 
 namespace App\Services\Auth;
 
-use App\Dtos\User;
+use App\DataObjects\User;
 use App\Repositories\Interfaces\JwtTokenRepositoryContract;
 use App\Repositories\Interfaces\UserRepositoryContract;
 use App\Services\Jwt\GenerateToken;
@@ -21,9 +21,9 @@ abstract readonly class BaseLoginWithCreds
 
     private function userDtoFromModel(): User
     {
-        /** @var array<string, mixed> $user_data */
-        $user_data = Auth::user()?->getAttributes();
-        return User::make($user_data);
+        /** @var array<string, mixed> $user */
+        $user = Auth::user();
+        return User::from($user);
     }
 
     protected function generateToken(User $user): ?string
@@ -33,7 +33,7 @@ abstract readonly class BaseLoginWithCreds
         if (!empty($token_id)) {
             // TODO change to event
             $this->user_repository->updateLastLogin($user->uuid);
-            return $token->getTokenValue();
+            return $token->getAdditionalData()['token_value'];
         }
         return null;
     }

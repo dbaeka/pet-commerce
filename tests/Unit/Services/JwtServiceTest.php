@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Services;
 
-use App\Dtos\User;
+use App\DataObjects\User;
 use App\Exceptions\InvalidPath;
 use App\Exceptions\Jwt\InvalidJwtExpiry;
 use App\Exceptions\Jwt\InvalidJwtIssuer;
@@ -95,14 +95,14 @@ class JwtServiceTest extends TestCase
     public function testGeneratesTokenReturnTokenString(): void
     {
         $user_uuid = 'foobar';
-        $user = User::make([
+        $user = User::from([
             'id' => 1,
             'uuid' => $user_uuid
         ]);
 
         $token = app(GenerateToken::class)->execute($user);
 
-        $this->checkJwtToken($token->getTokenValue(), $user_uuid);
+        $this->checkJwtToken($token->getAdditionalData()['token_value'], $user_uuid);
     }
 
     protected function checkJwtToken(string $token, string $user_uuid): void
@@ -128,7 +128,7 @@ class JwtServiceTest extends TestCase
     {
         $token = $this->getValidToken();
 
-        $user_dto = User::make();
+        $user_dto = User::from();
 
         $this->mock(JwtTokenRepositoryContract::class, function (MockInterface $mock) use ($user_dto) {
             $mock->shouldReceive('checkTokenExists')

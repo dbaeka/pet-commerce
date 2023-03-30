@@ -2,9 +2,9 @@
 
 namespace App\Repositories\Interfaces;
 
-use App\Dtos\BaseDto;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\LaravelData\Data;
 
 interface CrudRepositoryContract
 {
@@ -12,9 +12,9 @@ interface CrudRepositoryContract
      * Create a model
      *
      * @param array<string, mixed> $data
-     * @return BaseDto|Model|null
+     * @return Data|Model|null
      */
-    public function create(array $data): Model|BaseDto|null;
+    public function create(array $data): Model|Data|null;
 
     /**
      * Get list paginated list of model
@@ -35,16 +35,16 @@ interface CrudRepositoryContract
      * Find a model by uuid
      *
      * @param string $uuid
-     * @return BaseDto|Model|null
+     * @return Data|Model|null
      */
-    public function findByUuid(string $uuid): Model|BaseDto|null;
+    public function findByUuid(string $uuid): Model|Data|null;
 
     /**
      * Update by uuid
      *
      * @param string $uuid
      * @param array<string, mixed> $data
-     * @return BaseDto|null
+     * @return Data|null
      */
-    public function updateByUuid(string $uuid, array $data): Model|BaseDto|null;
+    public function updateByUuid(string $uuid, array $data): Model|Data|null;
 }

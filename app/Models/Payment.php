@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * @property int $id
  * @property string $uuid
  * @property PaymentType $type
- * @property \App\Values\PaymentType\PaymentTypeDetails $details
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @property-read \App\Models\Order|null $order

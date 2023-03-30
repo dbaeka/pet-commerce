@@ -2,7 +2,7 @@
 
 namespace App\Services\Jwt;
 
-use App\Dtos\User;
+use App\DataObjects\User;
 use App\Exceptions\Jwt\InvalidJwtToken;
 
 class AuthenticateWithToken extends BaseJwtProvider

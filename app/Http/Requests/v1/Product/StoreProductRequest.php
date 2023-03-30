@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\v1\Product;
 
+use App\DataObjects\ProductMetadata;
 use App\Models\User;
 use App\Rules\CheckValueObject;
-use App\Values\ProductMetadata;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -15,7 +15,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *    @OA\Property(
  *     property="title",
  *     type="string",
- *     description="Product title",
+ *     description="ProductItem title",
  *    ),
  *     @OA\Property(
  *     property="category_uuid",
@@ -25,12 +25,12 @@ use Illuminate\Foundation\Http\FormRequest;
  *     @OA\Property(
  *     property="price",
  *     type="number",
- *     description="Product price",
+ *     description="ProductItem price",
  *    ),
  *     @OA\Property(
  *     property="description",
  *     type="string",
- *     description="Product description",
+ *     description="ProductItem description",
  *    ),
  *     @OA\Property(
  *     property="metadata",

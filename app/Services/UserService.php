@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Dtos\User;
+use App\DataObjects\User;
 use App\Repositories\Interfaces\JwtTokenRepositoryContract;
 use App\Repositories\Interfaces\UserRepositoryContract;
 use App\Services\Jwt\GenerateToken;
@@ -39,12 +39,12 @@ readonly class UserService
         /** @var \App\Models\User|null $user */
         $user = $this->user_repository->create($data);
         if ($user) {
-            $user = User::make($user->getAttributes());
+            $user = User::from($user);
             $token = app(GenerateToken::class)->execute($user);
             $token_id = $this->jwt_token_repository->createToken($token);
             if (!empty($token_id)) {
                 return array_merge([
-                    'token' => $token->getTokenValue()
+                    'token' => $token->getAdditionalData()['token_value']
                 ], $user->toArray());
             }
         }

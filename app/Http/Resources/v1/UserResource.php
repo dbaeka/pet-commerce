@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\v1;
 
-use App\Dtos\User;
+use App\DataObjects\User;
 use Illuminate\Http\Request;
 
 class UserResource extends BaseResource

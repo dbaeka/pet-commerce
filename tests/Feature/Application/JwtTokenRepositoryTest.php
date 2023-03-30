@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Application;
 
-use App\Dtos\Token;
-use App\Dtos\User;
+use App\DataObjects\Token;
+use App\DataObjects\User;
 use App\Models\JwtToken;
 use App\Repositories\Interfaces\JwtTokenRepositoryContract;
 use Carbon\Carbon;
@@ -29,7 +29,7 @@ class JwtTokenRepositoryTest extends TestCase
     {
         /** @var JwtToken $jwt_token */
         $jwt_token = JwtTokenFactory::new()->make();
-        $token = Token::make($jwt_token->getAttributes());
+        $token = Token::from($jwt_token);
         $token_id = $this->jwt_repository->createToken($token);
         self::assertNotEmpty($token_id);
         self::assertDatabaseHas('jwt_tokens', [

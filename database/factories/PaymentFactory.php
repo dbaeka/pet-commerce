@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
+use App\DataObjects\PaymentType\PaymentTypeDetailsFactory;
 use App\Enums\PaymentType;
-use App\Values\PaymentType\PaymentTypeDetailsFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -51,7 +51,7 @@ class PaymentFactory extends Factory
                     "address_line1" => fake()->streetAddress(),
                     "address_line2" => fake()->city(),
                     "ref_code" => fake()->sentence(),
-                    "consent" => fake()->boolean()
+                    "consent" => fake()->boolean(),
                 ];
                 break;
             case PaymentType::BANK_TRANSFER:

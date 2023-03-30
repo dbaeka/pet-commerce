@@ -10,7 +10,6 @@ use App\Http\Resources\v1\BaseResource;
 use App\Http\Resources\v1\DefaultCollection;
 use App\Models\Product;
 use App\Repositories\Interfaces\ProductRepositoryContract;
-use App\Values\ProductMetadata;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -84,7 +83,6 @@ class ProductController extends Controller
     {
         $this->authorize('create', Product::class);
         $data = $request->validated();
-        $data['metadata'] = new ProductMetadata(...$data['metadata']);
         $product = $this->product_repository->create($data);
         return $product ? new BaseResource($product) : throw new UnprocessableEntityHttpException();
     }
@@ -137,7 +135,6 @@ class ProductController extends Controller
     {
         $this->authorize('update', Product::class);
         $data = $request->validated();
-        $data['metadata'] = new ProductMetadata(...$data['metadata']);
         $product = $this->product_repository->updateByUuid($uuid, $data);
         return $product ? new BaseResource($product) : throw new UnprocessableEntityHttpException();
     }

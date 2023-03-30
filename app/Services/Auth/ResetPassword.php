@@ -28,7 +28,7 @@ readonly class ResetPassword
             throw new ModelNotFoundException();
         }
 
-        if ($user->getIsAdmin()) {
+        if ($user->is_admin) {
             throw new UnauthorizedException();
         }
         $data['password'] = Hash::make($data['password']);

@@ -2,11 +2,11 @@
 
 namespace Application;
 
+use App\DataObjects\ProductMetadata;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
-use App\Values\ProductMetadata;
 use Database\Factories\BrandFactory;
 use Database\Factories\CategoryFactory;
 use Database\Factories\ProductFactory;
@@ -167,10 +167,10 @@ class ProductTest extends ApiTestCase
         /** @var Brand $brand */
         $brand = BrandFactory::new()->create();
         ProductFactory::new()->count(14)->create([
-           'metadata' => new ProductMetadata(
-               $brand->uuid,
-               fake()->uuid()
-           )
+           'metadata' => ProductMetadata::from([
+            'brand' =>   $brand->uuid,
+             'image' =>  fake()->uuid()
+           ])
         ]);
         $this->get($endpoint . '?limit=100&brand_uuid=' . $brand->uuid)
             ->assertOk()

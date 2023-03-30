@@ -2,8 +2,8 @@
 
 namespace App\Services\Jwt;
 
-use App\Dtos\Token;
-use App\Dtos\User;
+use App\DataObjects\Token;
+use App\DataObjects\User;
 
 class GenerateToken extends BaseJwtProvider
 {
@@ -30,6 +30,6 @@ class GenerateToken extends BaseJwtProvider
             'token_title' => 'Access Token',
             'expires_at' => $expires_at,
         ];
-        return Token::make($data)->withToken($jwt->toString());
+        return Token::from($data)->additional(['token_value' => $jwt->toString()]);
     }
 }

@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\v1\Payment;
 
+use App\DataObjects\PaymentType\PaymentTypeDetailsFactory;
 use App\Enums\PaymentType;
 use App\Rules\CheckValueObject;
-use App\Values\PaymentType\PaymentTypeDetails;
-use App\Values\PaymentType\PaymentTypeDetailsFactory;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
@@ -40,8 +39,7 @@ class UpdatePaymentRequest extends FormRequest
             'details' => [
                 'required',
                 new CheckValueObject(
-                    PaymentTypeDetails::class,
-                    function (array $attributes, mixed $value) {
+                    factory: function (array $attributes, mixed $value) {
                         $type = PaymentType::from($attributes['type']);
                         return PaymentTypeDetailsFactory::make($type, $value);
                     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Values\PaymentType;
+namespace App\DataObjects\PaymentType;
 
 use App\Enums\PaymentType;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -12,7 +12,7 @@ class PaymentTypeDetailsFactory
      * @param PaymentType|string $type
      * @param array<string, scalar> $details
      */
-    public static function make(PaymentType|string $type, array $details): PaymentTypeDetails
+    public static function make(PaymentType|string $type, array $details): BankTransferDetails|CashOnDeliveryDetails|CreditCardDetails
     {
         if (is_string($type)) {
             try {
@@ -22,9 +22,9 @@ class PaymentTypeDetailsFactory
             }
         }
         return match ($type) {
-            PaymentType::BANK_TRANSFER => BankTransferDetails::fromArray($details, $type),
-            PaymentType::CASH_ON_DELIVERY => CashOnDeliveryDetails::fromArray($details, $type),
-            PaymentType::CREDIT_CARD => CreditCardDetails::fromArray($details, $type),
+            PaymentType::BANK_TRANSFER => BankTransferDetails::from($details),
+            PaymentType::CASH_ON_DELIVERY => CashOnDeliveryDetails::from($details),
+            PaymentType::CREDIT_CARD => CreditCardDetails::from($details),
         };
     }
 }

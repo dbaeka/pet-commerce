@@ -24,7 +24,7 @@ readonly class ForgotPassword
             throw new ModelNotFoundException();
         }
 
-        if ($user->getIsAdmin()) {
+        if ($user->is_admin) {
             throw new UnauthorizedException();
         }
 

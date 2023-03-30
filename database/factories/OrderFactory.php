@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
+use App\DataObjects\Address;
+use App\DataObjects\ProductItem;
 use App\Models\OrderStatus;
 use App\Models\Payment;
 use App\Models\User;
-use App\Values\Address;
-use App\Values\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Collection;
 use Throwable;
@@ -39,15 +39,15 @@ class OrderFactory extends Factory
                 function () {
                     /** @var \App\Models\Product $product */
                     $product = ProductFactory::new()->create();
-                    return new Product(
-                        quantity: rand(1, 200),
-                        uuid: $product->uuid,
-                        price: fake()->randomFloat(2, 2),
-                        product: fake()->sentence(),
-                    );
+                    return ProductItem::from([
+                        'quantity' => rand(1, 200),
+                        'uuid' => $product->uuid,
+                        'price' => fake()->randomFloat(2, 2),
+                        'product' => fake()->sentence(),
+                    ]);
                 }
-            ),
-            'address' => new Address(fake()->streetAddress, fake()->address),
+            )->toArray(),
+            'address' => Address::from(['shipping' => fake()->streetAddress, 'billing' => fake()->address]),
             'delivery_fee' => fake()->randomFloat(2, 0, 4),
             'amount' => function (array $attributes) {
                 $products = $attributes['products'];
@@ -55,7 +55,7 @@ class OrderFactory extends Factory
                     $products = collect($products);
                 }
                 try {
-                    return $products->sum(fn (Product $value) => round($value->price * $value->quantity, 2));
+                    return $products->sum(fn (ProductItem $value) => round($value->price * $value->quantity, 2));
                 } catch (Throwable) {
                     return fake()->randomFloat();
                 }

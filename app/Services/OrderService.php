@@ -2,16 +2,15 @@
 
 namespace App\Services;
 
-use App\Dtos\BaseDto;
+use App\DataObjects\ProductItem;
 use App\Models\Order;
 use App\Models\User;
 use App\Repositories\Interfaces\OrderRepositoryContract;
 use App\Repositories\Interfaces\ProductRepositoryContract;
-use App\Values\Address;
-use App\Values\Product;
 use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Spatie\LaravelData\Data;
 
 readonly class OrderService
 {
@@ -28,7 +27,7 @@ readonly class OrderService
      * @param array<string, mixed> $data
      * @return Order|Model|null
      */
-    public function createOrder(array $data): BaseDto|Model|null
+    public function createOrder(array $data): Data|Model|null
     {
         $data = $this->extendData($data);
         return $this->order_repository->create($data);
@@ -43,52 +42,51 @@ readonly class OrderService
         /** @var User $user */
         $user = Auth::user();
         $data['user_uuid'] = $user->uuid;
-        $data['address'] = new Address(...$data['address']);
         /** @var array<string, mixed> $products */
         $products = $data['products'];
-        $products = collect($products);
         $data['products'] = $this->appendProductDetails($products);
         $data['amount'] = $this->getAmount($data['products']);
         return $data;
     }
 
     /**
-     * @param Collection<string, mixed> $products
-     * @return Collection<string, Product>
+     * @param array<string, mixed> $products
+     * @return array<string, mixed>
      */
-    private function appendProductDetails(Collection $products): Collection
+    private function appendProductDetails(array $products): array
     {
-        $product_uuids = $products->pluck('uuid');
+        $product_uuids = collect($products)->pluck('uuid')->toArray();
         /** @var Collection<int, \App\Models\Product> $products_info */
         $products_info = $this->product_repository->getListWithIds(
-            $product_uuids->toArray(),
+            $product_uuids,
             ['uuid', 'title', 'price']
         );
         $products_info = $products_info->keyBy('uuid');
-        return $products->map(function (array $value) use ($products_info) {
+        return array_map(function (array $value) use ($products_info) {
             /** @var \App\Models\Product $product */
             $product = $products_info->get($value['uuid']);
-            return new Product(
-                quantity: $value['quantity'],
-                uuid: $value['uuid'],
-                price: $product->price,
-                product: $product->title
-            );
-        });
+            return ProductItem::from([
+                'quantity' => $value['quantity'],
+                'uuid' => $value['uuid'],
+                'price' => $product->price,
+                'product' => $product->title
+            ]);
+        }, $products);
     }
 
     /**
-     * @param Collection<string, Product> $products
+     * @param array<string, mixed> $products
+     * @return float
      */
-    private function getAmount(Collection $products): float
+    private function getAmount(array $products): float
     {
-        return $products->sum(fn (Product $value) => round($value->price * $value->quantity, 2));
+        return collect($products)->sum(fn (ProductItem $value) => round($value->price * $value->quantity, 2));
     }
 
     /**
      * @param array<string, mixed> $data
      */
-    public function updateOrder(string $uuid, array $data): Order|BaseDto|Model|null
+    public function updateOrder(string $uuid, array $data): Order|Data|Model|null
     {
         $data = $this->extendData($data);
         return $this->order_repository->updateByUuid($uuid, $data);

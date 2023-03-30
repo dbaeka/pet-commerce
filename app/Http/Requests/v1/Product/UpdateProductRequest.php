@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\v1\Product;
 
+use App\DataObjects\ProductMetadata;
 use App\Models\User;
 use App\Rules\CheckValueObject;
-use App\Values\ProductMetadata;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Http\FormRequest;
 

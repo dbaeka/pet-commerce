@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.8",
         "lcobucci/jwt": "^5.0",
         "phpseclib/phpseclib": "^3.0",
+        "spatie/laravel-data": "^3.2",
         "staudenmeir/eloquent-json-relations": "^1.1"
     },
     "require-dev": {

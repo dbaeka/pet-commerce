@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Values\PaymentType;
+namespace App\DataObjects\PaymentType;
+
+use Spatie\LaravelData\Data;
 
 /**
  * @OA\Schema(
@@ -39,17 +41,15 @@ namespace App\Values\PaymentType;
  *    ),
  * )
  */
-
-class CashOnDeliveryDetails extends PaymentTypeDetails
+class CashOnDeliveryDetails extends Data
 {
     public function __construct(
-        public readonly string $first_name,
-        public readonly string $last_name,
-        public readonly string $address_line1,
-        public readonly string $address_line2,
-        public readonly string $ref_code,
-        public readonly bool   $consent
+        public string $first_name,
+        public string $last_name,
+        public string $address_line1,
+        public string $address_line2,
+        public string $ref_code,
+        public bool   $consent
     ) {
-        parent::__construct();
     }
 }

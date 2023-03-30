@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Dtos\User;
+use App\DataObjects\User;
 use App\Http\Middleware\SecureApi;
 use App\Services\Jwt\AuthenticateWithToken;
 use Illuminate\Auth\AuthenticationException;
@@ -24,7 +24,7 @@ class SecureApiMiddlewareTest extends TestCase
         $this->mock(AuthenticateWithToken::class, function (MockInterface $mock) {
             $mock->shouldReceive('execute')
                 ->once()
-                ->andReturn(User::make());
+                ->andReturn(User::from(['id' => 100]));
         });
 
         Auth::shouldReceive('onceUsingId');
@@ -45,7 +45,10 @@ class SecureApiMiddlewareTest extends TestCase
         $this->mock(AuthenticateWithToken::class, function (MockInterface $mock) {
             $mock->shouldReceive('execute')
                 ->once()
-                ->andReturn(User::make(['is_admin' => true]));
+                ->andReturn(User::from([
+                    'id' => 100,
+                    'is_admin' => true
+                ]));
         });
 
         Auth::shouldReceive('onceUsingId');
@@ -67,7 +70,10 @@ class SecureApiMiddlewareTest extends TestCase
         $this->mock(AuthenticateWithToken::class, function (MockInterface $mock) {
             $mock->shouldReceive('execute')
                 ->once()
-                ->andReturn(User::make(['is_admin' => false]));
+                ->andReturn(User::from([
+                    'id' => 100,
+                    'is_admin' => false
+                ]));
         });
 
         Auth::shouldReceive('onceUsingId');

@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Dtos\User as UserDto;
+use App\DataObjects\User as UserDto;
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryContract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -32,6 +32,6 @@ class UserRepository extends BaseCrudRepository implements UserRepositoryContrac
     {
         /** @var User|null $user */
         $user = $this->model::query()->where('email', $email)->first();
-        return $user ? UserDto::make($user->getAttributes()) : null;
+        return $user ? UserDto::from($user) : null;
     }
 }

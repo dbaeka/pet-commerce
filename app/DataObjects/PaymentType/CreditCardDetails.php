@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Values\PaymentType;
+namespace App\DataObjects\PaymentType;
+
+use Spatie\LaravelData\Data;
 
 /**
  * @OA\Schema(
@@ -30,15 +32,13 @@ namespace App\Values\PaymentType;
  *    ),
  * )
  */
-
-class CreditCardDetails extends PaymentTypeDetails
+class CreditCardDetails extends Data
 {
     public function __construct(
-        public readonly string $number,
-        public readonly string $cvv,
-        public readonly string $holder_name,
-        public readonly string $expiry_date,
+        public string $number,
+        public string $cvv,
+        public string $holder_name,
+        public string $expiry_date,
     ) {
-        parent::__construct();
     }
 }

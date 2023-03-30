@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\DataObjects\PaymentType\PaymentTypeDetailsFactory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\v1\Payment\PaymentListingRequest;
 use App\Http\Requests\v1\Payment\StorePaymentRequest;
@@ -11,7 +12,6 @@ use App\Http\Resources\v1\DefaultCollection;
 use App\Models\Payment;
 use App\Models\User;
 use App\Repositories\Interfaces\PaymentRepositoryContract;
-use App\Values\PaymentType\PaymentTypeDetailsFactory;
 use Auth;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Casts\ProductMetadata;
+use App\DataObjects\ProductMetadata;
 use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 
 /**
- * App\Models\Product
+ * App\Models\ProductItem
  *
  * @property int $id
  * @property string $category_uuid
@@ -55,7 +55,7 @@ class Product extends Model
     protected $fillable = ['title', 'category_uuid', 'price', 'description', 'metadata'];
 
     protected $casts = [
-        'metadata' => ProductMetadata::class,
+        'metadata' => ProductMetadata::class
     ];
 
     protected $hidden = ['id'];

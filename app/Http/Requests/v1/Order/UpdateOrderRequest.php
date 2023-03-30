@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\v1\Order;
 
+use App\DataObjects\Address;
+use App\DataObjects\ProductItem;
 use App\Rules\CheckValueObject;
 use App\Rules\ExistsUuidsList;
-use App\Values\Address;
-use App\Values\Product;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -32,7 +32,7 @@ class UpdateOrderRequest extends FormRequest
             'order_status_uuid' => ['required', 'exists:order_statuses,uuid'],
             'payment_uuid' => ['required', 'exists:payments,uuid'],
             'products' => ['required', 'array', new ExistsUuidsList('products')],
-            'products.*' => ['required', new CheckValueObject(Product::class)],
+            'products.*' => ['required', new CheckValueObject(ProductItem::class)],
             'address' => ['required', new CheckValueObject(Address::class)],
         ];
     }

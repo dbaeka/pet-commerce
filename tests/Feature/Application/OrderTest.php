@@ -6,8 +6,6 @@ use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\Payment;
 use App\Models\User;
-use App\Values\Address;
-use App\Values\Product;
 use Carbon\Carbon;
 use Database\Factories\OrderFactory;
 use Database\Factories\OrderStatusFactory;
@@ -199,14 +197,13 @@ class OrderTest extends ApiTestCase
         $data = [
             'order_status_uuid' => $order_status->uuid,
             'payment_uuid' => $payment->uuid,
-            'address' => new Address(
-                shipping: fake()->streetAddress(),
-                billing: fake()->streetAddress()
-            ),
+            'address' => [
+                'shipping' => fake()->streetAddress(),
+                'billing' => fake()->streetAddress()
+            ],
             'products' => [
-                new Product(quantity: 10, uuid: $product_uuid()),
-                new Product(quantity: 200, uuid: $product_uuid())
-            ]
+                 ['quantity' => 10, 'uuid' => $product_uuid()],
+                ['quantity' => 200, 'uuid' => $product_uuid()]]
         ];
 
         $response = $this->postAs($endpoint, $data, $user);
@@ -257,14 +254,13 @@ class OrderTest extends ApiTestCase
         $data = [
             'order_status_uuid' => $order_status->uuid,
             'payment_uuid' => $payment->uuid,
-            'address' => new Address(
-                shipping: fake()->streetAddress(),
-                billing: fake()->streetAddress()
-            ),
+            'address' => [
+                'shipping' => fake()->streetAddress(),
+                'billing' => fake()->streetAddress()
+            ],
             'products' => [
-                new Product(quantity: 10, uuid: $product_uuid()),
-                new Product(quantity: 200, uuid: $product_uuid())
-            ]
+                ['quantity' => 10, 'uuid' => $product_uuid()],
+                ['quantity' => 200, 'uuid' => $product_uuid()]]
         ];
 
         $this->postAs($endpoint, $data, $user)

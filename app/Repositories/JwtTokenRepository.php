@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Dtos\Token;
-use App\Dtos\User;
+use App\DataObjects\Token;
+use App\DataObjects\User;
 use App\Models\JwtToken;
 use App\Repositories\Interfaces\JwtTokenRepositoryContract;
 use Illuminate\Database\Eloquent\Builder;
@@ -54,7 +54,7 @@ class JwtTokenRepository implements JwtTokenRepositoryContract
         $token = $this->tokenFromUniqueId($unique_id)->with('user')->first();
 
         if ($token) {
-            return User::make($token->user->getAttributes());
+            return User::from($token->user);
         }
         return null;
     }

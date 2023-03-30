@@ -11,7 +11,7 @@ readonly class LoginUserWithCreds extends BaseLoginWithCreds
     public function execute(array $credentials): ?string
     {
         $user = $this->loginUser($credentials);
-        if ($user && !$user->getIsAdmin()) {
+        if ($user && !$user->is_admin) {
             return $this->generateToken($user);
         }
         return null;
