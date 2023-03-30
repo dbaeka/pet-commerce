@@ -27,7 +27,9 @@ abstract class BaseDto implements Arrayable
             if (property_exists(static::class, $key)) {
                 if (array_key_exists($key, $obj->casts)) {
                     $cast = new $obj->casts[$key]();
-                    $obj->$key = $cast->get(null, $key, $value, $attributes);
+                    if (method_exists($cast, 'get')) {
+                        $obj->$key = $cast->get(null, $key, $value, $attributes);
+                    }
                 } else {
                     $obj->$key = $value;
                 }

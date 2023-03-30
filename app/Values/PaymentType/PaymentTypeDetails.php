@@ -19,7 +19,6 @@ abstract class PaymentTypeDetails extends BaseValueObject
 
     /**
      * @param array<string, scalar> $data
-     * @param PaymentType $type
      * @return static
      */
     final public static function fromArray(array $data, PaymentType $type): static

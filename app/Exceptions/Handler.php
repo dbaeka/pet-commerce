@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\Actions\TransformException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -9,7 +10,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -88,56 +88,6 @@ class Handler extends ExceptionHandler
             $exception->setStatusCode(403);
         }
 
-        return $this->customApiResponse($exception);
-    }
-
-    private function customApiResponse(Throwable|JsonResponse|Response $e): JsonResponse
-    {
-        if (method_exists($e, 'getStatusCode')) {
-            $statusCode = $e->getStatusCode();
-        } else {
-            $statusCode = 500;
-        }
-
-        $response['error'] = 'Unknown error';
-        $response['errors'] = [];
-        $response['data'] = [];
-        $response['success'] = 0;
-
-        switch ($statusCode) {
-            case 401:
-                $response['error'] = 'Failed to authorize user';
-                break;
-            case 403:
-                $response['error'] = 'Forbidden';
-                break;
-            case 404:
-                $response['error'] = 'Not Found';
-                break;
-            case 405:
-                $response['error'] = 'Method Not Allowed';
-                break;
-            case 422:
-                if ($e instanceof JsonResponse) {
-                    $response['error'] = $e->original['message'];
-                    $response['errors'] = $e->original['errors'];
-                } else {
-                    $response['error'] = 'Unprocessable entity error';
-                }
-                break;
-            default:
-                if ($statusCode == 500) {
-                    $response['error'] = 'Server error. Whoops!';
-                } elseif ($e instanceof Throwable) {
-                    $response['error'] = $e->getMessage();
-                }
-                break;
-        }
-
-        if (config('app.debug') && $e instanceof Throwable) {
-            $response['trace'] = $e->getTrace();
-            $response['code'] = $e->getCode();
-        }
-        return response()->json($response, $statusCode);
+        return TransformException::execute($exception);
     }
 }

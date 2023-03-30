@@ -49,7 +49,7 @@ class Product extends Model
     use HasUuid;
     use HasJsonRelationships;
 
-    /** @var string[] $with */
+    /** @var array<int, string> $with */
     protected $with = ['category', 'brand'];
 
     protected $fillable = ['title', 'category_uuid', 'price', 'description', 'metadata'];

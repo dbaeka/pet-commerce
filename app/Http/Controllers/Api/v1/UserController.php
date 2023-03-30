@@ -18,7 +18,10 @@ use App\Http\Resources\v1\UserResource;
 use App\Models\User;
 use App\Repositories\Interfaces\OrderRepositoryInterface;
 use App\Repositories\UserRepository;
-use App\Services\AuthService;
+use App\Services\Auth\ForgotPassword;
+use App\Services\Auth\LoginUserWithCreds;
+use App\Services\Auth\LogoutUser;
+use App\Services\Auth\ResetPassword;
 use App\Services\UserService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -154,7 +157,7 @@ class UserController extends Controller
     public function resetPasswordToken(ResetPasswordTokenRequest $request): MessageResource
     {
         $data = $request->validated();
-        $success = (new AuthService())->resetPassword($data);
+        $success = app(ResetPassword::class)->execute($data);
         if ($success) {
             return new MessageResource('Password has been successfully updated');
         }
@@ -188,7 +191,7 @@ class UserController extends Controller
     public function forgotPassword(ForgotPasswordRequest $request): ForgotPasswordResource
     {
         $data = $request->validated();
-        $token = (new AuthService())->forgotPassword($data['email']);
+        $token = app(ForgotPassword::class)->execute($data['email']);
         return new ForgotPasswordResource($token);
     }
 
@@ -281,7 +284,7 @@ class UserController extends Controller
     public function login(UserLoginRequest $request): LoginResource
     {
         $credentials = $request->validated();
-        $token = (new AuthService())->loginRegularUser($credentials);
+        $token = app(LoginUserWithCreds::class)->execute($credentials);
         if ($token) {
             return new LoginResource($token);
         }
@@ -303,7 +306,7 @@ class UserController extends Controller
      */
     public function logout(): Response
     {
-        if ((new AuthService())->logoutUser()) {
+        if (app(LogoutUser::class)->execute()) {
             return response()->noContent();
         }
         throw new UnprocessableEntityHttpException();

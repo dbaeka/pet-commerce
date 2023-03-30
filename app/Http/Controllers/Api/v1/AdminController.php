@@ -12,7 +12,8 @@ use App\Http\Resources\v1\LoginResource;
 use App\Http\Resources\v1\UserCreateResource;
 use App\Http\Resources\v1\UserResource;
 use App\Repositories\UserRepository;
-use App\Services\AuthService;
+use App\Services\Auth\LoginAdminWithCreds;
+use App\Services\Auth\LogoutUser;
 use App\Services\UserService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -186,7 +187,7 @@ class AdminController extends Controller
     public function login(AdminLoginRequest $request): LoginResource
     {
         $credentials = $request->validated();
-        $token = (new AuthService())->loginAdminUser($credentials);
+        $token = app(LoginAdminWithCreds::class)->execute($credentials);
         if ($token) {
             return new LoginResource($token);
         }
@@ -208,7 +209,7 @@ class AdminController extends Controller
      */
     public function logout(): Response
     {
-        if ((new AuthService())->logoutUser()) {
+        if (app(LogoutUser::class)->execute()) {
             return response()->noContent();
         }
         throw new UnprocessableEntityHttpException();

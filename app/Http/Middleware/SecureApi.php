@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Dtos\User;
-use App\Services\Interfaces\JwtTokenProviderInterface;
+use App\Services\Jwt\AuthenticateWithToken;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
@@ -14,12 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 class SecureApi
 {
     private User $user;
-    private readonly JwtTokenProviderInterface $jwt_service;
-
-    public function __construct()
-    {
-        $this->jwt_service = app(JwtTokenProviderInterface::class);
-    }
 
     /**
      * Handle an incoming request.
@@ -45,7 +39,7 @@ class SecureApi
         if (empty($request->bearerToken())) {
             throw new AuthenticationException();
         }
-        $user = $this->jwt_service->authenticate($request->bearerToken());
+        $user = app(AuthenticateWithToken::class)->execute($request->bearerToken());
         if (empty($user)) {
             throw new AuthenticationException('invalid bearer token');
         }

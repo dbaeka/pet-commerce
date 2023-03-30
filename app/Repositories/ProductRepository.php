@@ -15,8 +15,8 @@ class ProductRepository extends BaseCrudRepository
     protected array $with = ['category', 'brand'];
 
     /**
-     * @param string[] $uuids
-     * @param string[] $columns
+     * @param array<string> $uuids
+     * @param array<string> $columns
      * @return Collection<int, Model>|array<int, Model>
      */
     public function getListWithIds(array $uuids, array $columns = []): Collection|array

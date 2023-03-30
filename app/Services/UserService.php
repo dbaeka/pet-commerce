@@ -5,18 +5,16 @@ namespace App\Services;
 use App\Dtos\User;
 use App\Repositories\Interfaces\JwtTokenRepositoryInterface;
 use App\Repositories\UserRepository;
-use App\Services\Interfaces\JwtTokenProviderInterface;
+use App\Services\Jwt\GenerateToken;
 use Hash;
 
 readonly class UserService
 {
-    private JwtTokenProviderInterface $jwt_service;
     private JwtTokenRepositoryInterface $jwt_token_repository;
     private UserRepository $user_repository;
 
     public function __construct()
     {
-        $this->jwt_service = app(JwtTokenProviderInterface::class);
         $this->jwt_token_repository = app(JwtTokenRepositoryInterface::class);
         $this->user_repository = app(UserRepository::class);
     }
@@ -42,7 +40,7 @@ readonly class UserService
         $user = $this->user_repository->create($data);
         if ($user) {
             $user = User::make($user->getAttributes());
-            $token = $this->jwt_service->generateToken($user);
+            $token = app(GenerateToken::class)->execute($user);
             $token_id = $this->jwt_token_repository->createToken($token);
             if (!empty($token_id)) {
                 return array_merge([

@@ -87,7 +87,6 @@ readonly class OrderService
     }
 
     /**
-     * @param string $uuid
      * @param array<string, mixed> $data
      * @return Order|BaseDto|null
      */
