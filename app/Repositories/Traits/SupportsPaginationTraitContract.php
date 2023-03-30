@@ -6,14 +6,11 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @template T of Model
- */
 interface SupportsPaginationTraitContract
 {
     /**
-     * @param Builder<T> $query
-     * @return LengthAwarePaginator<Model|T>
+     * @param Builder<Model> $query
+     * @return LengthAwarePaginator<Model>
      */
     public function withPaginate(Builder $query): LengthAwarePaginator;
 }

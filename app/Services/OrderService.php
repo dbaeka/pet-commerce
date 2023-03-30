@@ -79,7 +79,6 @@ readonly class OrderService
 
     /**
      * @param Collection<string, Product> $products
-     * @return float
      */
     private function getAmount(Collection $products): float
     {
@@ -88,9 +87,8 @@ readonly class OrderService
 
     /**
      * @param array<string, mixed> $data
-     * @return Order|BaseDto|null
      */
-    public function updateOrder(string $uuid, array $data): Order|BaseDto|null
+    public function updateOrder(string $uuid, array $data): Order|BaseDto|Model|null
     {
         $data = $this->extendData($data);
         return $this->order_repository->updateByUuid($uuid, $data);

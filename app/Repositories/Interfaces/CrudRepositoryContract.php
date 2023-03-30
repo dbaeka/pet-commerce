@@ -6,24 +6,20 @@ use App\Dtos\BaseDto;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @template TModel of Model
- * @template TObj of BaseDto
- */
 interface CrudRepositoryContract
 {
     /**
      * Create a model
      *
      * @param array<string, mixed> $data
-     * @return TObj|BaseDto|TModel|Model|null
+     * @return BaseDto|Model|null
      */
-    public function create(array $data);
+    public function create(array $data): Model|BaseDto|null;
 
     /**
      * Get list paginated list of model
      *
-     * @return LengthAwarePaginator<TModel>
+     * @return LengthAwarePaginator<Model>
      */
     public function getList(): LengthAwarePaginator;
 
@@ -39,16 +35,16 @@ interface CrudRepositoryContract
      * Find a model by uuid
      *
      * @param string $uuid
-     * @return TObj|BaseDto|TModel|Model|null
+     * @return BaseDto|Model|null
      */
-    public function findByUuid(string $uuid);
+    public function findByUuid(string $uuid): Model|BaseDto|null;
 
     /**
      * Update by uuid
      *
      * @param string $uuid
      * @param array<string, mixed> $data
-     * @return TObj|BaseDto|TModel|null
+     * @return BaseDto|null
      */
-    public function updateByUuid(string $uuid, array $data);
+    public function updateByUuid(string $uuid, array $data): Model|BaseDto|null;
 }

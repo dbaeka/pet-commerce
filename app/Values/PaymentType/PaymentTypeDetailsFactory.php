@@ -11,7 +11,6 @@ class PaymentTypeDetailsFactory
     /**
      * @param PaymentType|string $type
      * @param array<string, scalar> $details
-     * @return PaymentTypeDetails
      */
     public static function make(PaymentType|string $type, array $details): PaymentTypeDetails
     {

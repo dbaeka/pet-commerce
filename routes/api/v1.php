@@ -18,7 +18,7 @@ use App\Http\Controllers\Api\v1\ProductController;
 use App\Http\Controllers\Api\v1\UserController;
 
 // Admin only routes
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->group(function (): void {
     Route::post('create', [AdminController::class, 'store'])->name('create');
     Route::post('login', [AdminController::class, 'login'])->name('login');
     Route::get('logout', [AdminController::class, 'logout'])->name('logout');
@@ -29,7 +29,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
 // User routes
-Route::prefix('user')->name('user.')->group(function () {
+Route::prefix('user')->name('user.')->group(function (): void {
     Route::post('create', [UserController::class, 'store'])->name('create');
     Route::post('login', [UserController::class, 'login'])->name('login');
     Route::get('logout', [UserController::class, 'logout'])->name('logout');
@@ -42,7 +42,7 @@ Route::prefix('user')->name('user.')->group(function () {
 });
 
 // Additional Order routes
-Route::prefix('orders')->name('orders.')->group(function () {
+Route::prefix('orders')->name('orders.')->group(function (): void {
     Route::get('dashboard', [OrderController::class, 'getDashboard'])->name('dashboard');
     Route::get('shipment-locator', [OrderController::class, 'getShipmentLocator'])->name('shipment-locator');
     Route::get('{uuid}/download', [OrderController::class, 'downloadOrder'])->name('download');
@@ -64,14 +64,14 @@ Route::apiResources([
 ]);
 
 // Main page routes
-Route::prefix('main')->name('main_page.')->group(function () {
+Route::prefix('main')->name('main_page.')->group(function (): void {
     Route::get('promotions', [MainPageController::class, 'getPromotions'])->name('promotions-index');
     Route::get('blogs', [MainPageController::class, 'getBlogs'])->name('blogs-index');
     Route::get('blogs/{uuid}', [MainPageController::class, 'showBlog'])->name('blogs-show');
 });
 
 // File routes
-Route::prefix('files')->name('files.')->group(function () {
+Route::prefix('files')->name('files.')->group(function (): void {
     Route::get('{uuid}', [FileController::class, 'show'])->name('read');
     Route::post('upload', [FileController::class, 'store'])->name('upload');
 });

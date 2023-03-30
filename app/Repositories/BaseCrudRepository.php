@@ -12,12 +12,6 @@ use Illuminate\Database\Eloquent\Model;
 use ReflectionClass;
 use ReflectionException;
 
-/**
- * @template TModel of Model
- * @template TObj of BaseDto
- * @implements CrudRepositoryContract<TModel, TObj>
- * @implements SupportsPaginationTraitContract<TModel|Model>
- */
 abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPaginationTraitContract
 {
     use SupportsPagination;
@@ -36,7 +30,7 @@ abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPag
         $this->model_class = $modelClass ?: self::guessModelClass();
         $this->model = app($this->model_class);
 
-        /** @var class-string<TObj> $dto_class */
+        /** @var class-string<BaseDto> $dto_class */
         $dto_class = $dtoClass ?: self::guessDtoClass();
         $r = new ReflectionClass($dto_class);
         $this->dto = $r->newInstanceWithoutConstructor();
@@ -61,13 +55,13 @@ abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPag
         return self::guessClass('Dtos');
     }
 
-    public function create(array $data)
+    public function create(array $data): Model|BaseDto|null
     {
         return $this->model::query()->create($data)->load($this->with);
     }
 
     /**
-     * @return LengthAwarePaginator<TModel|Model>
+     * @return LengthAwarePaginator<Model>
      */
     public function getList(): LengthAwarePaginator
     {
@@ -77,8 +71,8 @@ abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPag
     }
 
     /**
-     * @param Builder<TModel|Model> $query
-     * @return Builder<TModel|Model>
+     * @param Builder<Model> $query
+     * @return Builder<Model>
      */
     final protected function withRelations(Builder $query): Builder
     {
@@ -90,7 +84,7 @@ abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPag
 
 
     /**
-     * @return LengthAwarePaginator<TModel|Model>
+     * @return LengthAwarePaginator<Model>
      */
     public function getListForUserUuid(string $uuid): LengthAwarePaginator
     {
@@ -107,21 +101,21 @@ abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPag
 
     /**
      * @param string $uuid
-     * @return Builder<TModel>
+     * @return Builder<Model>
      */
     final protected function byUuid(string $uuid): Builder
     {
         return $this->model::query()->where('uuid', $uuid);
     }
 
-    public function findByUuid(string $uuid)
+    public function findByUuid(string $uuid): Model|BaseDto|null
     {
         return $this->withRelations($this->byUuid($uuid))->first();
     }
 
-    public function updateByUuid(string $uuid, array $data)
+    public function updateByUuid(string $uuid, array $data): Model|BaseDto|null
     {
-        /** @var TModel|null $model */
+        /** @var null $model */
         $model = $this->byUuid($uuid)->first();
         $updated = $model?->update($data);
         return $updated ? $model->refresh() : null;

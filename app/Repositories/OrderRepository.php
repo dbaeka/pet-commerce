@@ -2,25 +2,15 @@
 
 namespace App\Repositories;
 
-use App\Dtos\Order as OrderDto;
-use App\Models\Order;
 use App\Models\User;
 use App\Repositories\Interfaces\OrderRepositoryContract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-/**
- * @extends BaseCrudRepository<Order, OrderDto>
- */
 class OrderRepository extends BaseCrudRepository implements OrderRepositoryContract
 {
     protected array $with = ['user', 'payment', 'order_status'];
 
-    /**
-     * @param string $uuid
-     * @return LengthAwarePaginator<Order|Model>
-     */
     public function getUserOrders(string $uuid): LengthAwarePaginator
     {
         $user = User::query()->where('uuid', $uuid)->first();
@@ -32,9 +22,6 @@ class OrderRepository extends BaseCrudRepository implements OrderRepositoryContr
         throw new ModelNotFoundException();
     }
 
-    /**
-     * @return LengthAwarePaginator<Order|Model>
-     */
     public function getListForUserUuid(string $uuid): LengthAwarePaginator
     {
         $query = $this->model::query()->where('user_uuid', $uuid);
@@ -43,9 +30,6 @@ class OrderRepository extends BaseCrudRepository implements OrderRepositoryContr
         return $this->withPaginate($query);
     }
 
-    /**
-     * @return LengthAwarePaginator<Order|Model>
-     */
     public function getShippedList(): LengthAwarePaginator
     {
         $query = $this->model::query()->whereNotNull('shipped_at');
