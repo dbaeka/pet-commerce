@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Repositories\OrderRepository;
 use App\Services\OrderService;
 use Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -217,5 +218,30 @@ class OrderController extends Controller
     {
         $orders = $this->order_repository->getShippedList();
         return new DefaultCollection($orders);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/orders/{uuid}/download",
+     *     operationId="download-order",
+     *     summary="Downloadan order invoice",
+     *     tags={"Orders"},
+     *     @OA\Parameter(ref="#/components/parameters/uuid_path"),
+     *     @OA\Response(response=200, ref="#/components/responses/OK"),
+     *     @OA\Response(response=401, ref="#/components/responses/Unauthorized"),
+     *     @OA\Response(response=404, ref="#/components/responses/NotFound"),
+     *     @OA\Response(response=422, ref="#/components/responses/Unprocessable"),
+     *     @OA\Response(response=500, ref="#/components/responses/ServerError")
+     * )
+     */
+    public function downloadOrder(string $uuid): Response
+    {
+        /** @var Order|null $order */
+        $order = $this->order_repository->findByUuid($uuid);
+        if (empty($order)) {
+            throw new UnprocessableEntityHttpException();
+        }
+        $pdf = Pdf::loadView('pdf.invoice.index', ['order' => $order]);
+        return $pdf->download($order->uuid . '.pdf');
     }
 }

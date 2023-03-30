@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.2",
         "ext-pdo": "*",
+        "barryvdh/laravel-dompdf": "^2.0",
         "darkaonline/l5-swagger": "^8.5",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.0",
@@ -61,8 +62,8 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ],
-        "test": "@php artisan test",
-        "coverage": "@php artisan test --coverage-clover=coverage.xml",
+        "test": "@php artisan test --parallel",
+        "coverage": "@php artisan test --parallel --coverage-clover=coverage.xml",
         "analyse": "@php ./vendor/bin/phpstan analyse --memory-limit 1G --configuration phpstan.neon.dist --ansi",
         "insight": "@php artisan insight",
         "pint": "@php ./vendor/bin/pint"

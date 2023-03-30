@@ -83,7 +83,7 @@ readonly class OrderService
      */
     private function getAmount(Collection $products): float
     {
-        return $products->sum(fn ($value) => $value->price * $value->quantity);
+        return $products->sum(fn (Product $value) => round($value->price * $value->quantity, 2));
     }
 
     /**

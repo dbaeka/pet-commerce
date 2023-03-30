@@ -28,9 +28,9 @@ namespace App\Values\PaymentType;
  *     description="Address Line 2",
  *    ),
  *     @OA\Property(
- *     property="text",
+ *     property="ref_code",
  *     type="string",
- *     description="Text",
+ *     description="Text reference",
  *    ),
  *     @OA\Property(
  *     property="consent",
@@ -47,7 +47,7 @@ class CashOnDeliveryDetails extends PaymentTypeDetails
         public readonly string $last_name,
         public readonly string $address_line1,
         public readonly string $address_line2,
-        public readonly string $text,
+        public readonly string $ref_code,
         public readonly bool   $consent
     ) {
         parent::__construct();
