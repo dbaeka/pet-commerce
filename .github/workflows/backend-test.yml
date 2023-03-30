@@ -40,11 +40,11 @@ jobs:
       - name: Generate app key
         run: php artisan key:generate --quiet
       - name: Run code style checker
-        run: composer cs
+        run: composer pint -- --test
       - name: Run static analysis
         run: composer analyse -- --no-progress
       - name: Run tests
-        run: composer test -- --testsuite Unit
+        run: composer test
       - name: Upload logs if broken
         uses: actions/upload-artifact@v1
         if: failure()
