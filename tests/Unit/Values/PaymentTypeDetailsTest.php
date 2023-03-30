@@ -48,7 +48,7 @@ class PaymentTypeDetailsTest extends TestCase
             'address_line1' => 'baz',
             'address_line2' => 'bae',
             'consent' => false,
-            'text' => 'Yeehaw'
+            'ref_code' => 'Yeehaw'
         ];
 
         $payment_type = CashOnDeliveryDetails::fromArray(

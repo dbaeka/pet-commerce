@@ -294,11 +294,11 @@ class OrderTest extends ApiTestCase
                 'success' => 1,
             ])->assertJsonCount(6, 'data');
 
-        $this->get($endpoint . '?limit=10')
+        $this->getAs($endpoint . '?limit=10', $user)
             ->assertOk()
             ->assertJsonCount(6, 'data');
 
-        $this->get($endpoint . '?page=2&limit=2')
+        $this->getAs($endpoint . '?page=2&limit=2', $user)
             ->assertOk()
             ->assertJsonFragment([
                 'current_page' => 2,
@@ -329,11 +329,11 @@ class OrderTest extends ApiTestCase
                 'success' => 1,
             ])->assertJsonCount(6, 'data');
 
-        $this->get($endpoint . '?limit=10')
+        $this->getAs($endpoint . '?limit=10', $user)
             ->assertOk()
             ->assertJsonCount(6, 'data');
 
-        $this->get($endpoint . '?page=2&limit=2')
+        $this->getAs($endpoint . '?page=2&limit=2', $user)
             ->assertOk()
             ->assertJsonFragment([
                 'current_page' => 2,
@@ -373,19 +373,19 @@ class OrderTest extends ApiTestCase
                 'success' => 1,
             ])->assertJsonCount(13, 'data');
 
-        $this->get($endpoint . '?fixed_range=today')
+        $this->getAs($endpoint . '?fixed_range=today', $user)
             ->assertOk()
             ->assertJsonCount(3, 'data');
 
-        $this->get($endpoint . '?fixed_range=monthly')
+        $this->getAs($endpoint . '?fixed_range=monthly', $user)
             ->assertOk()
             ->assertJsonCount(7, 'data');
 
-        $this->get($endpoint . '?fixed_range=yearly')
+        $this->getAs($endpoint . '?fixed_range=yearly', $user)
             ->assertOk()
             ->assertJsonCount(13, 'data');
 
-        $this->get($endpoint . '?date_range[from]=2020-01-20&date_range[to]=2020-03-20')
+        $this->getAs($endpoint . '?date_range[from]=2020-01-20&date_range[to]=2020-03-20', $user)
             ->assertOk()
             ->assertJsonCount(7, 'data');
     }
@@ -448,19 +448,19 @@ class OrderTest extends ApiTestCase
                 'success' => 1,
             ])->assertJsonCount(13, 'data');
 
-        $this->get($endpoint . '?fixed_range=today')
+        $this->getAs($endpoint . '?fixed_range=today', $user)
             ->assertOk()
             ->assertJsonCount(3, 'data');
 
-        $this->get($endpoint . '?fixed_range=monthly')
+        $this->getAs($endpoint . '?fixed_range=monthly', $user)
             ->assertOk()
             ->assertJsonCount(7, 'data');
 
-        $this->get($endpoint . '?fixed_range=yearly')
+        $this->getAs($endpoint . '?fixed_range=yearly', $user)
             ->assertOk()
             ->assertJsonCount(13, 'data');
 
-        $this->get($endpoint . '?date_range[from]=2020-01-20&date_range[to]=2020-03-20')
+        $this->getAs($endpoint . '?date_range[from]=2020-01-20&date_range[to]=2020-03-20', $user)
             ->assertOk()
             ->assertJsonCount(7, 'data');
 
@@ -470,13 +470,33 @@ class OrderTest extends ApiTestCase
             'shipped_at' => fake()->date()
         ]);
 
-        $this->get($endpoint . '?uuid=' . $order->uuid)
+        $this->getAs($endpoint . '?uuid=' . $order->uuid, $user)
             ->assertOk()
             ->assertJsonCount(1, 'data');
 
 
-        $this->get($endpoint . '?user_uuid=' . $user->uuid)
+        $this->getAs($endpoint . '?user_uuid=' . $user->uuid, $user)
             ->assertOk()
             ->assertJsonCount(1, 'data');
+    }
+
+    public function testInvoiceDownload(): void
+    {
+        $endpoint = self::PREFIX . 'orders/{uuid}/download';
+
+        /** @var User $user */
+        $user = UserFactory::new()->admin()->create();
+
+        /** @var Order $order */
+        $order = OrderFactory::new()->create([
+            'shipped_at' => fake()->date()
+        ]);
+
+        $endpoint = str_replace('{uuid}', $order->uuid, $endpoint);
+
+        $response = $this->getAs($endpoint, $user);
+        $response->assertOk()
+            ->assertHeader('content-type', 'application/pdf')
+            ->assertDownload();
     }
 }

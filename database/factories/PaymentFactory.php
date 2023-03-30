@@ -50,7 +50,7 @@ class PaymentFactory extends Factory
                     "last_name" => fake()->lastName(),
                     "address_line1" => fake()->streetAddress(),
                     "address_line2" => fake()->city(),
-                    "text" => "Cash on delivery",
+                    "ref_code" => fake()->sentence(),
                     "consent" => fake()->boolean()
                 ];
                 break;

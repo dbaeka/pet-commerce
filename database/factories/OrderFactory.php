@@ -9,6 +9,7 @@ use App\Values\Address;
 use App\Values\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Collection;
+use Throwable;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Order>
@@ -48,7 +49,17 @@ class OrderFactory extends Factory
             ),
             'address' => new Address(fake()->streetAddress, fake()->address),
             'delivery_fee' => fake()->randomFloat(2, 0, 4),
-            'amount' => fake()->randomFloat(2, 1, 20000),
+            'amount' => function (array $attributes) {
+                $products = $attributes['products'];
+                if (is_array($products)) {
+                    $products = collect($products);
+                }
+                try {
+                    return $products->sum(fn (Product $value) => round($value->price * $value->quantity, 2));
+                } catch (Throwable) {
+                    return fake()->randomFloat();
+                }
+            },
             'shipped_at' => fn () => ($order_status->title === 'shipped' ? fake()->date() : null)
         ];
     }
