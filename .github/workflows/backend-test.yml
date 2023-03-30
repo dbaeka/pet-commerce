@@ -43,6 +43,8 @@ jobs:
         run: composer pint -- --test
       - name: Run static analysis
         run: composer analyse -- --no-progress
+      - name: Run PHP insight
+        run: composer insight-action
       - name: Run tests
         run: composer test
       - name: Upload logs if broken
