@@ -3,7 +3,7 @@
 namespace Tests\Feature\Application;
 
 use App\Models\User;
-use App\Services\AuthService;
+use App\Services\Auth\LoginWithId;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 use Throwable;
@@ -54,7 +54,7 @@ class ApiTestCase extends TestCase
     private function jsonAs(?User $user, string $method, string $uri, array $data = []): TestResponse
     {
         $user = $user ?: User::factory()->create(['is_admin' => false]);
-        $token = (new AuthService())->loginUsingId($user->id);
+        $token = app(LoginWithId::class)->execute($user->id);
         throw_if(empty($token));
         return parent::withToken($token)->json($method, $uri, $data);
     }
