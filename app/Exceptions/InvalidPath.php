@@ -4,6 +4,6 @@ namespace App\Exceptions;
 
 use Exception;
 
-class InvalidPathException extends Exception
+class InvalidPath extends Exception
 {
 }

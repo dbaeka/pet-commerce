@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Dtos\Order as OrderDto;
 use App\Models\Order;
 use App\Models\User;
-use App\Repositories\Interfaces\OrderRepositoryInterface;
+use App\Repositories\Interfaces\OrderRepositoryContract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 /**
  * @extends BaseCrudRepository<Order, OrderDto>
  */
-class OrderRepository extends BaseCrudRepository implements OrderRepositoryInterface
+class OrderRepository extends BaseCrudRepository implements OrderRepositoryContract
 {
     protected array $with = ['user', 'payment', 'order_status'];
 

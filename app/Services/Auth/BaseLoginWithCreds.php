@@ -3,19 +3,19 @@
 namespace App\Services\Auth;
 
 use App\Dtos\User;
-use App\Repositories\Interfaces\JwtTokenRepositoryInterface;
+use App\Repositories\Interfaces\JwtTokenRepositoryContract;
 use App\Repositories\UserRepository;
 use App\Services\Jwt\GenerateToken;
 use Illuminate\Support\Facades\Auth;
 
 abstract readonly class BaseLoginWithCreds
 {
-    private JwtTokenRepositoryInterface $jwt_token_repository;
+    private JwtTokenRepositoryContract $jwt_token_repository;
     private UserRepository $user_repository;
 
     public function __construct()
     {
-        $this->jwt_token_repository = app(JwtTokenRepositoryInterface::class);
+        $this->jwt_token_repository = app(JwtTokenRepositoryContract::class);
         $this->user_repository = app(UserRepository::class);
     }
 

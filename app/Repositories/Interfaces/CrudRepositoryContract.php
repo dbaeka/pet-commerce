@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @template TModel of Model
  * @template TObj of BaseDto
  */
-interface CrudRepositoryInterface
+interface CrudRepositoryContract
 {
     /**
      * Create a model

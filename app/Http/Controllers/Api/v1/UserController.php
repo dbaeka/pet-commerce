@@ -16,7 +16,7 @@ use App\Http\Resources\v1\MessageResource;
 use App\Http\Resources\v1\UserCreateResource;
 use App\Http\Resources\v1\UserResource;
 use App\Models\User;
-use App\Repositories\Interfaces\OrderRepositoryInterface;
+use App\Repositories\Interfaces\OrderRepositoryContract;
 use App\Repositories\UserRepository;
 use App\Services\Auth\ForgotPassword;
 use App\Services\Auth\LoginUserWithCreds;
@@ -41,7 +41,7 @@ class UserController extends Controller
 {
     public function __construct(
         private readonly UserRepository           $user_repository,
-        private readonly OrderRepositoryInterface $order_repository
+        private readonly OrderRepositoryContract $order_repository
     ) {
         $this->middleware('secure')->except([
             'login', 'store', 'forgotPassword', 'resetPasswordToken'

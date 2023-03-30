@@ -5,7 +5,7 @@ namespace App\Repositories\Interfaces;
 use App\Dtos\Token;
 use App\Dtos\User;
 
-interface JwtTokenRepositoryInterface
+interface JwtTokenRepositoryContract
 {
     public function createToken(Token $token): ?int;
 

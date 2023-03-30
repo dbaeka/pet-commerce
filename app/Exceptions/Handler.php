@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use App\Exceptions\Actions\TransformException;
+use App\Exceptions\Actions\TransformToResponse;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -88,6 +88,6 @@ class Handler extends ExceptionHandler
             $exception->setStatusCode(403);
         }
 
-        return TransformException::execute($exception);
+        return TransformToResponse::execute($exception);
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
-class TransformException
+class TransformToResponse
 {
     public static function execute(Throwable|JsonResponse|Response $e): JsonResponse
     {

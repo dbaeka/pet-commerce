@@ -4,6 +4,6 @@ namespace App\Exceptions\Jwt;
 
 use Exception;
 
-class InvalidJwtIssuerException extends Exception
+class InvalidJwtIssuer extends Exception
 {
 }

@@ -2,10 +2,10 @@
 
 namespace App\Services\Jwt;
 
-use App\Exceptions\InvalidPathException;
-use App\Exceptions\Jwt\InvalidJwtExpiryException;
-use App\Exceptions\Jwt\InvalidJwtIssuerException;
-use App\Repositories\Interfaces\JwtTokenRepositoryInterface;
+use App\Exceptions\InvalidPath;
+use App\Exceptions\Jwt\InvalidJwtExpiry;
+use App\Exceptions\Jwt\InvalidJwtIssuer;
+use App\Repositories\Interfaces\JwtTokenRepositoryContract;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Lcobucci\JWT\Configuration;
@@ -22,16 +22,16 @@ abstract class BaseJwtProvider
     protected string $issuer;
     protected Configuration $config;
     protected int $expiry_seconds;
-    protected readonly JwtTokenRepositoryInterface $jwt_token_repository;
+    protected readonly JwtTokenRepositoryContract $jwt_token_repository;
 
 
     /**
-     * @throws InvalidJwtIssuerException
+     * @throws InvalidJwtIssuer
      * @throws Throwable
      */
     public function __construct()
     {
-        $this->jwt_token_repository = app(JwtTokenRepositoryInterface::class);
+        $this->jwt_token_repository = app(JwtTokenRepositoryContract::class);
 
         $this->loadKeys();
 
@@ -39,7 +39,7 @@ abstract class BaseJwtProvider
     }
 
     /**
-     * @throws InvalidPathException
+     * @throws InvalidPath
      */
     private function loadKeys(): void
     {
@@ -57,19 +57,19 @@ abstract class BaseJwtProvider
     }
 
     /**
-     * @throws InvalidPathException
+     * @throws InvalidPath
      */
     private function validatePaths(string ...$paths): void
     {
         foreach ($paths as $path) {
             if (!File::exists($path)) {
-                throw new InvalidPathException();
+                throw new InvalidPath();
             }
         }
     }
 
     /**
-     * @throws InvalidJwtIssuerException
+     * @throws InvalidJwtIssuer
      * @throws Throwable
      */
     private function loadConfig(): void
@@ -85,20 +85,20 @@ abstract class BaseJwtProvider
     }
 
     /**
-     * @throws InvalidJwtIssuerException|Throwable
+     * @throws InvalidJwtIssuer|Throwable
      */
     private function validateIssuer(string $issuer): void
     {
-        throw_if(empty($issuer), InvalidJwtIssuerException::class);
+        throw_if(empty($issuer), InvalidJwtIssuer::class);
     }
 
     /**
-     * @throws InvalidJwtExpiryException
+     * @throws InvalidJwtExpiry
      * @throws Throwable
      */
     private function validateExpiry(mixed $expiry_seconds): void
     {
-        throw_if($expiry_seconds <= 0 || !is_numeric($expiry_seconds), InvalidJwtExpiryException::class);
+        throw_if($expiry_seconds <= 0 || !is_numeric($expiry_seconds), InvalidJwtExpiry::class);
     }
 
     protected function parseToken(string $token): ?UnencryptedToken

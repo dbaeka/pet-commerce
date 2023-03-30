@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Interfaces;
 
-interface ResetRepositoryInterface
+interface ResetRepositoryContract
 {
     public function addResetToken(string $email, string $token): bool;
 

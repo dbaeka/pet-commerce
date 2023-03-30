@@ -3,18 +3,18 @@
 namespace App\Services\Jwt;
 
 use App\Dtos\User;
-use App\Exceptions\Jwt\InvalidJwtTokenException;
+use App\Exceptions\Jwt\InvalidJwtToken;
 
 class AuthenticateWithToken extends BaseJwtProvider
 {
     /**
-     * @throws InvalidJwtTokenException
+     * @throws InvalidJwtToken
      */
     public function execute(string $token): ?User
     {
         $parsed_token = $this->parseToken($token);
         if (empty($parsed_token)) {
-            throw new InvalidJwtTokenException();
+            throw new InvalidJwtToken();
         }
 
         $unique_id = $parsed_token->claims()->get('jti');

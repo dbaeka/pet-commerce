@@ -3,7 +3,7 @@
 namespace App\Services\Auth;
 
 use App\Dtos\User;
-use App\Repositories\Interfaces\JwtTokenRepositoryInterface;
+use App\Repositories\Interfaces\JwtTokenRepositoryContract;
 use App\Repositories\UserRepository;
 use App\Services\Jwt\GenerateToken;
 use Illuminate\Support\Facades\Auth;
@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Auth;
 readonly class LoginWithId
 {
     public function __construct(
-        private JwtTokenRepositoryInterface $jwt_token_repository,
-        private UserRepository              $user_repository
+        private JwtTokenRepositoryContract $jwt_token_repository,
+        private UserRepository             $user_repository
     ) {
     }
 

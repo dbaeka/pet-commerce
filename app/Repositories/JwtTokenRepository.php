@@ -5,10 +5,10 @@ namespace App\Repositories;
 use App\Dtos\Token;
 use App\Dtos\User;
 use App\Models\JwtToken;
-use App\Repositories\Interfaces\JwtTokenRepositoryInterface;
+use App\Repositories\Interfaces\JwtTokenRepositoryContract;
 use Illuminate\Database\Eloquent\Builder;
 
-class JwtTokenRepository implements JwtTokenRepositoryInterface
+class JwtTokenRepository implements JwtTokenRepositoryContract
 {
     public function createToken(Token $token): ?int
     {

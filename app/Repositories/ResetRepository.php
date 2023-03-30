@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Interfaces\ResetRepositoryInterface;
+use App\Repositories\Interfaces\ResetRepositoryContract;
 use DB;
 use Illuminate\Database\Query\Builder;
 
-class ResetRepository implements ResetRepositoryInterface
+class ResetRepository implements ResetRepositoryContract
 {
     public function checkTokenExists(string $email, string $token): bool
     {

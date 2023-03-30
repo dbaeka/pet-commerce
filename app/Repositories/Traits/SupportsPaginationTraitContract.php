@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @template T of Model
  */
-interface SupportsPaginationTraitInterface
+interface SupportsPaginationTraitContract
 {
     /**
      * @param Builder<T> $query

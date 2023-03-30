@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Repositories\Interfaces\JwtTokenRepositoryInterface;
-use App\Repositories\Interfaces\OrderRepositoryInterface;
-use App\Repositories\Interfaces\ResetRepositoryInterface;
-use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\Interfaces\JwtTokenRepositoryContract;
+use App\Repositories\Interfaces\OrderRepositoryContract;
+use App\Repositories\Interfaces\ResetRepositoryContract;
+use App\Repositories\Interfaces\UserRepositoryContract;
 use App\Repositories\JwtTokenRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\ResetRepository;
@@ -20,10 +20,10 @@ class RepositoryServiceProvider extends ServiceProvider
      * @var array<string, string>
      */
     public array $bindings = [
-        JwtTokenRepositoryInterface::class => JwtTokenRepository::class,
-        UserRepositoryInterface::class => UserRepository::class,
-        OrderRepositoryInterface::class => OrderRepository::class,
-        ResetRepositoryInterface::class => ResetRepository::class,
+        JwtTokenRepositoryContract::class => JwtTokenRepository::class,
+        UserRepositoryContract::class => UserRepository::class,
+        OrderRepositoryContract::class => OrderRepository::class,
+        ResetRepositoryContract::class => ResetRepository::class,
     ];
 
 

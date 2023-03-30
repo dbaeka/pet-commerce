@@ -3,9 +3,9 @@
 namespace App\Repositories;
 
 use App\Dtos\BaseDto;
-use App\Repositories\Interfaces\CrudRepositoryInterface;
+use App\Repositories\Interfaces\CrudRepositoryContract;
 use App\Repositories\Traits\SupportsPagination;
-use App\Repositories\Traits\SupportsPaginationTraitInterface;
+use App\Repositories\Traits\SupportsPaginationTraitContract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -15,10 +15,10 @@ use ReflectionException;
 /**
  * @template TModel of Model
  * @template TObj of BaseDto
- * @implements CrudRepositoryInterface<TModel, TObj>
- * @implements SupportsPaginationTraitInterface<TModel|Model>
+ * @implements CrudRepositoryContract<TModel, TObj>
+ * @implements SupportsPaginationTraitContract<TModel|Model>
  */
-abstract class BaseCrudRepository implements CrudRepositoryInterface, SupportsPaginationTraitInterface
+abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPaginationTraitContract
 {
     use SupportsPagination;
 

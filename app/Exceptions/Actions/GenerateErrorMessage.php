@@ -34,7 +34,6 @@ class GenerateErrorMessage
                 break;
             case 500:
                 $response['error'] = 'Server error. Whoops!';
-                break;
         }
         return $response;
     }
