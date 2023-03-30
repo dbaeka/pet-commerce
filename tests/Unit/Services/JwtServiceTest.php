@@ -3,11 +3,11 @@
 namespace Tests\Unit\Services;
 
 use App\Dtos\User;
-use App\Exceptions\InvalidPathException;
-use App\Exceptions\Jwt\InvalidJwtExpiryException;
-use App\Exceptions\Jwt\InvalidJwtIssuerException;
-use App\Exceptions\Jwt\InvalidJwtTokenException;
-use App\Repositories\Interfaces\JwtTokenRepositoryInterface;
+use App\Exceptions\InvalidPath;
+use App\Exceptions\Jwt\InvalidJwtExpiry;
+use App\Exceptions\Jwt\InvalidJwtIssuer;
+use App\Exceptions\Jwt\InvalidJwtToken;
+use App\Repositories\Interfaces\JwtTokenRepositoryContract;
 use App\Services\Jwt\AuthenticateWithToken;
 use App\Services\Jwt\BaseJwtProvider;
 use App\Services\Jwt\GenerateToken;
@@ -35,7 +35,7 @@ class JwtServiceTest extends TestCase
 
     public function testFailsCreateServiceWhenInvalidPrivateKey(): void
     {
-        $this->expectException(InvalidPathException::class);
+        $this->expectException(InvalidPath::class);
 
         config([
             'jwt.private_key' => '',
@@ -47,7 +47,7 @@ class JwtServiceTest extends TestCase
 
     public function testFailsCreateServiceWhenInvalidPublicKey(): void
     {
-        $this->expectException(InvalidPathException::class);
+        $this->expectException(InvalidPath::class);
 
         config([
             'jwt.private_key' => self::PRIVATE_KEY,
@@ -59,7 +59,7 @@ class JwtServiceTest extends TestCase
 
     public function testFailsCreateServiceWhenInvalidIssuer(): void
     {
-        $this->expectException(InvalidJwtIssuerException::class);
+        $this->expectException(InvalidJwtIssuer::class);
 
         config([
             'app.url' => '',
@@ -70,7 +70,7 @@ class JwtServiceTest extends TestCase
 
     public function testFailsCreateServiceWhenExpiryNotNumeric(): void
     {
-        $this->expectException(InvalidJwtExpiryException::class);
+        $this->expectException(InvalidJwtExpiry::class);
 
         config([
             'jwt.expiry_seconds' => 'test'
@@ -82,7 +82,7 @@ class JwtServiceTest extends TestCase
 
     public function testFailsCreateServiceWhenExpiryIsZero(): void
     {
-        $this->expectException(InvalidJwtExpiryException::class);
+        $this->expectException(InvalidJwtExpiry::class);
 
         config([
             'jwt.expiry_seconds' => 0
@@ -122,7 +122,7 @@ class JwtServiceTest extends TestCase
 
     /**
      * @return void
-     * @throws InvalidJwtTokenException
+     * @throws InvalidJwtToken
      */
     public function testAuthenticatesTokenReturnUser(): void
     {
@@ -130,7 +130,7 @@ class JwtServiceTest extends TestCase
 
         $user_dto = User::make();
 
-        $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) use ($user_dto) {
+        $this->mock(JwtTokenRepositoryContract::class, function (MockInterface $mock) use ($user_dto) {
             $mock->shouldReceive('checkTokenExists')
                 ->once()
                 ->andReturn(true);
@@ -161,7 +161,7 @@ class JwtServiceTest extends TestCase
 
     /**
      * @return void
-     * @throws InvalidJwtTokenException
+     * @throws InvalidJwtToken
      */
     public function testFailsAuthenticateExpiredTokenReturnFalse(): void
     {
@@ -169,7 +169,7 @@ class JwtServiceTest extends TestCase
 
         Carbon::setTestNow(now()->addDay());
 
-        $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
+        $this->mock(JwtTokenRepositoryContract::class, function (MockInterface $mock) {
             $mock->shouldReceive('checkTokenExists')
                 ->once()
                 ->andReturn(true);
@@ -188,13 +188,13 @@ class JwtServiceTest extends TestCase
 
     /**
      * @return void
-     * @throws InvalidJwtTokenException
+     * @throws InvalidJwtToken
      */
     public function testFailsAuthenticateTokenNotAssociatedWithUserReturnFalse(): void
     {
         $token = $this->getValidToken();
 
-        $this->mock(JwtTokenRepositoryInterface::class, function (MockInterface $mock) {
+        $this->mock(JwtTokenRepositoryContract::class, function (MockInterface $mock) {
             $mock->shouldReceive('checkTokenExists')
                 ->once()
                 ->andReturn(false);
@@ -214,12 +214,12 @@ class JwtServiceTest extends TestCase
     /**
      * @param string $token
      * @return void
-     * @throws InvalidJwtTokenException
+     * @throws InvalidJwtToken
      * @dataProvider provideInvalidToken
      */
     public function testFailsAuthenticateInvalidTokenThrowsException(string $token): void
     {
-        $this->expectException(InvalidJwtTokenException::class);
+        $this->expectException(InvalidJwtToken::class);
 
         app(AuthenticateWithToken::class)->execute($token);
     }
@@ -231,7 +231,7 @@ class JwtServiceTest extends TestCase
      */
     public function testFailsValidateInvalidTokenThrowsException(string $token): void
     {
-        $this->expectException(InvalidJwtTokenException::class);
+        $this->expectException(InvalidJwtToken::class);
 
         app(AuthenticateWithToken::class)->execute($token);
     }

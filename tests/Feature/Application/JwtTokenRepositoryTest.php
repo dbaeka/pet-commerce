@@ -5,7 +5,7 @@ namespace Tests\Feature\Application;
 use App\Dtos\Token;
 use App\Dtos\User;
 use App\Models\JwtToken;
-use App\Repositories\Interfaces\JwtTokenRepositoryInterface;
+use App\Repositories\Interfaces\JwtTokenRepositoryContract;
 use Carbon\Carbon;
 use Database\Factories\JwtTokenFactory;
 use Database\Factories\UserFactory;
@@ -16,13 +16,13 @@ class JwtTokenRepositoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    private JwtTokenRepositoryInterface $jwt_repository;
+    private JwtTokenRepositoryContract $jwt_repository;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->jwt_repository = app(JwtTokenRepositoryInterface::class);
+        $this->jwt_repository = app(JwtTokenRepositoryContract::class);
     }
 
     public function testCreateToken(): void
