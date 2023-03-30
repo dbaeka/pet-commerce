@@ -9,7 +9,7 @@ use App\Http\Requests\v1\Product\UpdateProductRequest;
 use App\Http\Resources\v1\BaseResource;
 use App\Http\Resources\v1\DefaultCollection;
 use App\Models\Product;
-use App\Repositories\ProductRepository;
+use App\Repositories\Interfaces\ProductRepositoryContract;
 use App\Values\ProductMetadata;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Response;
@@ -24,7 +24,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class ProductController extends Controller
 {
     public function __construct(
-        private readonly ProductRepository $product_repository
+        private readonly ProductRepositoryContract $product_repository
     ) {
         $this->middleware('secure')->except(['index', 'show']);
     }

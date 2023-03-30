@@ -11,7 +11,7 @@ use App\Http\Resources\v1\DefaultCollection;
 use App\Http\Resources\v1\LoginResource;
 use App\Http\Resources\v1\UserCreateResource;
 use App\Http\Resources\v1\UserResource;
-use App\Repositories\UserRepository;
+use App\Repositories\Interfaces\UserRepositoryContract;
 use App\Services\Auth\LoginAdminWithCreds;
 use App\Services\Auth\LogoutUser;
 use App\Services\UserService;
@@ -31,7 +31,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class AdminController extends Controller
 {
     public function __construct(
-        private readonly UserRepository $user_repository
+        private readonly UserRepositoryContract $user_repository
     ) {
         $this->middleware('secure:admin')->except([
             'login',

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\v1\File\StoreFileRequest;
 use App\Http\Resources\v1\BaseResource;
 use App\Models\File;
-use App\Repositories\FileRepository;
+use App\Repositories\Interfaces\FileRepositoryContract;
 use App\Services\FileService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Response;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class FileController extends Controller
 {
     public function __construct(
-        private readonly FileRepository $file_repository
+        private readonly FileRepositoryContract $file_repository
     ) {
         $this->middleware('secure')->except(['show']);
     }

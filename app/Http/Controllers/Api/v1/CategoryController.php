@@ -9,7 +9,7 @@ use App\Http\Requests\v1\Category\UpdateCategoryRequest;
 use App\Http\Resources\v1\DefaultCollection;
 use App\Http\Resources\v1\BaseResource;
 use App\Models\Category;
-use App\Repositories\CategoryRepository;
+use App\Repositories\Interfaces\CategoryRepositoryContract;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class CategoryController extends Controller
 {
     public function __construct(
-        private readonly CategoryRepository $category_repository
+        private readonly CategoryRepositoryContract $category_repository
     ) {
         $this->middleware('secure')->except(['index', 'show']);
     }

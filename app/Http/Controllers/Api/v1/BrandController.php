@@ -9,7 +9,7 @@ use App\Http\Requests\v1\Brand\UpdateBrandRequest;
 use App\Http\Resources\v1\DefaultCollection;
 use App\Http\Resources\v1\BaseResource;
 use App\Models\Brand;
-use App\Repositories\BrandRepository;
+use App\Repositories\Interfaces\BrandRepositoryContract;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class BrandController extends Controller
 {
     public function __construct(
-        private readonly BrandRepository $brand_repository
+        private readonly BrandRepositoryContract $brand_repository
     ) {
         $this->middleware('secure')->except(['index', 'show']);
     }

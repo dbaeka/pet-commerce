@@ -12,7 +12,7 @@ use App\Http\Resources\v1\BaseResource;
 use App\Http\Resources\v1\DefaultCollection;
 use App\Models\Order;
 use App\Models\User;
-use App\Repositories\OrderRepository;
+use App\Repositories\Interfaces\OrderRepositoryContract;
 use App\Services\OrderService;
 use Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -29,7 +29,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class OrderController extends Controller
 {
     public function __construct(
-        private readonly OrderRepository $order_repository
+        private readonly OrderRepositoryContract $order_repository
     ) {
         $this->middleware('secure:admin')->only(['getDashboard', 'getShipmentLocator']);
         $this->middleware('secure')->except(['getDashboard', 'getShipmentLocator']);

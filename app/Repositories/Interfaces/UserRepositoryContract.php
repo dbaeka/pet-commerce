@@ -5,7 +5,7 @@ namespace App\Repositories\Interfaces;
 use App\Dtos\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
-interface UserRepositoryContract
+interface UserRepositoryContract extends CrudRepositoryContract
 {
     public function updateLastLogin(string $uuid): bool;
 

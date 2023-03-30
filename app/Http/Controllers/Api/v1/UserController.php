@@ -17,7 +17,7 @@ use App\Http\Resources\v1\UserCreateResource;
 use App\Http\Resources\v1\UserResource;
 use App\Models\User;
 use App\Repositories\Interfaces\OrderRepositoryContract;
-use App\Repositories\UserRepository;
+use App\Repositories\Interfaces\UserRepositoryContract;
 use App\Services\Auth\ForgotPassword;
 use App\Services\Auth\LoginUserWithCreds;
 use App\Services\Auth\LogoutUser;
@@ -40,7 +40,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class UserController extends Controller
 {
     public function __construct(
-        private readonly UserRepository           $user_repository,
+        private readonly UserRepositoryContract           $user_repository,
         private readonly OrderRepositoryContract $order_repository
     ) {
         $this->middleware('secure')->except([

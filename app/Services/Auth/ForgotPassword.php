@@ -3,7 +3,7 @@
 namespace App\Services\Auth;
 
 use App\Repositories\Interfaces\ResetRepositoryContract;
-use App\Repositories\UserRepository;
+use App\Repositories\Interfaces\UserRepositoryContract;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\UnauthorizedException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 readonly class ForgotPassword
 {
     public function __construct(
-        private UserRepository           $user_repository,
+        private UserRepositoryContract           $user_repository,
         private ResetRepositoryContract $reset_repository
     ) {
     }

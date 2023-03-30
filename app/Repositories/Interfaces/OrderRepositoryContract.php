@@ -6,7 +6,7 @@ use App\Models\Order;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 
-interface OrderRepositoryContract
+interface OrderRepositoryContract extends CrudRepositoryContract
 {
     /**
      * @param string $uuid

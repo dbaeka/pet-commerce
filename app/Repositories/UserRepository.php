@@ -4,13 +4,14 @@ namespace App\Repositories;
 
 use App\Dtos\User as UserDto;
 use App\Models\User;
+use App\Repositories\Interfaces\UserRepositoryContract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @extends  BaseCrudRepository<User, UserDto>
  */
-class UserRepository extends BaseCrudRepository
+class UserRepository extends BaseCrudRepository implements UserRepositoryContract
 {
     public function updateLastLogin(string $uuid): bool
     {

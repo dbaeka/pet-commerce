@@ -5,8 +5,8 @@ namespace App\Services;
 use App\Dtos\BaseDto;
 use App\Models\Order;
 use App\Models\User;
-use App\Repositories\OrderRepository;
-use App\Repositories\ProductRepository;
+use App\Repositories\Interfaces\OrderRepositoryContract;
+use App\Repositories\Interfaces\ProductRepositoryContract;
 use App\Values\Address;
 use App\Values\Product;
 use Auth;
@@ -15,13 +15,13 @@ use Illuminate\Support\Collection;
 
 readonly class OrderService
 {
-    private OrderRepository $order_repository;
-    private ProductRepository $product_repository;
+    private OrderRepositoryContract $order_repository;
+    private ProductRepositoryContract $product_repository;
 
     public function __construct()
     {
-        $this->order_repository = app(OrderRepository::class);
-        $this->product_repository = app(ProductRepository::class);
+        $this->order_repository = app(OrderRepositoryContract::class);
+        $this->product_repository = app(ProductRepositoryContract::class);
     }
 
     /**

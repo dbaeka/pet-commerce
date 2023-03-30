@@ -7,8 +7,8 @@ use App\Http\Requests\v1\MainPage\PostListingRequest;
 use App\Http\Requests\v1\Product\ProductListingRequest;
 use App\Http\Resources\v1\BaseResource;
 use App\Http\Resources\v1\DefaultCollection;
-use App\Repositories\PostRepository;
-use App\Repositories\PromotionRepository;
+use App\Repositories\Interfaces\PostRepositoryContract;
+use App\Repositories\Interfaces\PromotionRepositoryContract;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -20,8 +20,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class MainPageController extends Controller
 {
     public function __construct(
-        private readonly PostRepository      $post_repository,
-        private readonly PromotionRepository $promotion_repository
+        private readonly PostRepositoryContract      $post_repository,
+        private readonly PromotionRepositoryContract $promotion_repository
     ) {
     }
 

@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Dtos\BaseDto;
 use App\Models\File;
-use App\Repositories\FileRepository;
+use App\Repositories\Interfaces\FileRepositoryContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
@@ -12,11 +12,11 @@ use Str;
 
 readonly class FileService
 {
-    private FileRepository $file_repository;
+    private FileRepositoryContract $file_repository;
 
     public function __construct()
     {
-        $this->file_repository = app(FileRepository::class);
+        $this->file_repository = app(FileRepositoryContract::class);
     }
 
     /**

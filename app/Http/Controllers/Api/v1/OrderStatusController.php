@@ -9,7 +9,7 @@ use App\Http\Requests\v1\OrderStatus\UpdateOrderStatusRequest;
 use App\Http\Resources\v1\DefaultCollection;
 use App\Http\Resources\v1\BaseResource;
 use App\Models\OrderStatus;
-use App\Repositories\OrderStatusRepository;
+use App\Repositories\Interfaces\OrderStatusRepositoryContract;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class OrderStatusController extends Controller
 {
     public function __construct(
-        private readonly OrderStatusRepository $order_status_repository
+        private readonly OrderStatusRepositoryContract $order_status_repository
     ) {
         $this->middleware('secure')->except(['index', 'show']);
     }

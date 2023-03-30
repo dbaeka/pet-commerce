@@ -10,7 +10,7 @@ use App\Http\Resources\v1\BaseResource;
 use App\Http\Resources\v1\DefaultCollection;
 use App\Models\Payment;
 use App\Models\User;
-use App\Repositories\PaymentRepository;
+use App\Repositories\Interfaces\PaymentRepositoryContract;
 use App\Values\PaymentType\PaymentTypeDetailsFactory;
 use Auth;
 use Illuminate\Http\Response;
@@ -25,7 +25,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class PaymentController extends Controller
 {
     public function __construct(
-        private readonly PaymentRepository $payment_repository
+        private readonly PaymentRepositoryContract $payment_repository
     ) {
         $this->middleware('secure');
         $this->authorizeResource(Payment::class);

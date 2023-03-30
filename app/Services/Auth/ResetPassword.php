@@ -3,7 +3,7 @@
 namespace App\Services\Auth;
 
 use App\Repositories\Interfaces\ResetRepositoryContract;
-use App\Repositories\UserRepository;
+use App\Repositories\Interfaces\UserRepositoryContract;
 use Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Arr;
@@ -12,7 +12,7 @@ use Illuminate\Validation\UnauthorizedException;
 readonly class ResetPassword
 {
     public function __construct(
-        private UserRepository           $user_repository,
+        private UserRepositoryContract           $user_repository,
         private ResetRepositoryContract $reset_repository
     ) {
     }

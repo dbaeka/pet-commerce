@@ -4,13 +4,14 @@ namespace App\Repositories;
 
 use App\Dtos\Promotion as PromotionDto;
 use App\Models\Promotion;
+use App\Repositories\Interfaces\PromotionRepositoryContract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @extends BaseCrudRepository<Promotion, PromotionDto>
  */
-class PromotionRepository extends BaseCrudRepository
+class PromotionRepository extends BaseCrudRepository implements PromotionRepositoryContract
 {
     /**
      * @return LengthAwarePaginator<Promotion|Model>
