@@ -6,6 +6,11 @@ order, view products and manage users. This app satisfies all
 the endpoints requested in the main task.
 
 ## Usage
+DEFAULT ADMIN: admin@buckhill.co.uk
+
+ADMIN PASS: admin
+
+USER PASS: userpassword
 ### Using the Terminal
 1. Clone this repository into your local development.
 2. Copy the .env.dev file to .env using
@@ -20,7 +25,9 @@ composer install && php artisan key:generate
 is sqlite and the queue connection is set to sync. Run the following
 to sync the db with tables and seeds
 ```bash
-php artisan db:seed --migrate
+touch database/database.sqlite
+php artisan migrate:fresh
+php artisan db:seed
 ```
 5. JWT tokens require you to use RSA keys. By default the 
 `config/jwt.php` file contains the default location, which is 
@@ -99,5 +106,7 @@ alternative would be to encrypt details
 - Most tests have been left out since they ensure more coverage rather than testing
 new functions. Rather, all feature tests were added for each endpoint. There
 is room for adding more edge cases
+- Logging was ommitted intentionally to focus on the code since choice of logging
+is team dependent and what works best with the tools available.
 
 *Note*: Calculation from order seeder might be off in invoice
