@@ -7,7 +7,7 @@ use App\Http\Requests\v1\File\StoreFileRequest;
 use App\Http\Resources\v1\BaseResource;
 use App\Models\File;
 use App\Repositories\Interfaces\FileRepositoryContract;
-use App\Services\FileService;
+use App\Services\File\SaveFile;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Response;
@@ -54,7 +54,7 @@ class FileController extends Controller
     public function store(StoreFileRequest $request): JsonResponse
     {
         $file = $request->validated()['file'];
-        $saved_file = (new FileService())->saveFile($file);
+        $saved_file = app(SaveFile::class)->execute($file);
         return $saved_file ? (new BaseResource($saved_file))->response()->setStatusCode(SResponse::HTTP_CREATED) :
             throw new UnprocessableEntityHttpException();
     }

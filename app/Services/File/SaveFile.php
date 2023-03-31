@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\File;
 
 use App\Models\File;
 use App\Repositories\Interfaces\FileRepositoryContract;
@@ -10,7 +10,7 @@ use Illuminate\Http\UploadedFile;
 use Spatie\LaravelData\Data;
 use Str;
 
-readonly class FileService
+readonly class SaveFile
 {
     private FileRepositoryContract $file_repository;
 
@@ -23,7 +23,7 @@ readonly class FileService
      * @param UploadedFile $file
      * @return Data|Builder<File>|Model|null
      */
-    public function saveFile(UploadedFile $file): Model|Builder|Data|null
+    public function execute(UploadedFile $file): Model|Builder|Data|null
     {
         $dir = storage_path(config('app.pet_shop_file_dir'));
         $file_name = sha1(Str::random()) . '.' . $file->getClientOriginalExtension();

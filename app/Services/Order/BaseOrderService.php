@@ -1,44 +1,27 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Order;
 
 use App\DataObjects\ProductItem;
-use App\Models\Order;
 use App\Models\User;
 use App\Repositories\Interfaces\OrderRepositoryContract;
 use App\Repositories\Interfaces\ProductRepositoryContract;
 use Auth;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Spatie\LaravelData\Data;
 
-readonly class OrderService
+abstract readonly class BaseOrderService
 {
-    private OrderRepositoryContract $order_repository;
-    private ProductRepositoryContract $product_repository;
-
-    public function __construct()
-    {
-        $this->order_repository = app(OrderRepositoryContract::class);
-        $this->product_repository = app(ProductRepositoryContract::class);
-    }
-
-    /**
-     * @param array<string, mixed> $data
-     * @return Order|Model|null
-     */
-    public function createOrder(array $data): Data|Model|null
-    {
-        $data = $this->extendData($data);
-        $data = \App\DataObjects\Order::from($data);
-        return $this->order_repository->create($data);
+    public function __construct(
+        private ProductRepositoryContract $product_repository,
+        protected OrderRepositoryContract $order_repository
+    ) {
     }
 
     /**
      * @param array<string, mixed> $data
      * @return array<string, mixed>
      */
-    private function extendData(array $data): array
+    final protected function extendData(array $data): array
     {
         /** @var User $user */
         $user = Auth::user();
@@ -87,15 +70,5 @@ readonly class OrderService
     private function getDeliveryFee(float $amount): float
     {
         return $amount > 500 ? 0 : 15;
-    }
-
-    /**
-     * @param array<string, mixed> $data
-     */
-    public function updateOrder(string $uuid, array $data): Order|Data|Model|null
-    {
-        $data = $this->extendData($data);
-        $data = \App\DataObjects\Order::from($data);
-        return $this->order_repository->updateByUuid($uuid, $data);
     }
 }

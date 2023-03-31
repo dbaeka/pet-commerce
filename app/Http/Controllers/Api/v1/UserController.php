@@ -22,13 +22,13 @@ use App\Services\Auth\ForgotPassword;
 use App\Services\Auth\LoginUserWithCreds;
 use App\Services\Auth\LogoutUser;
 use App\Services\Auth\ResetPassword;
-use App\Services\UserService;
+use App\Services\User\CreateRegularUser;
+use App\Services\User\UpdateUserDetails;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\UnauthorizedException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 /**
@@ -63,16 +63,11 @@ class UserController extends Controller
      */
     public function show(): UserResource
     {
+        $this->authorize('view', User::class);
         /** @var User $user */
         $user = Auth::user();
-        if ($user->is_admin) {
-            throw new UnauthorizedException();
-        }
         $user_dto = $this->user_repository->findByUuid($user->uuid);
-        if ($user_dto) {
-            return new UserResource($user_dto);
-        }
-        throw new ModelNotFoundException();
+        return $user_dto ? new UserResource($user_dto) : throw new ModelNotFoundException();
     }
 
     /**
@@ -94,11 +89,9 @@ class UserController extends Controller
      */
     public function getOrders(OrderListingRequest $request): DefaultCollection
     {
+        $this->authorize('getOrders', User::class);
         /** @var User $user */
         $user = Auth::user();
-        if ($user->is_admin) {
-            throw new UnauthorizedException();
-        }
         $orders = $this->order_repository->getUserOrders($user->uuid);
         return new DefaultCollection($orders);
     }
@@ -129,11 +122,9 @@ class UserController extends Controller
     public function store(UserCreateRequest $request): JsonResponse
     {
         $data = $request->validated();
-        $user = (new UserService())->createUser($data);
-        if ($user) {
-            return (new UserCreateResource((object)$user->toArray()))->response()->setStatusCode(201);
-        }
-        throw new UnprocessableEntityHttpException();
+        $user = app(CreateRegularUser::class)->execute($data);
+        return $user ? (new UserCreateResource((object)$user->toArray()))->response()->setStatusCode(201) :
+            throw new UnprocessableEntityHttpException();
     }
 
 
@@ -164,10 +155,8 @@ class UserController extends Controller
     {
         $data = $request->validated();
         $success = app(ResetPassword::class)->execute($data);
-        if ($success) {
-            return new MessageResource('Password has been successfully updated');
-        }
-        throw new UnprocessableEntityHttpException();
+        return $success ? new MessageResource('Password has been successfully updated') :
+            throw new UnprocessableEntityHttpException();
     }
 
 
@@ -228,13 +217,9 @@ class UserController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-        $data = \App\DataObjects\User::from($request->validated());
-        $updated_user = $this->user_repository->updateByUuid($user->uuid, $data);
-
-        if ($updated_user) {
-            return new UserResource($user);
-        }
-        throw new UnprocessableEntityHttpException();
+        $data = $request->validated();
+        $updated_user = app(UpdateUserDetails::class)->execute($user->uuid, $data);
+        return $updated_user ? new UserResource($user) : throw new UnprocessableEntityHttpException();
     }
 
     /**
@@ -253,11 +238,9 @@ class UserController extends Controller
      */
     public function delete(): Response
     {
+        $this->authorize('delete', User::class);
         /** @var User $user */
         $user = Auth::user();
-        if ($user->is_admin) {
-            throw new UnauthorizedException();
-        }
         $deleted = $this->user_repository->deleteByUuid($user->uuid);
         return $deleted ? response()->noContent() : throw new UnprocessableEntityHttpException();
     }
@@ -290,10 +273,7 @@ class UserController extends Controller
     {
         $credentials = $request->validated();
         $token = app(LoginUserWithCreds::class)->execute($credentials);
-        if ($token) {
-            return new LoginResource($token);
-        }
-        throw new AuthenticationException();
+        return $token ? new LoginResource($token) : throw new AuthenticationException();
     }
 
     /**
@@ -311,11 +291,7 @@ class UserController extends Controller
      */
     public function logout(): Response
     {
-        /** @var User $user */
-        $user = Auth::user();
-        if ($user->is_admin) {
-            throw new UnauthorizedException();
-        }
+        $this->authorize('logout', User::class);
         if (app(LogoutUser::class)->execute()) {
             return response()->noContent();
         }

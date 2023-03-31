@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\DataObjects\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\v1\Admin\AdminLoginRequest;
 use App\Http\Requests\v1\Admin\AdminUserCreateRequest;
@@ -15,9 +14,9 @@ use App\Http\Resources\v1\UserResource;
 use App\Repositories\Interfaces\UserRepositoryContract;
 use App\Services\Auth\LoginAdminWithCreds;
 use App\Services\Auth\LogoutUser;
-use App\Services\UserService;
+use App\Services\User\CreateAdminUser;
+use App\Services\User\UpdateUserDetails;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\Response as SResponse;
@@ -93,19 +92,9 @@ class AdminController extends Controller
     public function store(AdminUserCreateRequest $request): JsonResponse
     {
         $data = $request->validated();
-        $data['is_marketing'] = filter_var(
-            data_get($data, 'is_marketing'),
-            FILTER_VALIDATE_BOOL,
-            FILTER_NULL_ON_FAILURE
-        );
-        if ($this->user_repository->findUserByEmail($data['email'])) {
-            throw new UnprocessableEntityHttpException('Email already exists');
-        }
-        $user = (new UserService())->createAdmin($data);
-        if ($user) {
-            return (new UserCreateResource((object)$user->toArray()))->response()->setStatusCode(SResponse::HTTP_CREATED);
-        }
-        throw new UnprocessableEntityHttpException();
+        $user = app(CreateAdminUser::class)->execute($data);
+        return $user ? (new UserCreateResource((object)$user->toArray()))->response()
+            ->setStatusCode(SResponse::HTTP_CREATED) : throw new UnprocessableEntityHttpException();
     }
 
     /**
@@ -133,23 +122,9 @@ class AdminController extends Controller
      */
     public function editUser(AdminUserEditRequest $request, string $uuid): UserResource
     {
-        $user = $this->user_repository->findByUuid($uuid);
-        if (empty($user)) {
-            throw new ModelNotFoundException();
-        }
         $data = $request->validated();
-        $data['is_marketing'] = filter_var(
-            data_get($data, 'is_marketing'),
-            FILTER_VALIDATE_BOOL,
-            FILTER_NULL_ON_FAILURE
-        );
-        $data = User::from($data);
-        $updated_user = $this->user_repository->updateByUuid($uuid, $data);
-
-        if ($updated_user) {
-            return new UserResource($updated_user);
-        }
-        throw new UnprocessableEntityHttpException();
+        $updated_user = app(UpdateUserDetails::class)->execute($uuid, $data);
+        return $updated_user ? new UserResource($updated_user) : throw new UnprocessableEntityHttpException();
     }
 
     /**

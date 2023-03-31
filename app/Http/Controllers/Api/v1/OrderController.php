@@ -13,9 +13,10 @@ use App\Http\Resources\v1\DefaultCollection;
 use App\Models\Order;
 use App\Models\User;
 use App\Repositories\Interfaces\OrderRepositoryContract;
-use App\Services\OrderService;
+use App\Services\Order\CreateOrder;
+use App\Services\Order\GetInvoiceAsPdf;
+use App\Services\Order\UpdateOrder;
 use Auth;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -92,7 +93,7 @@ class OrderController extends Controller
     {
         $this->authorize('create', Order::class);
         $data = $request->validated();
-        $order = (new OrderService())->createOrder($data);
+        $order = app(CreateOrder::class)->execute($data);
         return $order ? (new BaseResource($order))->response()->setStatusCode(SResponse::HTTP_CREATED) :
             throw new UnprocessableEntityHttpException();
     }
@@ -145,7 +146,7 @@ class OrderController extends Controller
     {
         $this->authorize('update', [Order::class, $order]);
         $data = $request->validated();
-        $order = (new OrderService())->updateOrder($order->uuid, $data);
+        $order = app(UpdateOrder::class)->execute($order->uuid, $data);
         return $order ? new BaseResource($order) : throw new UnprocessableEntityHttpException();
     }
 
@@ -239,12 +240,7 @@ class OrderController extends Controller
      */
     public function downloadOrder(string $uuid): Response
     {
-        /** @var Order|null $order */
-        $order = $this->order_repository->findByUuid($uuid);
-        if (empty($order)) {
-            throw new UnprocessableEntityHttpException();
-        }
-        $pdf = Pdf::loadView('pdf.invoice.index', ['order' => $order]);
-        return $pdf->download($order->uuid . '.pdf');
+        $pdf = app(GetInvoiceAsPdf::class)->execute($uuid);
+        return $pdf->download($uuid . '.pdf');
     }
 }

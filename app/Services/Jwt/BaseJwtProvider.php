@@ -97,19 +97,19 @@ abstract class BaseJwtProvider
         throw_if($expiry_seconds <= 0 || !is_numeric($expiry_seconds), InvalidJwtExpiry::class);
     }
 
-    protected function parseToken(string $token): ?UnencryptedToken
-    {
-        if (empty($token)) {
-            return null;
-        }
-        $config = $this->config;
-        try {
-            $jwt = $config->parser()->parse($token);
-            assert($jwt instanceof UnencryptedToken);
-            return $jwt;
-        } catch (Throwable $e) {
-            Log::error('error parsing token: ' . $e->getMessage());
-        }
-        return null;
-    }
+   final protected function parseToken(string $token): ?UnencryptedToken
+   {
+       if (empty($token)) {
+           return null;
+       }
+       $config = $this->config;
+       try {
+           $jwt = $config->parser()->parse($token);
+           assert($jwt instanceof UnencryptedToken);
+           return $jwt;
+       } catch (Throwable $e) {
+           Log::error('error parsing token: ' . $e->getMessage());
+       }
+       return null;
+   }
 }
