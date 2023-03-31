@@ -68,7 +68,8 @@
         "analyse": "@php ./vendor/bin/phpstan analyse --memory-limit 1G --configuration phpstan.neon.dist --ansi",
         "insight": "@php artisan insight",
         "insight-action": "@php artisan insight -n --ansi --format=github-action",
-        "pint": "@php ./vendor/bin/pint"
+        "pint": "@php ./vendor/bin/pint",
+        "swagger": "@php artisan l5-swagger:generate --ansi"
     },
     "extra": {
         "laravel": {
