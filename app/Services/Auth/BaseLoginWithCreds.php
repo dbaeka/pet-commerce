@@ -5,7 +5,6 @@ namespace App\Services\Auth;
 use App\DataObjects\User;
 use App\Events\UserLoggedIn;
 use App\Repositories\Interfaces\JwtTokenRepositoryContract;
-use App\Repositories\Interfaces\UserRepositoryContract;
 use App\Services\Jwt\GenerateToken;
 use Illuminate\Support\Facades\Auth;
 
