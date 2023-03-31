@@ -11,8 +11,8 @@ DEFAULT ADMIN: admin@buckhill.co.uk
 ADMIN PASS: admin
 
 USER PASS: userpassword
-### Using the Terminal
-1. Clone this repository into your local development.
+### Using the Terminal (Ubuntu)
+1. Clone this repository into your local development and cd into directory
 2. Copy the .env.dev file to .env using
 ```bash
 cp .env.dev .env
@@ -41,7 +41,7 @@ php artisan jwt:keys
 php artisan serve
 ```
 7. You can start working with the API using the swagger link below
-[http://localhost:8000/api/swagger]()
+[http://localhost:8000/api/swagger](http://localhost:8000/api/swagger)
 
 ### Using docker-compose
 
