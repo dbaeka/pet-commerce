@@ -47,6 +47,8 @@ jobs:
         run: composer insight-action
       - name: Run tests
         run: composer test
+      - name: Attempt Swagger Generation
+        run: composer swagger
       - name: Upload logs if broken
         uses: actions/upload-artifact@v1
         if: failure()
