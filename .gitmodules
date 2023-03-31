@@ -1,0 +1,3 @@
+[submodule "packages/dbaeka/buckhill-currency-converter"]
+	path = packages/dbaeka/buckhill-currency-converter
+	url = git@github.com:dbaeka/buckhill-currency-converter.git

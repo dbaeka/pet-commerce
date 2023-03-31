@@ -22,6 +22,8 @@ class UserSeeder extends Seeder
             'is_admin' => true,
         ]);
 
-        UserFactory::new()->regular()->count(20)->create();
+        UserFactory::new()->regular()->count(20)->create([
+            'password' => Hash::make('userpassword')
+        ]);
     }
 }
