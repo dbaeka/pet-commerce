@@ -13,7 +13,7 @@ return new class () extends Migration {
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignUuid('user_uuid')->constrained('users', 'uuid')->cascadeOnDelete();
-            $table->foreignUuid('order_status_uuid')->constrained('order_statuses', 'uuid')->nullOnDelete();
+            $table->foreignUuid('order_status_uuid')->constrained('order_statuses', 'uuid');
             $table->foreignUuid('payment_uuid')->constrained('payments', 'uuid')->cascadeOnDelete();
             $table->string('uuid')->unique();
             $table->json('products');

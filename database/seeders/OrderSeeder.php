@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
-use Database\Factories\CategoryFactory;
+use Database\Factories\OrderFactory;
 use Illuminate\Database\Seeder;
 
-class CategorySeeder extends Seeder
+class OrderSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        CategoryFactory::new()->count(20)->create();
+        OrderFactory::new()->count(rand(60, 100))->create();
     }
 }

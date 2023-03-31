@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Database\Factories\UserFactory;
+use Hash;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -17,8 +18,10 @@ class UserSeeder extends Seeder
             'first_name' => 'Admin',
             'last_name' => 'User',
             'email' => 'admin@buckhill.co.uk',
-            'password' => 'admin',
+            'password' => Hash::make('admin'),
             'is_admin' => true,
         ]);
+
+        UserFactory::new()->regular()->count(20)->create();
     }
 }
