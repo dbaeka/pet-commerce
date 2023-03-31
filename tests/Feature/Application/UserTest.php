@@ -114,8 +114,8 @@ class UserTest extends ApiTestCase
         $data = array_merge($user->getAttributes(), [
             "first_name" => fake()->firstName(),
             "last_name" => fake()->lastName(),
-            "password" => "secret",
-            "password_confirmation" => "secret"
+            "password" => "secret1234",
+            "password_confirmation" => "secret1234"
         ]);
 
         self::assertNotSame($user->first_name, $data['first_name']);
@@ -178,8 +178,8 @@ class UserTest extends ApiTestCase
             "first_name" => fake()->firstName(),
             "last_name" => fake()->lastName(),
             "email" => "delmwin@test.com",
-            "password" => 'foobar',
-            "password_confirmation" => 'foobar',
+            "password" => 'foobar1234',
+            "password_confirmation" => 'foobar1234',
             "address" => fake()->streetAddress(),
             "phone_number" => fake()->e164PhoneNumber(),
         ];

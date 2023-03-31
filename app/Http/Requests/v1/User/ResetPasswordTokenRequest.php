@@ -3,6 +3,7 @@
 namespace App\Http\Requests\v1\User;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 /**
  * @OA\Schema(
@@ -49,7 +50,7 @@ class ResetPasswordTokenRequest extends FormRequest
         return [
             "token" => ['required', 'string'],
             "email" => ['required', 'email'],
-            "password" => ['required', 'confirmed'],
+            "password" => ['required', Password::defaults(), 'confirmed'],
             "password_confirmation" => ['required'],
         ];
     }

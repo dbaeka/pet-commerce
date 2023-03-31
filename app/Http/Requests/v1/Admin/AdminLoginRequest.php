@@ -3,6 +3,7 @@
 namespace App\Http\Requests\v1\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 /**
  * @OA\Schema(
