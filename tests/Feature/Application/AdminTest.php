@@ -2,10 +2,13 @@
 
 namespace Tests\Feature\Application;
 
+use App\Events\TokenUsed;
+use App\Events\UserLoggedIn;
 use App\Models\User;
 use Database\Factories\UserFactory;
 use Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 
 class AdminTest extends ApiTestCase
 {
@@ -13,6 +16,7 @@ class AdminTest extends ApiTestCase
 
     public function testAdminLogin(): void
     {
+        Event::fake();
         $endpoint = self::PREFIX . 'admin/login';
         $email = 'delmwin@test.com';
 
@@ -56,6 +60,8 @@ class AdminTest extends ApiTestCase
             ->assertJsonFragment([
                 'success' => 0
             ]);
+
+        Event::assertDispatchedTimes(UserLoggedIn::class);
     }
 
 
@@ -75,6 +81,7 @@ class AdminTest extends ApiTestCase
 
     public function testAdminLogout(): void
     {
+        Event::fake();
         $login_endpoint = self::PREFIX . 'admin/login';
         $logout_endpoint = self::PREFIX . 'admin/logout';
 
@@ -98,6 +105,7 @@ class AdminTest extends ApiTestCase
             ->assertNoContent();
 
         self::assertSame(0, $user->jwt_tokens()->count());
+        Event::assertDispatchedTimes(TokenUsed::class);
     }
 
     public function testAdminUserEdit(): void

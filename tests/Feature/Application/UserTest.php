@@ -2,12 +2,14 @@
 
 namespace Application;
 
+use App\Events\UserLoggedIn;
 use App\Models\User;
 use Database\Factories\OrderFactory;
 use Database\Factories\UserFactory;
 use Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Tests\Feature\Application\ApiTestCase;
 
 class UserTest extends ApiTestCase
@@ -16,6 +18,7 @@ class UserTest extends ApiTestCase
 
     public function testUserLogin(): void
     {
+        Event::fake();
         $endpoint = self::PREFIX . 'user/login';
         $email = 'delmwin@test.com';
 
@@ -59,6 +62,7 @@ class UserTest extends ApiTestCase
             ->assertJsonFragment([
                 'success' => 0
             ]);
+        Event::assertDispatchedTimes(UserLoggedIn::class);
     }
 
     public function testUserLoginWithWrongParamsFails(): void

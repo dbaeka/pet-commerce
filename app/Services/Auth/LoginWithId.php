@@ -3,8 +3,8 @@
 namespace App\Services\Auth;
 
 use App\DataObjects\User;
+use App\Events\UserLoggedIn;
 use App\Repositories\Interfaces\JwtTokenRepositoryContract;
-use App\Repositories\Interfaces\UserRepositoryContract;
 use App\Services\Jwt\GenerateToken;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,7 +12,6 @@ readonly class LoginWithId
 {
     public function __construct(
         private JwtTokenRepositoryContract $jwt_token_repository,
-        private UserRepositoryContract     $user_repository
     ) {
     }
 
@@ -25,8 +24,7 @@ readonly class LoginWithId
             $token = app(GenerateToken::class)->execute($user_dto);
             $token_id = $this->jwt_token_repository->createToken($token);
             if (!empty($token_id)) {
-                // TODO change to event
-                $this->user_repository->updateLastLogin($user->uuid);
+                UserLoggedIn::dispatch($user->uuid);
                 return $token->getAdditionalData()['token_value'];
             }
         }

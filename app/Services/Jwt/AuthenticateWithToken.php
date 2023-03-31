@@ -3,6 +3,7 @@
 namespace App\Services\Jwt;
 
 use App\DataObjects\User;
+use App\Events\TokenUsed;
 use App\Exceptions\Jwt\InvalidJwtToken;
 
 class AuthenticateWithToken extends BaseJwtProvider
@@ -21,8 +22,7 @@ class AuthenticateWithToken extends BaseJwtProvider
         $jwt_token_exists = $this->jwt_token_repository->checkTokenExists($unique_id);
 
         if ($jwt_token_exists) {
-            // TODO change to event
-            $this->jwt_token_repository->updateTokenLastUsed($unique_id);
+            TokenUsed::dispatch($unique_id);
         }
 
         $is_expired = $parsed_token->isExpired(now());
