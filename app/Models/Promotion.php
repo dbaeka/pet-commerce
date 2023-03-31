@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\DataObjects\PromotionMetadata;
 use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -38,7 +39,7 @@ class Promotion extends Model
     use HasUuid;
 
     protected $casts = [
-        'metadata' => 'array'
+        'metadata' => PromotionMetadata::class
     ];
 
     protected $hidden = ['id', 'valid_to'];

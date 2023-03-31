@@ -24,7 +24,6 @@ abstract class BaseJwtProvider
     protected int $expiry_seconds;
     protected readonly JwtTokenRepositoryContract $jwt_token_repository;
 
-
     /**
      * @throws InvalidJwtIssuer
      * @throws Throwable
@@ -45,12 +44,9 @@ abstract class BaseJwtProvider
     {
         $private_key_path = config('jwt.private_key');
         $private_key_passphrase = config('jwt.private_key_passphrase');
-
         $public_key_path = config('jwt.public_key');
         $public_key_passphrase = config('jwt.public_key_passphrase');
         $this->validatePaths($private_key_path, $public_key_path);
-
-
         $private_key = InMemory::file($private_key_path, $private_key_passphrase);
         $public_key = InMemory::file($public_key_path, $public_key_passphrase);
         $this->config = Configuration::forAsymmetricSigner(new Sha256(), $private_key, $public_key);

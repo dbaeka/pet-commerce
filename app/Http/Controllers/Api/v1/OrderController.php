@@ -17,7 +17,9 @@ use App\Services\OrderService;
 use Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as SResponse;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 /**
@@ -86,12 +88,13 @@ class OrderController extends Controller
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function store(StoreOrderRequest $request): BaseResource
+    public function store(StoreOrderRequest $request): JsonResponse
     {
         $this->authorize('create', Order::class);
         $data = $request->validated();
         $order = (new OrderService())->createOrder($data);
-        return $order ? new BaseResource($order) : throw new UnprocessableEntityHttpException();
+        return $order ? (new BaseResource($order))->response()->setStatusCode(SResponse::HTTP_CREATED) :
+            throw new UnprocessableEntityHttpException();
     }
 
     /**

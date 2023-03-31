@@ -12,7 +12,7 @@ readonly class LoginWithId
 {
     public function __construct(
         private JwtTokenRepositoryContract $jwt_token_repository,
-        private UserRepositoryContract             $user_repository
+        private UserRepositoryContract     $user_repository
     ) {
     }
 

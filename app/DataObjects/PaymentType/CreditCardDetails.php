@@ -2,8 +2,6 @@
 
 namespace App\DataObjects\PaymentType;
 
-use Spatie\LaravelData\Data;
-
 /**
  * @OA\Schema(
  *    schema="CreditCardDetails",
@@ -32,7 +30,7 @@ use Spatie\LaravelData\Data;
  *    ),
  * )
  */
-class CreditCardDetails extends Data
+class CreditCardDetails extends BasePaymentDetails
 {
     public function __construct(
         public string $number,

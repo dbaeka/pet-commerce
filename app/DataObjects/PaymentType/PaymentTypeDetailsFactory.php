@@ -12,7 +12,7 @@ class PaymentTypeDetailsFactory
      * @param PaymentType|string $type
      * @param array<string, scalar> $details
      */
-    public static function make(PaymentType|string $type, array $details): BankTransferDetails|CashOnDeliveryDetails|CreditCardDetails
+    public static function make(PaymentType|string $type, array $details): BasePaymentDetails
     {
         if (is_string($type)) {
             try {

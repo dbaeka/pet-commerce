@@ -11,7 +11,9 @@ use App\Http\Resources\v1\BaseResource;
 use App\Models\Brand;
 use App\Repositories\Interfaces\BrandRepositoryContract;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as SResponse;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 /**
@@ -74,12 +76,13 @@ class BrandController extends Controller
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function store(StoreBrandRequest $request): BaseResource
+    public function store(StoreBrandRequest $request): JsonResponse
     {
         $this->authorize('create', Brand::class);
-        $data = $request->validated();
+        $data = \App\DataObjects\Brand::from($request->validated());
         $brand = $this->brand_repository->create($data);
-        return $brand ? new BaseResource($brand) : throw new UnprocessableEntityHttpException();
+        return $brand ? (new BaseResource($brand))->response()->setStatusCode(SResponse::HTTP_CREATED) :
+            throw new UnprocessableEntityHttpException();
     }
 
     /**
@@ -129,7 +132,7 @@ class BrandController extends Controller
     public function update(UpdateBrandRequest $request, string $uuid): BaseResource
     {
         $this->authorize('update', Brand::class);
-        $data = $request->validated();
+        $data = \App\DataObjects\Brand::from($request->validated());
         $brand = $this->brand_repository->updateByUuid($uuid, $data);
         return $brand ? new BaseResource($brand) : throw new UnprocessableEntityHttpException();
     }

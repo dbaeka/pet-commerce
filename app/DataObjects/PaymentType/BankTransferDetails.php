@@ -2,8 +2,6 @@
 
 namespace App\DataObjects\PaymentType;
 
-use Spatie\LaravelData\Data;
-
 /**
  * @OA\Schema(
  *    schema="BankTransferDetails",
@@ -26,7 +24,7 @@ use Spatie\LaravelData\Data;
  *    ),
  * )
  */
-class BankTransferDetails extends Data
+class BankTransferDetails extends BasePaymentDetails
 {
     public function __construct(
         public string $swift,

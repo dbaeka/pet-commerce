@@ -11,7 +11,9 @@ use App\Http\Resources\v1\DefaultCollection;
 use App\Models\Product;
 use App\Repositories\Interfaces\ProductRepositoryContract;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as SResponse;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 /**
@@ -79,12 +81,13 @@ class ProductController extends Controller
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function store(StoreProductRequest $request): BaseResource
+    public function store(StoreProductRequest $request): JsonResponse
     {
         $this->authorize('create', Product::class);
-        $data = $request->validated();
+        $data = \App\DataObjects\Product::from($request->validated());
         $product = $this->product_repository->create($data);
-        return $product ? new BaseResource($product) : throw new UnprocessableEntityHttpException();
+        return $product ? (new BaseResource($product))->response()->setStatusCode(SResponse::HTTP_CREATED) :
+            throw new UnprocessableEntityHttpException();
     }
 
     /**
@@ -134,7 +137,7 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, string $uuid): BaseResource
     {
         $this->authorize('update', Product::class);
-        $data = $request->validated();
+        $data = \App\DataObjects\Product::from($request->validated());
         $product = $this->product_repository->updateByUuid($uuid, $data);
         return $product ? new BaseResource($product) : throw new UnprocessableEntityHttpException();
     }

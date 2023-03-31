@@ -19,20 +19,15 @@ abstract readonly class BaseLoginWithCreds
         $this->user_repository = app(UserRepositoryContract::class);
     }
 
-    private function userDtoFromModel(): User
-    {
-        /** @var array<string, mixed> $user */
-        $user = Auth::user();
-        return User::from($user);
-    }
-
     protected function generateToken(User $user): ?string
     {
         $token = app(GenerateToken::class)->execute($user);
         $token_id = $this->jwt_token_repository->createToken($token);
         if (!empty($token_id)) {
             // TODO change to event
-            $this->user_repository->updateLastLogin($user->uuid);
+            /** @var string $uuid */
+            $uuid = $user->uuid;
+            $this->user_repository->updateLastLogin($uuid);
             return $token->getAdditionalData()['token_value'];
         }
         return null;
@@ -48,5 +43,12 @@ abstract readonly class BaseLoginWithCreds
             return $this->userDtoFromModel();
         }
         return null;
+    }
+
+    private function userDtoFromModel(): User
+    {
+        /** @var array<string, mixed> $user */
+        $user = Auth::user();
+        return User::from($user);
     }
 }

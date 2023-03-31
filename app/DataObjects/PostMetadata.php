@@ -6,6 +6,6 @@ use Spatie\LaravelData\Data;
 
 class PostMetadata extends Data
 {
-    public string $brand;
+    public string $author;
     public string $image;
 }

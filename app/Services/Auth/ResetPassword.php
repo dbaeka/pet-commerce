@@ -2,17 +2,17 @@
 
 namespace App\Services\Auth;
 
+use App\DataObjects\User;
 use App\Repositories\Interfaces\ResetRepositoryContract;
 use App\Repositories\Interfaces\UserRepositoryContract;
 use Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Arr;
 use Illuminate\Validation\UnauthorizedException;
 
 readonly class ResetPassword
 {
     public function __construct(
-        private UserRepositoryContract           $user_repository,
+        private UserRepositoryContract  $user_repository,
         private ResetRepositoryContract $reset_repository
     ) {
     }
@@ -32,8 +32,13 @@ readonly class ResetPassword
             throw new UnauthorizedException();
         }
         $data['password'] = Hash::make($data['password']);
-        $user = $this->user_repository->updateByUuid($user->uuid, Arr::only($data, ['password']));
-        $success = $this->reset_repository->deleteToken($data['email']);
+        $data = User::from($data);
+        /** @var string $uuid */
+        $uuid = $user->uuid;
+        $user = $this->user_repository->updateByUuid($uuid, $data);
+        /** @var string $email */
+        $email = $data->email;
+        $success = $this->reset_repository->deleteToken($email);
         if ($user && $success) {
             return true;
         }

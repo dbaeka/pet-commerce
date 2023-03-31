@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Casts\PaymentDetails;
 use App\Enums\PaymentType;
+use App\Models\Casts\PaymentDetails;
 use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereUuid($value)
+ * @property \App\DataObjects\PaymentType\BasePaymentDetails $details
  * @mixin \Eloquent
  */
 class Payment extends Model

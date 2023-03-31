@@ -27,7 +27,6 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
@@ -40,7 +39,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class UserController extends Controller
 {
     public function __construct(
-        private readonly UserRepositoryContract           $user_repository,
+        private readonly UserRepositoryContract  $user_repository,
         private readonly OrderRepositoryContract $order_repository
     ) {
         $this->middleware('secure')->except([
@@ -125,7 +124,7 @@ class UserController extends Controller
         $data = $request->validated();
         $user = (new UserService())->createUser($data);
         if ($user) {
-            return (new UserCreateResource((object)$user))->response()->setStatusCode(201);
+            return (new UserCreateResource((object) $user->toArray()))->response()->setStatusCode(201);
         }
         throw new UnprocessableEntityHttpException();
     }
@@ -221,13 +220,10 @@ class UserController extends Controller
      */
     public function update(UserEditRequest $request): UserResource
     {
-        $data = $request->validated();
         /** @var User $user */
         $user = Auth::user();
-        $updated_user = $this->user_repository->updateByUuid(
-            $user->uuid,
-            Arr::except($data, ['password_confirmation'])
-        );
+        $data = \App\DataObjects\User::from($request->validated());
+        $updated_user = $this->user_repository->updateByUuid($user->uuid, $data);
 
         if ($updated_user) {
             return new UserResource($user);

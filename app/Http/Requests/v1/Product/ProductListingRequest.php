@@ -16,9 +16,9 @@ class ProductListingRequest extends DefaultPaginationRequest
     public function additionalRules(): array
     {
         return [
-            'category_uuid' => ['string',],
+            'category_uuid' => ['string'],
             'price' => ['numeric'],
-            'brand_uuid' => ['string',],
+            'brand_uuid' => ['string'],
             'title' => ['string'],
             'uuid' => ['string']
         ];

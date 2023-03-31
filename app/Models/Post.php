@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\DataObjects\PostMetadata;
 use App\Models\Traits\HasSlug;
 use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -39,7 +40,7 @@ class Post extends Model
     use HasSlug;
 
     protected $casts = [
-        'metadata' => 'array'
+        'metadata' => PostMetadata::class
     ];
 
     protected $hidden = ['id'];

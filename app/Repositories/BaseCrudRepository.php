@@ -8,32 +8,24 @@ use App\Repositories\Traits\SupportsPaginationTraitContract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use ReflectionClass;
-use ReflectionException;
 use Spatie\LaravelData\Data;
 
 abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPaginationTraitContract
 {
     use SupportsPagination;
 
-    protected Data $dto;
+    protected string $dto_class;
     protected Model $model;
     /** @var array<int, string> */
     protected array $with = [];
     private string $model_class;
 
-    /**
-     * @throws ReflectionException
-     */
-    public function __construct(?string $modelClass = null, ?string $dtoClass = null)
+    public function __construct(?string $model_class = null, ?string $dto_class = null)
     {
-        $this->model_class = $modelClass ?: self::guessModelClass();
+        $this->model_class = $model_class ?: self::guessModelClass();
         $this->model = app($this->model_class);
 
-        /** @var class-string<Data> $dto_class */
-        $dto_class = $dtoClass ?: self::guessDtoClass();
-        $r = new ReflectionClass($dto_class);
-        $this->dto = $r->newInstanceWithoutConstructor();
+        $this->dto_class = $dto_class ?: self::guessDtoClass();
     }
 
     private static function guessModelClass(): string
@@ -55,9 +47,15 @@ abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPag
         return self::guessClass('DataObjects');
     }
 
-    public function create(array $data): Model|Data|null
+    public function create(Data $data): Data|null
     {
-        return $this->model::query()->create($data)->load($this->with);
+        $model = $this->model::query()->create($data->toArray())->load($this->with);
+        return $this->buildDto($model);
+    }
+
+    private function buildDto(Model $model): Data
+    {
+        return $this->dto_class::{'optional'}($model);
     }
 
     /**
@@ -81,7 +79,6 @@ abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPag
         }
         return $query;
     }
-
 
     /**
      * @return LengthAwarePaginator<Model>
@@ -108,16 +105,18 @@ abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPag
         return $this->model::query()->where('uuid', $uuid);
     }
 
-    public function findByUuid(string $uuid): Model|Data|null
+    public function findByUuid(string $uuid): Data|null
     {
-        return $this->withRelations($this->byUuid($uuid))->first();
+        /** @var Model $model */
+        $model = $this->withRelations($this->byUuid($uuid))->first();
+        return $this->buildDto($model);
     }
 
-    public function updateByUuid(string $uuid, array $data): Model|Data|null
+    public function updateByUuid(string $uuid, Data $data): Data|null
     {
-        /** @var null $model */
+        /** @var Model|null $model */
         $model = $this->byUuid($uuid)->first();
-        $updated = $model?->update($data);
-        return $updated ? $model->refresh() : null;
+        $updated = $model?->update($data->toArray());
+        return $updated ? $this->buildDto($model->refresh()) : null;
     }
 }

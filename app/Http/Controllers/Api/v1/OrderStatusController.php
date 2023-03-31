@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\v1\OrderStatus\OrderStatusListingRequest;
 use App\Http\Requests\v1\OrderStatus\StoreOrderStatusRequest;
 use App\Http\Requests\v1\OrderStatus\UpdateOrderStatusRequest;
-use App\Http\Resources\v1\DefaultCollection;
 use App\Http\Resources\v1\BaseResource;
+use App\Http\Resources\v1\DefaultCollection;
 use App\Models\OrderStatus;
 use App\Repositories\Interfaces\OrderStatusRepositoryContract;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as SResponse;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 /**
@@ -74,12 +76,13 @@ class OrderStatusController extends Controller
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function store(StoreOrderStatusRequest $request): BaseResource
+    public function store(StoreOrderStatusRequest $request): JsonResponse
     {
         $this->authorize('create', OrderStatus::class);
-        $data = $request->validated();
+        $data = \App\DataObjects\OrderStatus::from($request->validated());
         $order_status = $this->order_status_repository->create($data);
-        return $order_status ? new BaseResource($order_status) : throw new UnprocessableEntityHttpException();
+        return $order_status ? (new BaseResource($order_status))->response()->setStatusCode(SResponse::HTTP_CREATED) :
+            throw new UnprocessableEntityHttpException();
     }
 
     /**
@@ -129,7 +132,7 @@ class OrderStatusController extends Controller
     public function update(UpdateOrderStatusRequest $request, string $uuid): BaseResource
     {
         $this->authorize('update', OrderStatus::class);
-        $data = $request->validated();
+        $data = \App\DataObjects\OrderStatus::from($request->validated());
         $order_status = $this->order_status_repository->updateByUuid($uuid, $data);
         return $order_status ? new BaseResource($order_status) : throw new UnprocessableEntityHttpException();
     }

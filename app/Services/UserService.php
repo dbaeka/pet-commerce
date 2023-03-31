@@ -21,9 +21,8 @@ readonly class UserService
 
     /**
      * @param array<string, mixed> $data
-     * @return array<string, mixed>|null
      */
-    public function createAdmin(array $data): ?array
+    public function createAdmin(array $data): ?User
     {
         $data['is_admin'] = true;
         return $this->storeUser($data);
@@ -31,32 +30,27 @@ readonly class UserService
 
     /**
      * @param array<string, mixed> $data
-     * @return array<string, mixed>|null
      */
-    private function storeUser(array $data): ?array
+    private function storeUser(array $data): ?User
     {
         $data['password'] = Hash::make($data['password']);
-        /** @var \App\Models\User|null $user */
+        $data = User::from($data);
         $user = $this->user_repository->create($data);
         if ($user) {
             $user = User::from($user);
             $token = app(GenerateToken::class)->execute($user);
             $token_id = $this->jwt_token_repository->createToken($token);
             if (!empty($token_id)) {
-                return array_merge([
-                    'token' => $token->getAdditionalData()['token_value']
-                ], $user->toArray());
+                return $user->additional(['token' => $token->getAdditionalData()['token_value']]);
             }
         }
-
         return null;
     }
 
     /**
      * @param array<string, mixed> $data
-     * @return array<string, mixed>|null
      */
-    public function createUser(array $data): ?array
+    public function createUser(array $data): ?User
     {
         $data['is_admin'] = false;
         return $this->storeUser($data);

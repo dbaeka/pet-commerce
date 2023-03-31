@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\DataObjects\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\v1\Admin\AdminLoginRequest;
 use App\Http\Requests\v1\Admin\AdminUserCreateRequest;
@@ -19,7 +20,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use Illuminate\Support\Arr;
+use Symfony\Component\HttpFoundation\Response as SResponse;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 /**
@@ -94,7 +95,7 @@ class AdminController extends Controller
         $data = $request->validated();
         $user = (new UserService())->createAdmin($data);
         if ($user) {
-            return (new UserCreateResource((object)$user))->response()->setStatusCode(201);
+            return (new UserCreateResource((object) $user->toArray()))->response()->setStatusCode(SResponse::HTTP_CREATED);
         }
         throw new UnprocessableEntityHttpException();
     }
@@ -124,15 +125,12 @@ class AdminController extends Controller
      */
     public function editUser(AdminUserEditRequest $request, string $uuid): UserResource
     {
-        $data = $request->validated();
         $user = $this->user_repository->findByUuid($uuid);
         if (empty($user)) {
             throw new ModelNotFoundException();
         }
-        $updated_user = $this->user_repository->updateByUuid(
-            $uuid,
-            Arr::except($data, ['password_confirmation'])
-        );
+        $data = User::from($request->validated());
+        $updated_user = $this->user_repository->updateByUuid($uuid, $data);
 
         if ($updated_user) {
             return new UserResource($user);

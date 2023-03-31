@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\v1\Category\CategoryListingRequest;
 use App\Http\Requests\v1\Category\StoreCategoryRequest;
 use App\Http\Requests\v1\Category\UpdateCategoryRequest;
-use App\Http\Resources\v1\DefaultCollection;
 use App\Http\Resources\v1\BaseResource;
+use App\Http\Resources\v1\DefaultCollection;
 use App\Models\Category;
 use App\Repositories\Interfaces\CategoryRepositoryContract;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as SResponse;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 /**
@@ -74,12 +76,13 @@ class CategoryController extends Controller
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function store(StoreCategoryRequest $request): BaseResource
+    public function store(StoreCategoryRequest $request): JsonResponse
     {
         $this->authorize('create', Category::class);
-        $data = $request->validated();
+        $data = \App\DataObjects\Category::from($request->validated());
         $category = $this->category_repository->create($data);
-        return $category ? new BaseResource($category) : throw new UnprocessableEntityHttpException();
+        return $category ? (new BaseResource($category))->response()->setStatusCode(SResponse::HTTP_CREATED) :
+            throw new UnprocessableEntityHttpException();
     }
 
     /**
@@ -129,7 +132,7 @@ class CategoryController extends Controller
     public function update(UpdateCategoryRequest $request, string $uuid): BaseResource
     {
         $this->authorize('update', Category::class);
-        $data = $request->validated();
+        $data = \App\DataObjects\Category::from($request->validated());
         $category = $this->category_repository->updateByUuid($uuid, $data);
         return $category ? new BaseResource($category) : throw new UnprocessableEntityHttpException();
     }

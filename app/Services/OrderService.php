@@ -30,6 +30,7 @@ readonly class OrderService
     public function createOrder(array $data): Data|Model|null
     {
         $data = $this->extendData($data);
+        $data = \App\DataObjects\Order::from($data);
         return $this->order_repository->create($data);
     }
 
@@ -61,15 +62,14 @@ readonly class OrderService
             $product_uuids,
             ['uuid', 'title', 'price']
         );
-        $products_info = $products_info->keyBy('uuid');
+        $products_info = collect($products_info)->keyBy('uuid');
         return array_map(function (array $value) use ($products_info) {
-            /** @var \App\Models\Product $product */
             $product = $products_info->get($value['uuid']);
             return ProductItem::from([
                 'quantity' => $value['quantity'],
                 'uuid' => $value['uuid'],
-                'price' => $product->price,
-                'product' => $product->title
+                'price' => $product['price'],
+                'product' => $product['title']
             ]);
         }, $products);
     }
@@ -89,6 +89,7 @@ readonly class OrderService
     public function updateOrder(string $uuid, array $data): Order|Data|Model|null
     {
         $data = $this->extendData($data);
+        $data = \App\DataObjects\Order::from($data);
         return $this->order_repository->updateByUuid($uuid, $data);
     }
 }

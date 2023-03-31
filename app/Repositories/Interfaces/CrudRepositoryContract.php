@@ -11,10 +11,10 @@ interface CrudRepositoryContract
     /**
      * Create a model
      *
-     * @param array<string, mixed> $data
-     * @return Data|Model|null
+     * @param Data $data
+     * @return Data|null
      */
-    public function create(array $data): Model|Data|null;
+    public function create(Data $data): ?Data;
 
     /**
      * Get list paginated list of model
@@ -35,16 +35,16 @@ interface CrudRepositoryContract
      * Find a model by uuid
      *
      * @param string $uuid
-     * @return Data|Model|null
+     * @return Data|null
      */
-    public function findByUuid(string $uuid): Model|Data|null;
+    public function findByUuid(string $uuid): ?Data;
 
     /**
      * Update by uuid
      *
      * @param string $uuid
-     * @param array<string, mixed> $data
+     * @param Data $data
      * @return Data|null
      */
-    public function updateByUuid(string $uuid, array $data): Model|Data|null;
+    public function updateByUuid(string $uuid, Data $data): ?Data;
 }

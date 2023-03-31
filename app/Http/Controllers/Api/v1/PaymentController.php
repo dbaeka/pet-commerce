@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\DataObjects\PaymentType\PaymentTypeDetailsFactory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\v1\Payment\PaymentListingRequest;
 use App\Http\Requests\v1\Payment\StorePaymentRequest;
@@ -13,7 +12,9 @@ use App\Models\Payment;
 use App\Models\User;
 use App\Repositories\Interfaces\PaymentRepositoryContract;
 use Auth;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as SResponse;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 /**
@@ -82,12 +83,12 @@ class PaymentController extends Controller
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function store(StorePaymentRequest $request): BaseResource
+    public function store(StorePaymentRequest $request): JsonResponse
     {
-        $data = $request->validated();
-        $data['details'] = PaymentTypeDetailsFactory::make($data['type'], $data['details']);
+        $data = \App\DataObjects\Payment::from($request->validated());
         $payment = $this->payment_repository->create($data);
-        return $payment ? new BaseResource($payment) : throw new UnprocessableEntityHttpException();
+        return $payment ? (new BaseResource($payment))->response()->setStatusCode(SResponse::HTTP_CREATED) :
+            throw new UnprocessableEntityHttpException();
     }
 
     /**
@@ -134,8 +135,7 @@ class PaymentController extends Controller
      */
     public function update(UpdatePaymentRequest $request, Payment $payment): BaseResource
     {
-        $data = $request->validated();
-        $data['details'] = PaymentTypeDetailsFactory::make($data['type'], $data['details']);
+        $data = \App\DataObjects\Payment::from($request->validated());
         $payment = $this->payment_repository->updateByUuid($payment->uuid, $data);
         return $payment ? new BaseResource($payment) : throw new UnprocessableEntityHttpException();
     }

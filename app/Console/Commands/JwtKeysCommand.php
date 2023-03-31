@@ -29,9 +29,9 @@ class JwtKeysCommand extends Command
      */
     public function handle(): int
     {
-        $key = RSA::createKey((int)$this->option('length') ?: 4096);
+        $key = RSA::createKey((int) $this->option('length') ?: 4096);
 
-        list($publicKey, $privateKey) = [
+        [$publicKey, $privateKey] = [
             config('jwt.public_key'),
             config('jwt.private_key')
         ];
@@ -41,8 +41,8 @@ class JwtKeysCommand extends Command
             return -1;
         }
 
-        file_put_contents($publicKey, (string)$key->getPublicKey());
-        file_put_contents($privateKey, (string)$key);
+        file_put_contents($publicKey, (string) $key->getPublicKey());
+        file_put_contents($privateKey, (string) $key);
 
         $this->info('Encryption keys generated successfully.');
         return 0;

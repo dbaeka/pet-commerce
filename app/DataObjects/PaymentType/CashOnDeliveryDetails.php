@@ -2,8 +2,6 @@
 
 namespace App\DataObjects\PaymentType;
 
-use Spatie\LaravelData\Data;
-
 /**
  * @OA\Schema(
  *    schema="CashOnDeliveryDetails",
@@ -41,7 +39,7 @@ use Spatie\LaravelData\Data;
  *    ),
  * )
  */
-class CashOnDeliveryDetails extends Data
+class CashOnDeliveryDetails extends BasePaymentDetails
 {
     public function __construct(
         public string $first_name,

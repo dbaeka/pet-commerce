@@ -9,8 +9,10 @@ use App\Models\File;
 use App\Repositories\Interfaces\FileRepositoryContract;
 use App\Services\FileService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response as SResponse;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 /**
@@ -49,11 +51,12 @@ class FileController extends Controller
      *     @OA\Response(response=500, ref="#/components/responses/ServerError")
      * )
      */
-    public function store(StoreFileRequest $request): BaseResource
+    public function store(StoreFileRequest $request): JsonResponse
     {
         $file = $request->validated()['file'];
         $saved_file = (new FileService())->saveFile($file);
-        return $saved_file ? new BaseResource($saved_file) : throw new UnprocessableEntityHttpException();
+        return $saved_file ? (new BaseResource($saved_file))->response()->setStatusCode(SResponse::HTTP_CREATED) :
+            throw new UnprocessableEntityHttpException();
     }
 
 

@@ -4,12 +4,13 @@ namespace App\DataObjects;
 
 use Carbon\CarbonImmutable;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Optional;
 
 class Brand extends Data
 {
     public string $title;
-    public string $uuid;
-    public string $slug;
-    public CarbonImmutable $updated_at;
-    public CarbonImmutable $created_at;
+    public string|Optional $uuid;
+    public string|Optional $slug;
+    public CarbonImmutable|Optional $updated_at;
+    public CarbonImmutable|Optional $created_at;
 }

@@ -35,6 +35,7 @@ readonly class FileService
             'size' => $saved_file->getSize(),
             'type' => $file->getClientMimeType(),
         ];
+        $data = \App\DataObjects\File::from($data);
         return $this->file_repository->create($data);
     }
 }

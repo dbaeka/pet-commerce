@@ -2,15 +2,15 @@
 
 namespace App\Repositories\Interfaces;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
+use App\DataObjects\Product;
+use Spatie\LaravelData\DataCollection;
 
 interface ProductRepositoryContract extends CrudRepositoryContract
 {
     /**
      * @param array<string> $uuids
      * @param array<string> $columns
-     * @return Collection<int, Model>|array<int, Model>
+     * @return DataCollection<int, Product>
      */
-    public function getListWithIds(array $uuids, array $columns = []): Collection|array;
+    public function getListWithIds(array $uuids, array $columns = []): DataCollection;
 }

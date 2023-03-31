@@ -11,11 +11,10 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 readonly class ForgotPassword
 {
     public function __construct(
-        private UserRepositoryContract           $user_repository,
+        private UserRepositoryContract $user_repository,
         private ResetRepositoryContract $reset_repository
     ) {
     }
-
 
     public function execute(string $email): string
     {
