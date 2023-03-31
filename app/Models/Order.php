@@ -20,7 +20,7 @@ use Spatie\LaravelData\DataCollection;
  * @property string $payment_uuid
  * @property string $uuid
  * @property \Illuminate\Support\Collection $products
- * @property \App\Casts\Address|object $address
+ * @property \App\DataObjects\Address $address
  * @property float|null $delivery_fee
  * @property float $amount
  * @property \Illuminate\Support\Carbon $created_at
@@ -58,7 +58,8 @@ class Order extends Model
         'shipped_at' => 'datetime',
     ];
 
-    protected $fillable = ['order_status_uuid', 'payment_uuid', 'user_uuid', 'products', 'address', 'amount'];
+    protected $fillable = ['order_status_uuid', 'payment_uuid', 'user_uuid',
+        'products', 'address', 'amount', 'delivery_fee'];
 
     protected $hidden = ['id', 'user_uuid', 'payment_uuid', 'order_status_uuid'];
 

@@ -19,7 +19,7 @@ use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
  * @property string $title
  * @property float $price
  * @property string $description
- * @property \App\Casts\ProductMetadata|object $metadata
+ * @property \App\DataObjects\ProductMetadata|object $metadata
  * @property string|null $brand_uuid
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at

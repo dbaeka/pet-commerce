@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property string $slug
  * @property string $content
- * @property array $metadata
+ * @property \App\DataObjects\PostMetadata $metadata
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @method static \Database\Factories\PostFactory factory($count = null, $state = [])

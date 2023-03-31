@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $uuid
  * @property string $title
  * @property string $content
- * @property array $metadata
+ * @property \App\DataObjects\PromotionMetadata $metadata
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @method static \Database\Factories\PromotionFactory factory($count = null, $state = [])

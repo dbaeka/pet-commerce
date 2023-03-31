@@ -47,6 +47,7 @@ readonly class OrderService
         $products = $data['products'];
         $data['products'] = $this->appendProductDetails($products);
         $data['amount'] = $this->getAmount($data['products']);
+        $data['delivery_fee'] = $this->getDeliveryFee($data['amount']);
         return $data;
     }
 
@@ -81,6 +82,11 @@ readonly class OrderService
     private function getAmount(array $products): float
     {
         return collect($products)->sum(fn (ProductItem $value) => round($value->price * $value->quantity, 2));
+    }
+
+    private function getDeliveryFee(float $amount): float
+    {
+        return $amount > 500 ? 0 : 15;
     }
 
     /**
