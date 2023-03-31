@@ -63,7 +63,7 @@ class OrderStatusController extends Controller
      *     @OA\RequestBody(
      *      required=true,
      *      @OA\MediaType(
-     *       mediaType="application/x-www-form-urlencoded",
+     *       mediaType="application/json",
      *       @OA\Schema(
      *        ref="#/components/schemas/StoreOrderStatusRequest"
      *       )
@@ -116,7 +116,7 @@ class OrderStatusController extends Controller
      *     @OA\RequestBody(
      *      required=true,
      *      @OA\MediaType(
-     *       mediaType="application/x-www-form-urlencoded",
+     *       mediaType="application/json",
      *       @OA\Schema(
      *        ref="#/components/schemas/UpdateOrderStatusRequest"
      *       )

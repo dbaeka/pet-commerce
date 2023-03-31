@@ -77,7 +77,7 @@ class AdminController extends Controller
      *     @OA\RequestBody(
      *      required=true,
      *      @OA\MediaType(
-     *       mediaType="application/x-www-form-urlencoded",
+     *       mediaType="application/json",
      *       @OA\Schema(
      *        ref="#/components/schemas/AdminUserCreateRequest"
      *       )
@@ -93,9 +93,17 @@ class AdminController extends Controller
     public function store(AdminUserCreateRequest $request): JsonResponse
     {
         $data = $request->validated();
+        $data['is_marketing'] = filter_var(
+            data_get($data, 'is_marketing'),
+            FILTER_VALIDATE_BOOL,
+            FILTER_NULL_ON_FAILURE
+        );
+        if ($this->user_repository->findUserByEmail($data['email'])) {
+            throw new UnprocessableEntityHttpException('Email already exists');
+        }
         $user = (new UserService())->createAdmin($data);
         if ($user) {
-            return (new UserCreateResource((object) $user->toArray()))->response()->setStatusCode(SResponse::HTTP_CREATED);
+            return (new UserCreateResource((object)$user->toArray()))->response()->setStatusCode(SResponse::HTTP_CREATED);
         }
         throw new UnprocessableEntityHttpException();
     }
@@ -110,7 +118,7 @@ class AdminController extends Controller
      *     @OA\RequestBody(
      *      required=true,
      *      @OA\MediaType(
-     *       mediaType="application/x-www-form-urlencoded",
+     *       mediaType="application/json",
      *       @OA\Schema(
      *        ref="#/components/schemas/AdminUserEditRequest"
      *       )
@@ -129,11 +137,17 @@ class AdminController extends Controller
         if (empty($user)) {
             throw new ModelNotFoundException();
         }
-        $data = User::from($request->validated());
+        $data = $request->validated();
+        $data['is_marketing'] = filter_var(
+            data_get($data, 'is_marketing'),
+            FILTER_VALIDATE_BOOL,
+            FILTER_NULL_ON_FAILURE
+        );
+        $data = User::from($data);
         $updated_user = $this->user_repository->updateByUuid($uuid, $data);
 
         if ($updated_user) {
-            return new UserResource($user);
+            return new UserResource($updated_user);
         }
         throw new UnprocessableEntityHttpException();
     }
@@ -168,7 +182,7 @@ class AdminController extends Controller
      *     @OA\RequestBody(
      *      required=true,
      *      @OA\MediaType(
-     *       mediaType="application/x-www-form-urlencoded",
+     *       mediaType="application/json",
      *       @OA\Schema(
      *        ref="#/components/schemas/AdminLoginRequest"
      *       )

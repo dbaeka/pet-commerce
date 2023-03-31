@@ -19,16 +19,8 @@ class User extends Data
     public CarbonImmutable|Optional|null $email_verified_at;
     public string|Optional $address;
     public string|Optional $phone_number;
-    public bool|Optional $is_marketing = false;
+    public bool|Optional|null $is_marketing = false;
     public CarbonImmutable|Optional $updated_at;
     public CarbonImmutable|Optional $created_at;
     public CarbonImmutable|Optional|null $last_login_at;
-
-    /**
-     * @return array<string>
-     */
-    public function exceptProperties(): array
-    {
-        return ['password', 'is_admin', 'id'];
-    }
 }

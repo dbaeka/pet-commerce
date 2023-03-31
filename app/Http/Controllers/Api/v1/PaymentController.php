@@ -70,7 +70,7 @@ class PaymentController extends Controller
      *     @OA\RequestBody(
      *      required=true,
      *      @OA\MediaType(
-     *       mediaType="application/x-www-form-urlencoded",
+     *       mediaType="application/json",
      *       @OA\Schema(
      *        ref="#/components/schemas/StorePaymentRequest"
      *       )
@@ -120,7 +120,7 @@ class PaymentController extends Controller
      *     @OA\RequestBody(
      *      required=true,
      *      @OA\MediaType(
-     *       mediaType="application/x-www-form-urlencoded",
+     *       mediaType="application/json",
      *       @OA\Schema(
      *        ref="#/components/schemas/UpdatePaymentRequest"
      *       )

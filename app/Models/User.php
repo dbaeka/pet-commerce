@@ -73,7 +73,9 @@ class User extends Authenticatable
         'password',
         'address',
         'is_admin',
-        'phone_number'
+        'phone_number',
+        'is_marketing',
+        'avatar'
     ];
 
     /**
@@ -83,7 +85,7 @@ class User extends Authenticatable
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint
      */
     protected $hidden = [
-        'password',
+        'password', 'id', 'is_admin'
     ];
 
     /**

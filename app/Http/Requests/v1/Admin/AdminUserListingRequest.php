@@ -33,7 +33,7 @@ class AdminUserListingRequest extends DefaultPaginationRequest
             'phone' => ['string'],
             'address' => ['string'],
             'created_at' => ['date', 'date_format:Y-m-d'],
-            'marketing' => ['boolean']
+            'is_marketing' => ['in:true,false']
         ];
     }
 }

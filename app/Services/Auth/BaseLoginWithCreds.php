@@ -47,8 +47,8 @@ abstract readonly class BaseLoginWithCreds
 
     private function userDtoFromModel(): User
     {
-        /** @var array<string, mixed> $user */
+        /** @var \App\Models\User $user */
         $user = Auth::user();
-        return User::from($user);
+        return User::from($user->makeVisible(['id', 'is_admin']));
     }
 }

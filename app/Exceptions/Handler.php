@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use App\Exceptions\Actions\TransformToResponse;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
@@ -86,6 +87,12 @@ class Handler extends ExceptionHandler
         if ($exception instanceof UnauthorizedException) {
             $exception = $this->convertExceptionToResponse($e);
             $exception->setStatusCode(403);
+        }
+
+
+        if ($exception instanceof QueryException) {
+            $exception = $this->convertExceptionToResponse($e);
+            $exception->setStatusCode(422);
         }
 
         return TransformToResponse::execute($exception);

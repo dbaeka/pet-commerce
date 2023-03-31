@@ -53,7 +53,7 @@ abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPag
         return $this->buildDto($model);
     }
 
-    private function buildDto(Model $model): Data
+    private function buildDto(?Model $model): ?Data
     {
         return $this->dto_class::{'optional'}($model);
     }
@@ -115,7 +115,7 @@ abstract class BaseCrudRepository implements CrudRepositoryContract, SupportsPag
     public function updateByUuid(string $uuid, Data $data): Data|null
     {
         /** @var Model|null $model */
-        $model = $this->byUuid($uuid)->first();
+        $model = $this->withRelations($this->byUuid($uuid))->first();
         $updated = $model?->update($data->toArray());
         return $updated ? $this->buildDto($model->refresh()) : null;
     }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\v1\User;
 
+use App\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -12,10 +14,18 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UserEditRequest extends FormRequest
 {
-    public function authorize(): bool
+    /**
+     * @param Authenticatable $user
+     * Determine if the user is authorized to make this request.
+     * @return bool
+     */
+    public function authorize(Authenticatable $user): bool
     {
-        return true;
+        /** @var User $user_model */
+        $user_model = $user;
+        return !$user_model->is_admin;
     }
+
 
     /**
      * Get the validation rules that apply to the request.

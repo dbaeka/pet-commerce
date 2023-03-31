@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Traits;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -18,13 +19,20 @@ trait SupportsPagination
     {
         $limit = request()->get('limit', 20);
         $sort_by = request()->get('sort_by', 'id');
-        $desc = request()->get('desc', true);
+        $desc = request()->boolean('desc');
         $filters = request()->except(['limit', 'sort_by', 'page', 'desc', 'valid', 'fixed_range', 'date_range']);
 
         $query = $query->orderBy($sort_by, $desc ? 'desc' : 'asc');
         $query = $query->where(function (Builder $query) use ($filters) {
             foreach ($filters as $key => $value) {
-                $query->where($key, $value);
+                if (in_array($value, ['true', 'false'])) {
+                    $value = filter_var($value, FILTER_VALIDATE_BOOL);
+                }
+                if (str_ends_with($key, '_at')) {
+                    $query->whereDate($key, $value);
+                } else {
+                    $query->where($key, $value);
+                }
             }
         });
 
@@ -74,7 +82,9 @@ trait SupportsPagination
     {
         if (request()->has('date_range')) {
             $date_range = request()->get('date_range');
-            $query->whereBetween('created_at', [$date_range['from'], $date_range['to']]);
+            $from = Carbon::parse($date_range['from']);
+            $to = Carbon::parse($date_range['to']);
+            $query->whereBetween('created_at', [$from->startOfDay(), $to->endOfDay()]);
         }
         return $query;
     }

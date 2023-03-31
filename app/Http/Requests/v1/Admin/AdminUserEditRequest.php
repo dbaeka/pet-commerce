@@ -41,7 +41,8 @@ class AdminUserEditRequest extends FormRequest
             "password_confirmation" => ['required'],
             "address" => ['required'],
             "phone_number" => ['required'],
-            'is_marketing' => ['boolean', 'nullable']
+            'is_marketing' => ['boolean', 'nullable'],
+            'avatar' => ['string']
         ];
     }
 }

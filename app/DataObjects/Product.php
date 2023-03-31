@@ -13,6 +13,7 @@ class Product extends Data
     public string|Optional $category_uuid;
     public float $price;
     public Brand|Optional|null $brand;
+    public Category|Optional|null $category;
     public CarbonImmutable|Optional $updated_at;
     public CarbonImmutable|Optional $created_at;
     public string|Optional $description;

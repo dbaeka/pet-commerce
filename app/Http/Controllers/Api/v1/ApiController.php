@@ -28,7 +28,7 @@ use App\Http\Controllers\Controller;
  *
  * @OA\OpenApi(
  *     security={
- *       {"apiKeyAuth": {}}
+ *       {"bearerAuth": {}}
  *     }
  * )
  */

@@ -54,7 +54,9 @@ class JwtTokenRepository implements JwtTokenRepositoryContract
         $token = $this->tokenFromUniqueId($unique_id)->with('user')->first();
 
         if ($token) {
-            return User::from($token->user);
+            /** @var \App\Models\User $user */
+            $user = $token->user;
+            return User::from($user->makeVisible(['id', 'is_admin']));
         }
         return null;
     }

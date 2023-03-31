@@ -15,7 +15,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *    @OA\Property(
  *     property="title",
  *     type="string",
- *     description="ProductItem title",
+ *     description="Product title",
  *    ),
  *     @OA\Property(
  *     property="category_uuid",
@@ -25,12 +25,12 @@ use Illuminate\Foundation\Http\FormRequest;
  *     @OA\Property(
  *     property="price",
  *     type="number",
- *     description="ProductItem price",
+ *     description="Product price",
  *    ),
  *     @OA\Property(
  *     property="description",
  *     type="string",
- *     description="ProductItem description",
+ *     description="Product description",
  *    ),
  *     @OA\Property(
  *     property="metadata",

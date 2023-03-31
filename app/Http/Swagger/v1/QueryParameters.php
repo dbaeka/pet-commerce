@@ -20,7 +20,7 @@ namespace App\Http\Swagger\v1;
  * ),
  *
  * @OA\Parameter(
- *     name="sortBy",
+ *     name="sort_by",
  *     parameter="sort_by_query",
  *     in="query",
  *     required=false,
@@ -84,11 +84,11 @@ namespace App\Http\Swagger\v1;
  * ),
  *
  * @OA\Parameter(
- *     name="marketing",
+ *     name="is_marketing",
  *     parameter="marketing_query",
  *     in="query",
  *     required=false,
- *     @OA\Schema(type="string", enum={"1", "2"}),
+ *     @OA\Schema(type="boolean"),
  * ),
  *
  * @OA\Parameter(
@@ -151,6 +151,8 @@ namespace App\Http\Swagger\v1;
  *     name="date_range",
  *     parameter="date_range_query",
  *     in="query",
+ *     style="deepObject",
+ *     explode=true,
  *     required=false,
  *     @OA\Schema(
  *      type="object",

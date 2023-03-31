@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\UnauthorizedException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 /**
@@ -64,6 +65,9 @@ class UserController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
+        if ($user->is_admin) {
+            throw new UnauthorizedException();
+        }
         $user_dto = $this->user_repository->findByUuid($user->uuid);
         if ($user_dto) {
             return new UserResource($user_dto);
@@ -92,6 +96,9 @@ class UserController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
+        if ($user->is_admin) {
+            throw new UnauthorizedException();
+        }
         $orders = $this->order_repository->getUserOrders($user->uuid);
         return new DefaultCollection($orders);
     }
@@ -106,7 +113,7 @@ class UserController extends Controller
      *     @OA\RequestBody(
      *      required=true,
      *      @OA\MediaType(
-     *       mediaType="application/x-www-form-urlencoded",
+     *       mediaType="application/json",
      *       @OA\Schema(
      *        ref="#/components/schemas/UserCreateRequest"
      *       )
@@ -124,7 +131,7 @@ class UserController extends Controller
         $data = $request->validated();
         $user = (new UserService())->createUser($data);
         if ($user) {
-            return (new UserCreateResource((object) $user->toArray()))->response()->setStatusCode(201);
+            return (new UserCreateResource((object)$user->toArray()))->response()->setStatusCode(201);
         }
         throw new UnprocessableEntityHttpException();
     }
@@ -140,7 +147,7 @@ class UserController extends Controller
      *     @OA\RequestBody(
      *      required=true,
      *      @OA\MediaType(
-     *       mediaType="application/x-www-form-urlencoded",
+     *       mediaType="application/json",
      *       @OA\Schema(
      *        ref="#/components/schemas/ResetPasswordTokenRequest"
      *       )
@@ -174,7 +181,7 @@ class UserController extends Controller
      *     @OA\RequestBody(
      *      required=true,
      *      @OA\MediaType(
-     *       mediaType="application/x-www-form-urlencoded",
+     *       mediaType="application/json",
      *       @OA\Schema(
      *        ref="#/components/schemas/ForgotPasswordRequest"
      *       )
@@ -201,11 +208,10 @@ class UserController extends Controller
      *     operationId="user-edit",
      *     summary="Edit a User account",
      *     tags={"User"},
-     *     @OA\Parameter(ref="#/components/parameters/uuid_path"),
      *     @OA\RequestBody(
      *      required=true,
      *      @OA\MediaType(
-     *       mediaType="application/x-www-form-urlencoded",
+     *       mediaType="application/json",
      *       @OA\Schema(
      *        ref="#/components/schemas/UserEditRequest"
      *       )
@@ -249,6 +255,9 @@ class UserController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
+        if ($user->is_admin) {
+            throw new UnauthorizedException();
+        }
         $deleted = $this->user_repository->deleteByUuid($user->uuid);
         return $deleted ? response()->noContent() : throw new UnprocessableEntityHttpException();
     }
@@ -263,7 +272,7 @@ class UserController extends Controller
      *     @OA\RequestBody(
      *      required=true,
      *      @OA\MediaType(
-     *       mediaType="application/x-www-form-urlencoded",
+     *       mediaType="application/json",
      *       @OA\Schema(
      *        ref="#/components/schemas/UserLoginRequest"
      *       )
@@ -302,6 +311,11 @@ class UserController extends Controller
      */
     public function logout(): Response
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user->is_admin) {
+            throw new UnauthorizedException();
+        }
         if (app(LogoutUser::class)->execute()) {
             return response()->noContent();
         }

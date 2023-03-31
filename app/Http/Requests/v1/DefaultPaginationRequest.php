@@ -28,7 +28,7 @@ abstract class DefaultPaginationRequest extends QueryRequest
             'page' => ['numeric', 'gt:0'],
             'limit' => ['numeric', 'gt:0'],
             'sort_by' => ['string', 'in:' . implode(',', $this->getSortByCols())],
-            'desc' => ['boolean']
+            'desc' => ['in:false,true']
         ], $this->additionalRules());
     }
 

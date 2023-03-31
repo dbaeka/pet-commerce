@@ -32,6 +32,6 @@ class UserRepository extends BaseCrudRepository implements UserRepositoryContrac
     {
         /** @var User|null $user */
         $user = $this->model::query()->where('email', $email)->first();
-        return $user ? UserDto::from($user) : null;
+        return $user ? UserDto::from($user->makeVisible(['id', 'is_admin'])) : null;
     }
 }
