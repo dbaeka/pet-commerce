@@ -23,10 +23,12 @@ jobs:
         php-version: [ 8.2 ]
       fail-fast: false
     steps:
-      - name: Checkout repository and submodules
+      - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Checkout submodules
+        uses: srt32/git-actions@v0.0.3
         with:
-          submodules: recursive
+          args: git submodule update --init --recursive
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -49,7 +51,7 @@ jobs:
       - name: Run PHP insight
         run: composer insight-action
       - name: Run tests
-        run: composer test
+        run: composer coverage
       - name: Attempt Swagger Generation
         run: composer swagger
       - name: Upload logs if broken
@@ -58,3 +60,7 @@ jobs:
         with:
           name: logs
           path: storage/logs
+      - name: Upload coverage
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
