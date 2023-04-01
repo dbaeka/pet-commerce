@@ -23,7 +23,12 @@ jobs:
         php-version: [ 8.2 ]
       fail-fast: false
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Checkout submodules
+        uses: textbook/git-checkout-submodule-action@master
+        with:
+          remote: true
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
