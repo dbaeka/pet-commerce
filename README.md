@@ -13,7 +13,12 @@ ADMIN PASS: admin
 USER PASS: userpassword
 ### Using the Terminal (Ubuntu)
 1. Clone this repository into your local development and cd into directory
-2. Copy the .env.dev file to .env using
+2. Clone package submodules by running. The submodule is the Level 3 challenge
+currency converter
+```bash
+git submodule update --init --recursive
+```
+3. Copy the .env.dev file to .env using
 ```bash
 cp .env.dev .env
 ```
