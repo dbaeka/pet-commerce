@@ -49,11 +49,29 @@ php artisan serve
 [http://localhost:8000/api/swagger](http://localhost:8000/api/swagger)
 
 ### Using docker-compose
+Requires use of Docker and docker-compose installed on your machine and running
+1. Clone this repository into your local development and cd into directory
+2. Clone package submodules by running. The submodule is the Level 3 challenge
+   currency converter
+```bash
+git submodule update --init --recursive
+```
+3. Install *cmake* as a system dependency if you cannot run `make`. Use make to 
+quickly bootstrap everything by running the following in the project directory
+```bash
+make bootstrap
+```
+Use `make stop` to end the containers and `make test` to run tests.
 
 ## Testing
-To run tests, simply run
+To run tests, simply run using the following if not running in a container
 ```bash
 composer test
+```
+
+For container users, use:
+```bash
+make test
 ```
 
 ## Linting
