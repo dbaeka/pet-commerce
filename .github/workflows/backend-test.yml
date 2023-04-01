@@ -23,10 +23,10 @@ jobs:
         php-version: [ 8.2 ]
       fail-fast: false
     steps:
-      - name: Checkout repository
+      - name: Checkout repository and submodules
         uses: actions/checkout@v2
-      - name: Checkout submodules
-        uses: textbook/git-checkout-submodule-action@master
+        with:
+          submodules: recursive
         with:
           remote: true
       - name: Set up PHP
