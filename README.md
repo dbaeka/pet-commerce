@@ -1,4 +1,4 @@
-# Pets Shop
+# Pets Shop [![Backend Tests](https://github.com/dbaeka/buckhill-pet-commerce/actions/workflows/backend-test.yml/badge.svg)](https://github.com/dbaeka/buckhill-pet-commerce/actions/workflows/backend-test.yml)
 
 Pet Store is a laravel app that provides an API for consumers 
 to have the necessary endpoints and HTTP request methods to
