@@ -224,10 +224,9 @@
             "dist": {
                 "type": "path",
                 "url": "packages/dbaeka/buckhill-currency-converter",
-                "reference": "2798e1348be19ab766a28ea19b6ebfe967c55e10"
+                "reference": "b8f1c057a59fddb184cb0b3419c994226ae31ae9"
             },
             "require": {
-                "dracoblue/craur": "^2",
                 "ext-json": "*",
                 "guzzlehttp/guzzle": "^7",
                 "illuminate/console": "^10.5",
@@ -717,99 +716,6 @@
                 "source": "https://github.com/dompdf/dompdf/tree/v2.0.3"
             },
             "time": "2023-02-07T12:51:48+00:00"
-        },
-        {
-            "name": "dracoblue/craur",
-            "version": "2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/DracoBlue/Craur.git",
-                "reference": "4e6f5d93aa8b774f5df4e9b9c55c0cac9dda22a4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/DracoBlue/Craur/zipball/4e6f5d93aa8b774f5df4e9b9c55c0cac9dda22a4",
-                "reference": "4e6f5d93aa8b774f5df4e9b9c55c0cac9dda22a4",
-                "shasum": ""
-            },
-            "require": {
-                "dracoblue/naith": "1.1.*",
-                "phpoffice/phpexcel": "1.7.*",
-                "symfony/yaml": "*"
-            },
-            "bin": [
-                "bin/craur"
-            ],
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "DracoBlue",
-                    "email": "JanS@DracoBlue.de"
-                }
-            ],
-            "description": "A lossless xml to json and json to xml converter (and csv/xlsx/yaml). Writing PHP Json/Xml/Csv/Yaml/excel Importers made easy",
-            "keywords": [
-                "csv",
-                "dom",
-                "excel",
-                "exporter",
-                "importer",
-                "json",
-                "xml",
-                "yaml"
-            ],
-            "support": {
-                "issues": "https://github.com/DracoBlue/Craur/issues",
-                "source": "https://github.com/DracoBlue/Craur/tree/master"
-            },
-            "time": "2015-04-28T14:35:01+00:00"
-        },
-        {
-            "name": "dracoblue/naith",
-            "version": "1.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/DracoBlue/naith.git",
-                "reference": "f8c7e1ddd2639460f7a3203ad1cba8ec7af440e7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/DracoBlue/naith/zipball/f8c7e1ddd2639460f7a3203ad1cba8ec7af440e7",
-                "reference": "f8c7e1ddd2639460f7a3203ad1cba8ec7af440e7",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.0"
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "DracoBlue",
-                    "email": "JanS@DracoBlue.de"
-                }
-            ],
-            "description": "A simple php test runner, without the bloat of other frameworks.",
-            "keywords": [
-                "testing"
-            ],
-            "support": {
-                "issues": "https://github.com/DracoBlue/naith/issues",
-                "source": "https://github.com/DracoBlue/naith/tree/master"
-            },
-            "time": "2013-06-10T14:48:42+00:00"
         },
         {
             "name": "dragonmantank/cron-expression",
@@ -3158,67 +3064,6 @@
                 "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.7.1"
             },
             "time": "2023-03-27T19:02:04+00:00"
-        },
-        {
-            "name": "phpoffice/phpexcel",
-            "version": "1.7.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PHPOffice/PHPExcel.git",
-                "reference": "7a7634fba664249a04fc771df677a9b9f755d7ec"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/7a7634fba664249a04fc771df677a9b9f755d7ec",
-                "reference": "7a7634fba664249a04fc771df677a9b9f755d7ec",
-                "shasum": ""
-            },
-            "require": {
-                "ext-xml": "*",
-                "php": ">=5.2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "PHPExcel": "Classes/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL"
-            ],
-            "authors": [
-                {
-                    "name": "Maarten Balliauw",
-                    "homepage": "http://blog.maartenballiauw.be"
-                },
-                {
-                    "name": "Mark Baker"
-                },
-                {
-                    "name": "Franck Lefevre",
-                    "homepage": "http://blog.rootslabs.net"
-                },
-                {
-                    "name": "Erik Tilt"
-                }
-            ],
-            "description": "PHPExcel - OpenXML - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
-            "homepage": "http://phpexcel.codeplex.com",
-            "keywords": [
-                "OpenXML",
-                "excel",
-                "php",
-                "spreadsheet",
-                "xls",
-                "xlsx"
-            ],
-            "support": {
-                "issues": "https://github.com/PHPOffice/PHPExcel/issues",
-                "source": "https://github.com/PHPOffice/PHPExcel/tree/develop"
-            },
-            "abandoned": "phpoffice/phpspreadsheet",
-            "time": "2013-05-24T11:57:42+00:00"
         },
         {
             "name": "phpoption/phpoption",
