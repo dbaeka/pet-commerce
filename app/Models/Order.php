@@ -5,11 +5,15 @@ namespace App\Models;
 use App\DataObjects\Address;
 use App\DataObjects\ProductItem;
 use App\Models\Traits\HasUuid;
+use Dbaeka\MsNotification\Events\OrderStatusChanged;
+use Dbaeka\MsNotification\Services\StatusUpdateData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\LaravelData\DataCollection;
+
+use function Illuminate\Events\queueable;
 
 /**
  * App\Models\Order
@@ -62,6 +66,29 @@ class Order extends Model
         'products', 'address', 'amount', 'delivery_fee'];
 
     protected $hidden = ['id', 'user_uuid', 'payment_uuid', 'order_status_uuid'];
+
+    protected static function booted()
+    {
+        parent::booted();
+
+        $get_order_status_value =
+            fn (string $value) => OrderStatus::where('uuid', $value)->value('title');
+
+        static::updated(queueable(function (Order $order) use ($get_order_status_value) {
+            if ($order->wasChanged('order_status_uuid')) {
+                $old_order_status_uuid = $order->getOriginal('order_status_uuid');
+                /** @var OrderStatus $new_order_status */
+                $new_order_status = $order->order_status;
+                $data = new StatusUpdateData(
+                    order_uuid: $order->uuid,
+                    old_order_status: $get_order_status_value($old_order_status_uuid),
+                    new_order_status: $new_order_status->title,
+                    updated_time: $order->updated_at->toImmutable()
+                );
+                OrderStatusChanged::dispatch($data);
+            }
+        }));
+    }
 
     /**
      * Get the current order status.

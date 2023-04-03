@@ -1,3 +1,6 @@
 [submodule "packages/dbaeka/buckhill-currency-converter"]
 	path = packages/dbaeka/buckhill-currency-converter
 	url = git@github.com:dbaeka/buckhill-currency-converter.git
+[submodule "packages/dbaeka/ms-notification"]
+	path = packages/dbaeka/ms-notification
+	url = git@github.com:dbaeka/ms-teams-notification.git

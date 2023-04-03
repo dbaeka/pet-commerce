@@ -19,6 +19,7 @@
         "phpseclib/phpseclib": "^3.0",
         "spatie/laravel-data": "^3.2",
         "dbaeka/buckhill-currency-converter": "dev-main",
+        "dbaeka/ms-notification": "dev-main",
         "staudenmeir/eloquent-json-relations": "^1.1"
     },
     "require-dev": {
@@ -39,6 +40,13 @@
         {
             "type": "path",
             "url": "packages/dbaeka/buckhill-currency-converter",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "packages/dbaeka/ms-notification",
             "options": {
                 "symlink": true
             }
