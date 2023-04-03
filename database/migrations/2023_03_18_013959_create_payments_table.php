@@ -15,6 +15,9 @@ return new class () extends Migration {
             $table->string('uuid')->unique();
             $table->enum('type', ['credit_card', 'cash_on_delivery', 'bank_transfer',]);
             $table->json('details');
+            $table->enum('status', ['pending', 'success', 'failed', 'canceled'])->default('pending');
+            $table->string('gateway')->nullable();
+            $table->json('gateway_metadata')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrentOnUpdate();
         });

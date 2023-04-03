@@ -5,6 +5,7 @@ namespace App\DataObjects;
 use App\DataObjects\Casts\PaymentDetails;
 use App\DataObjects\PaymentType\BasePaymentDetails;
 use App\DataObjects\PaymentType\PaymentTypeDetailsFactory;
+use App\Enums\PaymentStatus;
 use App\Enums\PaymentType;
 use Carbon\CarbonImmutable;
 use Spatie\LaravelData\Attributes\WithCast;
@@ -17,6 +18,8 @@ class Payment extends Data
     public PaymentType $type;
     #[WithCast(PaymentDetails::class)]
     public BasePaymentDetails $details;
+    public string|Optional|null $gateway;
+    public PaymentStatus $status;
     public CarbonImmutable|Optional $updated_at;
     public CarbonImmutable|Optional $created_at;
 
@@ -28,6 +31,8 @@ class Payment extends Data
         $details = PaymentTypeDetailsFactory::make($data['type'], $data['details']);
         $object = new self();
         $object->uuid = Optional::create();
+        $object->status = PaymentStatus::from($data['status']);
+        $object->gateway = Optional::create();
         $object->updated_at = Optional::create();
         $object->created_at = Optional::create();
         $object->type = PaymentType::from($data['type']);

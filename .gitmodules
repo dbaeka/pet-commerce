@@ -4,3 +4,6 @@
 [submodule "packages/dbaeka/ms-notification"]
 	path = packages/dbaeka/ms-notification
 	url = git@github.com:dbaeka/ms-teams-notification.git
+[submodule "packages/dbaeka/stripe-payment"]
+	path = packages/dbaeka/stripe-payment
+	url = git@github.com:dbaeka/stripe-payment.git

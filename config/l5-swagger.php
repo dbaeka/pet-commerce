@@ -41,6 +41,7 @@ return [
                 'annotations' => [
                     base_path('app'),
                     base_path('packages/dbaeka/buckhill-currency-converter/src'),
+                    base_path('packages/dbaeka/stripe-payment/src'),
                 ],
 
             ],

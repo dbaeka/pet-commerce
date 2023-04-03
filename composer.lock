@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d387cdf8918446c22a83affd04c39c44",
+    "content-hash": "3a5801cface86884c671d1d9d66eb191",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -367,6 +367,86 @@
                 }
             ],
             "description": "Package to send MS Teams Notification on Order Status Change",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "dbaeka/stripe-payment",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/dbaeka/stripe-payment",
+                "reference": "71ae84e354d40d8424114c0fdc089d27bb31d74c"
+            },
+            "require": {
+                "ext-json": "*",
+                "illuminate/console": "^10.5",
+                "illuminate/contracts": "^10.0",
+                "illuminate/database": "^10.0",
+                "illuminate/support": "^10.5",
+                "php": "^8.2",
+                "spatie/laravel-data": "^3.2",
+                "stripe/stripe-php": "^10.12"
+            },
+            "require-dev": {
+                "brianium/paratest": "6.*",
+                "dms/phpunit-arraysubset-asserts": "^0.4.0",
+                "fakerphp/faker": "^1.9.1",
+                "laravel/pint": "^1.6",
+                "mockery/mockery": "^1.4.4",
+                "nunomaduro/larastan": "^2.0",
+                "nunomaduro/phpinsights": "^2.8",
+                "orchestra/testbench": "^7.0|^8.0",
+                "phpstan/phpstan-mockery": "^1.1",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Dbaeka\\StripePayment\\StripePaymentServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Dbaeka\\StripePayment\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Dbaeka\\StripePayment\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "@php ./vendor/bin/phpunit"
+                ],
+                "analyse": [
+                    "@php ./vendor/bin/phpstan analyse --memory-limit 1G --configuration phpstan.neon.dist --ansi"
+                ],
+                "pint": [
+                    "@php ./vendor/bin/pint"
+                ],
+                "insight": [
+                    "@php ./vendor/bin/phpinsights"
+                ],
+                "insight-action": [
+                    "@php ./vendor/bin/phpinsights -n --ansi --format=github-action"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Delmwin Baeka",
+                    "email": "dbaekajnr@gmail.com"
+                }
+            ],
+            "description": "Package to accept payment using Stripe",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -4191,16 +4271,16 @@
         },
         {
             "name": "spatie/laravel-data",
-            "version": "3.2.2",
+            "version": "3.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-data.git",
-                "reference": "4968b0eebec2aa292fb19bffeb983adbc4ab0283"
+                "reference": "4cbeb639760c96896c15493abbf3aa8c9382ced9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-data/zipball/4968b0eebec2aa292fb19bffeb983adbc4ab0283",
-                "reference": "4968b0eebec2aa292fb19bffeb983adbc4ab0283",
+                "url": "https://api.github.com/repos/spatie/laravel-data/zipball/4cbeb639760c96896c15493abbf3aa8c9382ced9",
+                "reference": "4cbeb639760c96896c15493abbf3aa8c9382ced9",
                 "shasum": ""
             },
             "require": {
@@ -4262,7 +4342,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-data/issues",
-                "source": "https://github.com/spatie/laravel-data/tree/3.2.2"
+                "source": "https://github.com/spatie/laravel-data/tree/3.3.3"
             },
             "funding": [
                 {
@@ -4270,7 +4350,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-03-30T15:46:13+00:00"
+            "time": "2023-04-03T07:27:59+00:00"
         },
         {
             "name": "spatie/laravel-package-tools",
@@ -4424,6 +4504,67 @@
                 }
             ],
             "time": "2023-01-19T22:18:17+00:00"
+        },
+        {
+            "name": "stripe/stripe-php",
+            "version": "v10.12.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stripe/stripe-php.git",
+                "reference": "ef2b761e4c69de59892c95d0453e2caa25162faf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/ef2b761e4c69de59892c95d0453e2caa25162faf",
+                "reference": "ef2b761e4c69de59892c95d0453e2caa25162faf",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "3.5.0",
+                "php-coveralls/php-coveralls": "^2.5",
+                "phpstan/phpstan": "^1.2",
+                "phpunit/phpunit": "^5.7 || ^9.0",
+                "squizlabs/php_codesniffer": "^3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Stripe\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Stripe and contributors",
+                    "homepage": "https://github.com/stripe/stripe-php/contributors"
+                }
+            ],
+            "description": "Stripe PHP Library",
+            "homepage": "https://stripe.com/",
+            "keywords": [
+                "api",
+                "payment processing",
+                "stripe"
+            ],
+            "support": {
+                "issues": "https://github.com/stripe/stripe-php/issues",
+                "source": "https://github.com/stripe/stripe-php/tree/v10.12.0"
+            },
+            "time": "2023-03-30T20:27:06+00:00"
         },
         {
             "name": "swagger-api/swagger-ui",
@@ -12165,7 +12306,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "dbaeka/buckhill-currency-converter": 20,
-        "dbaeka/ms-notification": 20
+        "dbaeka/ms-notification": 20,
+        "dbaeka/stripe-payment": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
