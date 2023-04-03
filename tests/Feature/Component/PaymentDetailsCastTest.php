@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Component\Cast;
+namespace Component;
 
 use App\DataObjects\PaymentType\BankTransferDetails;
 use App\DataObjects\PaymentType\CashOnDeliveryDetails;
