@@ -19,6 +19,7 @@ class Payment extends Data
     #[WithCast(PaymentDetails::class)]
     public BasePaymentDetails $details;
     public string|Optional|null $gateway;
+    public array|Optional|null $gateway_metadata;
     public PaymentStatus $status;
     public CarbonImmutable|Optional $updated_at;
     public CarbonImmutable|Optional $created_at;

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\PaymentType;
 use App\Models\Casts\PaymentDetails;
 use App\Models\Traits\HasUuid;
+use Dbaeka\StripePayment\DataObjects\StripeMetadata;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -38,11 +39,12 @@ class Payment extends Model
     use HasFactory;
     use HasUuid;
 
-    protected $fillable = ['type', 'details'];
+    protected $fillable = ['type', 'details', 'gateway', 'gateway_metadata', 'status'];
 
     protected $casts = [
         'type' => PaymentType::class,
-        'details' => PaymentDetails::class
+        'details' => PaymentDetails::class,
+        'gateway_metadata' => 'array'
     ];
 
     protected $hidden = ['id'];

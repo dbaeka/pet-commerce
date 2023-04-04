@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enums\PaymentStatus;
 use App\Repositories\Interfaces\PaymentRepositoryContract;
 use Dbaeka\StripePayment\Contracts\StripeUpdatable;
 use Dbaeka\StripePayment\DataObjects\Payment;
@@ -21,5 +22,15 @@ class PaymentRepository extends BaseCrudRepository implements PaymentRepositoryC
     public function updatePayment(string $payment_uuid, Payment $data): ?Data
     {
         return $this->updateByUuid($payment_uuid, $data);
+    }
+
+    public function updateSuccess(string $payment_uuid, Payment $data): ?Data
+    {
+        return $this->updateByUuid($payment_uuid, $data->additional(['status' => PaymentStatus::SUCCESS]));
+    }
+
+    public function updateFailure(string $payment_uuid, Payment $data): ?Data
+    {
+        return $this->updateByUuid($payment_uuid, $data->additional(['status' => PaymentStatus::FAILED]));
     }
 }
