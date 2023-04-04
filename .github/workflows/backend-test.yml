@@ -40,7 +40,7 @@ jobs:
         with:
           composer-options: --prefer-dist
       - name: Copy .env
-        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+        run: php -r "file_exists('.env') || copy('.env.dev', '.env');"
       - name: Generate app key
         run: php artisan key:generate --quiet
       - name: Run code style checker
