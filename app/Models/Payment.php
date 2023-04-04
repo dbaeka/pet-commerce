@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Enums\PaymentType;
 use App\Models\Casts\PaymentDetails;
 use App\Models\Traits\HasUuid;
-use Dbaeka\StripePayment\DataObjects\StripeMetadata;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;

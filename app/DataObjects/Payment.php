@@ -19,6 +19,9 @@ class Payment extends Data
     #[WithCast(PaymentDetails::class)]
     public BasePaymentDetails $details;
     public string|Optional|null $gateway;
+    /**
+     * @var array<string, mixed>|Optional|null
+     */
     public array|Optional|null $gateway_metadata;
     public PaymentStatus $status;
     public CarbonImmutable|Optional $updated_at;
@@ -32,8 +35,10 @@ class Payment extends Data
         $details = PaymentTypeDetailsFactory::make($data['type'], $data['details']);
         $object = new self();
         $object->uuid = Optional::create();
-        $object->status = PaymentStatus::from($data['status']);
+        $status = data_get($data, 'status', 'pending');
+        $object->status = PaymentStatus::from($status);
         $object->gateway = Optional::create();
+        $object->gateway_metadata = Optional::create();
         $object->updated_at = Optional::create();
         $object->created_at = Optional::create();
         $object->type = PaymentType::from($data['type']);

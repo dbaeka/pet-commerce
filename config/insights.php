@@ -53,7 +53,8 @@ return [
 
     'exclude' => [
         //  'path/to/directory-or-file'
-        'app/Providers'
+        'app/Providers',
+        'packages'
     ],
 
     'add' => [],

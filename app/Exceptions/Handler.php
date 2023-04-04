@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -65,9 +66,7 @@ class Handler extends ExceptionHandler
     {
         $exception = $this->prepareException($e);
 
-        if ($exception instanceof HttpResponseException) {
-            $exception = $exception->getResponse();
-        }
+        $exception = $this->processNonHttpExceptions($exception, $e);
 
         if ($exception instanceof AuthenticationException) {
             /** @var AuthenticationException $auth_exception */
@@ -84,17 +83,24 @@ class Handler extends ExceptionHandler
             }
         }
 
-        if ($exception instanceof UnauthorizedException) {
-            $exception = $this->convertExceptionToResponse($e);
-            $exception->setStatusCode(403);
-        }
+        return TransformToResponse::execute($exception);
+    }
 
-
+    private function processNonHttpExceptions(Throwable $exception, Throwable $e): Response|Throwable
+    {
         if ($exception instanceof QueryException) {
             $exception = $this->convertExceptionToResponse($e);
             $exception->setStatusCode(422);
         }
 
-        return TransformToResponse::execute($exception);
+        if ($exception instanceof HttpResponseException) {
+            $exception = $exception->getResponse();
+        }
+
+        if ($exception instanceof UnauthorizedException) {
+            $exception = $this->convertExceptionToResponse($e);
+            $exception->setStatusCode(403);
+        }
+        return $exception;
     }
 }

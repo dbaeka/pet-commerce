@@ -85,8 +85,8 @@ class MainPageTest extends ApiTestCase
 
         PromotionFactory::new()->valid()->count(5)->create();
 
-//        $this->get($endpoint . '?limit=100&valid=true')
-//            ->assertOk()
-//            ->assertJsonCount(5, 'data');
+        //        $this->get($endpoint . '?limit=100&valid=true')
+        //            ->assertOk()
+        //            ->assertJsonCount(5, 'data');
     }
 }
