@@ -27,16 +27,13 @@ RUN docker-php-ext-configure gd --enable-gd --with-jpeg
 
 RUN docker-php-ext-install gd
 
+# setup redis
+RUN pecl install redis \
+        && docker-php-ext-enable redis
+
+# Get latest Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
     --install-dir=/usr/local/bin --filename=composer
-
-# create document root, fix permissions for www-data user and change owner to www-data
-#RUN mkdir -p $APP_HOME/public && \
- #   mkdir -p /home/$USERNAME && chown $USERNAME:$USERNAME /home/$USERNAME \
-  #  && usermod -o -u $HOST_UID $USERNAME -d /home/$USERNAME \
-   # && groupmod -o -g $HOST_GID $USERNAME \
-   # && chown -R ${USERNAME}:${USERNAME} $APP_HOME
-
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -45,25 +42,14 @@ RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
-# add supervisor
-#RUN mkdir -p /var/log/supervisor
-#COPY --chown=root:root ./docker/general/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-#COPY --chown=root:crontab ./docker/general/cron /var/spool/cron/crontabs/root
-#RUN chmod 0600 /var/spool/cron/crontabs/root
-
 WORKDIR /var/www
 
-USER $user
+COPY docker/start.sh /usr/local/bin/start
+RUN chown -R $user: /var/www \
+    && chmod u+x /usr/local/bin/start
+COPY docker/supervisord.conf /etc/supervisor/conf.d/
 
-# copy source files and config file
-#COPY --chown=$user:$user . /var/www/#
-#COPY --chown=$user:$user .env.dev /var/www/.env
+COPY docker/wait-for-it.sh /usr/local/bin/wait-for-it
+RUN chmod u+x /usr/local/bin/wait-for-it
 
-
-#RUN COMPOSER_MEMORY_LIMIT=-1 composer install --optimize-autoloader --no-interaction --no-progress;
-
-#RUN ["chmod", "+x", "./start_script.sh"]
-
-#CMD ./start_script.sh
-
-#USER root
+CMD ["/usr/local/bin/start"]

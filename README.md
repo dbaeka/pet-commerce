@@ -13,8 +13,7 @@ ADMIN PASS: admin
 USER PASS: userpassword
 ### Using the Terminal (Ubuntu)
 1. Clone this repository into your local development and cd into directory
-2. Clone package submodules by running. The submodule is the Level 3 challenge
-currency converter
+2. Clone package submodules by running. The submodules are the Level 3 and 4 challenges
 ```bash
 git submodule update --init --recursive
 ```

@@ -37,10 +37,16 @@ keys: ## Generates Laravel application keys
 jwt-keys: ## Generates JWT keys
 	@make exec cmd="php artisan jwt:keys --force"
 
+db-wait: ## Wait for db
+	@make exec cmd="wait-for-it mysql:3306"
+
+fix-permissions:
+	@make exec cmd="chmod 777 -R /var/www/storage"
+
 test: ## Runs PhpUnit tests
 	@make exec cmd="./vendor/bin/phpunit -c phpunit.xml"
 
 stop:
 	@INNODB_USE_NATIVE_AIO=$(INNODB_USE_NATIVE_AIO) docker-compose -f docker-compose-dev.yml down
 
-bootstrap: env-dev build start composer-install keys drop-migrate seed jwt-keys
+bootstrap: env-dev build start composer-install keys fix-permissions db-wait drop-migrate seed jwt-keys
