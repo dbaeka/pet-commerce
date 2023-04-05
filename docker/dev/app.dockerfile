@@ -2,7 +2,7 @@ FROM php:8.2-fpm
 
 # Arguments defined in docker-compose.yml
 ARG user
-ARG uid
+ARG gid
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -38,7 +38,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Create system user to run Composer and Artisan Commands
-RUN useradd -G www-data,root -u $uid -d /home/$user $user
+RUN useradd -G www-data,root -u $gid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 

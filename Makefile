@@ -4,7 +4,7 @@ ifneq ("$(wildcard .env)","")
 	include .env
 endif
 
-USER := $(shell id -u)
+USER := $(shell id -nu)
 GID := $(shell id -g)
 
 build:
