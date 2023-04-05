@@ -55,7 +55,8 @@ Requires use of Docker and docker-compose installed on your machine and running
 ```bash
 git submodule update --init --recursive
 ```
-3. Install *cmake* as a system dependency if you cannot run `make`. Use make to 
+3. Set user in `docker/supervisord.conf` to your host user. You can use `id -u` in bash to get the user.
+4. Install *cmake* as a system dependency if you cannot run `make`. Use make to 
 quickly bootstrap everything by running the following in the project directory
 ```bash
 make bootstrap

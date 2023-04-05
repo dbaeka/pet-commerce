@@ -4,11 +4,14 @@ ifneq ("$(wildcard .env)","")
 	include .env
 endif
 
+USER := $(shell id -u)
+GID := $(shell id -g)
+
 build:
-	@INNODB_USE_NATIVE_AIO=$(INNODB_USE_NATIVE_AIO) docker-compose -f docker-compose-dev.yml build
+	@USER=$(USER) GID=$(GID) INNODB_USE_NATIVE_AIO=$(INNODB_USE_NATIVE_AIO) docker-compose -f docker-compose-dev.yml build
 
 start: ## Start dev environment
-	@INNODB_USE_NATIVE_AIO=$(INNODB_USE_NATIVE_AIO) docker-compose -f docker-compose-dev.yml up -d
+	@USER=$(USER) GID=$(GID) INNODB_USE_NATIVE_AIO=$(INNODB_USE_NATIVE_AIO) docker-compose -f docker-compose-dev.yml up -d
 
 composer-install: ## Installs composer dependencies
 	@make exec-bash cmd="COMPOSER_MEMORY_LIMIT=-1 composer install --optimize-autoloader"
@@ -17,10 +20,10 @@ env-dev: ## Creates config for dev environment
 	cp ./.env.dev.docker ./.env
 
 exec:
-	@INNODB_USE_NATIVE_AIO=$(INNODB_USE_NATIVE_AIO) docker-compose -f docker-compose-dev.yml exec app $$cmd
+	@USER=$(USER) GID=$(GID) INNODB_USE_NATIVE_AIO=$(INNODB_USE_NATIVE_AIO) docker-compose -f docker-compose-dev.yml exec app $$cmd
 
 exec-bash:
-	@INNODB_USE_NATIVE_AIO=$(INNODB_USE_NATIVE_AIO) docker-compose -f docker-compose-dev.yml exec app bash -c "$(cmd)"
+	@USER=$(USER) GID=$(GID) INNODB_USE_NATIVE_AIO=$(INNODB_USE_NATIVE_AIO) docker-compose -f docker-compose-dev.yml exec app bash -c "$(cmd)"
 
 drop-migrate: ## Drops databases and runs all migrations for the database
 	@make exec cmd="php artisan migrate:fresh"
@@ -47,6 +50,6 @@ test: ## Runs PhpUnit tests
 	@make exec cmd="./vendor/bin/phpunit -c phpunit.xml"
 
 stop:
-	@INNODB_USE_NATIVE_AIO=$(INNODB_USE_NATIVE_AIO) docker-compose -f docker-compose-dev.yml down
+	@USER=$(USER) GID=$(GID) INNODB_USE_NATIVE_AIO=$(INNODB_USE_NATIVE_AIO) docker-compose -f docker-compose-dev.yml down
 
 bootstrap: env-dev build start composer-install keys fix-permissions db-wait drop-migrate seed jwt-keys

@@ -18,8 +18,8 @@ services:
     image: pet-store-laravel:latest
     build:
       args:
-        user: delmwin
-        uid: 1000
+        user: ${USER}
+        gid: ${GID}
       context: .
       dockerfile: ./docker/dev/app.dockerfile
     working_dir: /var/www
