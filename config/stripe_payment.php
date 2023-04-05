@@ -16,5 +16,5 @@ return [
     'webhook_url' => null,
 
     //-----------PAYMENT CONTROLLER MIDDLEWARES-------
-    'payment_middlewares' => []
+    'payment_middlewares' => ['secure:regular']
 ];
