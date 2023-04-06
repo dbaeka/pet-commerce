@@ -50,8 +50,7 @@ php artisan serve
 ### Using docker-compose
 Requires use of Docker and docker-compose installed on your machine and running
 1. Clone this repository into your local development and cd into directory
-2. Clone package submodules by running. The submodule is the Level 3 challenge
-   currency converter
+2. Clone package submodules by running. The submodule is the Level 3 and level 4 challenges
 ```bash
 git submodule update --init --recursive
 ```
