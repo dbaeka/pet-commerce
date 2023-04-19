@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:1.21-alpine
+    working_dir: /var/www
+    depends_on:
+      - app
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/:/etc/nginx/conf.d
+    ports:
+      - 8000:80
+    networks:
+      - petstore
+
+  app:
+    image: pet-store-laravel:latest
+    build:
+      args:
+        user: ${USER}
+        gid: ${GID}
+      context: .
+      dockerfile: ./docker/dev/app.dockerfile
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www/:cached
+    depends_on:
+      - redis
+      - mysql
+    networks:
+      - petstore
+    environment:
+      CONTAINER_ROLE: app
+
+  scheduler:
+    image: pet-store-laravel:latest
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www/:cached
+    depends_on:
+      - app
+    networks:
+      - petstore
+    environment:
+      CONTAINER_ROLE: scheduler
+
+  queue:
+    image: pet-store-laravel:latest
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www/:cached
+    depends_on:
+      - app
+    networks:
+      - petstore
+    environment:
+      CONTAINER_ROLE: queue
+
+  redis:
+    image: redis:4-alpine
+    ports:
+      - 16379:6379
+    volumes:
+      - redis:/data
+    networks:
+      - petstore
+
+  mysql:
+    image: mysql:8.0
+    platform: linux/x86_64
+    command: --default-authentication-plugin=mysql_native_password --innodb-use-native-aio=${INNODB_USE_NATIVE_AIO:-1}
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: petstore
+      MYSQL_USER: db
+      MYSQL_PASSWORD: password
+    ports:
+      - "33061:3306"
+    volumes:
+      - ./mysql-data:/var/lib/mysql:delegated
+      - ./docker/mysql:/docker-entrypoint-initdb.d
+    networks:
+      - petstore
+
+networks:
+  petstore:
+    driver: bridge
+
+volumes:
+  redis:
+    driver: "local"

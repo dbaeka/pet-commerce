@@ -21,3 +21,5 @@ _ide_helper.php
 _ide_helper_models.php
 .phpstorm.meta.php
 /storage/api-docs/api-docs.json
+mysql-data
+/reports/

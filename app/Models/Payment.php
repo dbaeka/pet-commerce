@@ -38,11 +38,12 @@ class Payment extends Model
     use HasFactory;
     use HasUuid;
 
-    protected $fillable = ['type', 'details'];
+    protected $fillable = ['type', 'details', 'gateway', 'gateway_metadata', 'status'];
 
     protected $casts = [
         'type' => PaymentType::class,
-        'details' => PaymentDetails::class
+        'details' => PaymentDetails::class,
+        'gateway_metadata' => 'array'
     ];
 
     protected $hidden = ['id'];

@@ -13,8 +13,7 @@ ADMIN PASS: admin
 USER PASS: userpassword
 ### Using the Terminal (Ubuntu)
 1. Clone this repository into your local development and cd into directory
-2. Clone package submodules by running. The submodule is the Level 3 challenge
-currency converter
+2. Clone package submodules by running. The submodules are the Level 3 and 4 challenges
 ```bash
 git submodule update --init --recursive
 ```
@@ -49,11 +48,29 @@ php artisan serve
 [http://localhost:8000/api/swagger](http://localhost:8000/api/swagger)
 
 ### Using docker-compose
+Requires use of Docker and docker-compose installed on your machine and running
+1. Clone this repository into your local development and cd into directory
+2. Clone package submodules by running. The submodule is the Level 3 and level 4 challenges
+```bash
+git submodule update --init --recursive
+```
+3. Set user in `docker/supervisord.conf` to your host user. You can use `id -u` in bash to get the user.
+4. Install *cmake* as a system dependency if you cannot run `make`. Use make to 
+quickly bootstrap everything by running the following in the project directory
+```bash
+make bootstrap
+```
+Use `make stop` to end the containers and `make test` to run tests.
 
 ## Testing
-To run tests, simply run
+To run tests, simply run using the following if not running in a container
 ```bash
 composer test
+```
+
+For container users, use:
+```bash
+make test
 ```
 
 ## Linting

@@ -6,7 +6,7 @@ namespace App\DataObjects\PaymentType;
  * @OA\Schema(
  *    schema="CreditCardDetails",
  *    type="object",
- *    required={"number", "cvv", "holder_name"},
+ *    required={"number", "cvv", "holder_name", "expiry_date"},
  *    @OA\Property(
  *     property="number",
  *     type="string",

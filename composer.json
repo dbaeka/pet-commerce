@@ -12,13 +12,16 @@
         "ext-pdo": "*",
         "barryvdh/laravel-dompdf": "^2.0",
         "darkaonline/l5-swagger": "^8.5",
+        "dbaeka/buckhill-currency-converter": "dev-main",
+        "dbaeka/ms-notification": "dev-main",
+        "dbaeka/stripe-payment": "dev-main",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.0",
         "laravel/tinker": "^2.8",
         "lcobucci/jwt": "^5.0",
         "phpseclib/phpseclib": "^3.0",
+        "predis/predis": "^2.1",
         "spatie/laravel-data": "^3.2",
-        "dbaeka/buckhill-currency-converter": "dev-main",
         "staudenmeir/eloquent-json-relations": "^1.1"
     },
     "require-dev": {
@@ -39,6 +42,20 @@
         {
             "type": "path",
             "url": "packages/dbaeka/buckhill-currency-converter",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "packages/dbaeka/stripe-payment",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "packages/dbaeka/ms-notification",
             "options": {
                 "symlink": true
             }
