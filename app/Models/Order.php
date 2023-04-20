@@ -65,7 +65,7 @@ class Order extends Model
     protected $fillable = ['order_status_uuid', 'payment_uuid', 'user_uuid',
         'products', 'address', 'amount', 'delivery_fee'];
 
-    protected $hidden = ['id', 'user_uuid', 'payment_uuid', 'order_status_uuid'];
+    protected $hidden = ['id', 'payment_uuid', 'order_status_uuid'];
 
     protected static function booted()
     {

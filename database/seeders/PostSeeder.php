@@ -4,20 +4,25 @@ namespace Database\Seeders;
 
 use App\Models\File;
 use Database\Factories\PostFactory;
-use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
-class PostSeeder extends Seeder
+class PostSeeder extends BaseSeeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        PostFactory::new()->count(10)->sequence(
-            fn () => ['metadata' => [
+        $posts = [];
+        for ($i = 0; $i < 10; $i++) {
+            $post = PostFactory::new()->definition();
+            $post['metadata'] = json_encode([
                 "image" => File::all()->random()->uuid,
                 "author" => fake()->name()
-            ]]
-        )->create();
+            ]);
+            $post['slug'] = Str::slug($post['title']);
+            $posts[] = $post;
+        }
+        $this->syncToDb($posts);
     }
 }

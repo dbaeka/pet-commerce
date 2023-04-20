@@ -4,9 +4,8 @@ namespace Database\Seeders;
 
 use Database\Factories\UserFactory;
 use Hash;
-use Illuminate\Database\Seeder;
 
-class UserSeeder extends Seeder
+class UserSeeder extends BaseSeeder
 {
     /**
      * Run the database seeds.
@@ -22,8 +21,12 @@ class UserSeeder extends Seeder
             'is_admin' => true,
         ]);
 
-        UserFactory::new()->regular()->count(20)->create([
-            'password' => Hash::make('userpassword')
-        ]);
+        $users = [];
+        for ($i = 0; $i < 20; $i++) {
+            $definition = UserFactory::new()->regular()->definition();
+            $definition['password'] = Hash::make('userpassword');
+            $users[] = $definition;
+        }
+        $this->syncToDb($users);
     }
 }

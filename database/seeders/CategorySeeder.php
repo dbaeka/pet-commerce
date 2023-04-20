@@ -3,15 +3,15 @@
 namespace Database\Seeders;
 
 use Database\Factories\CategoryFactory;
-use Illuminate\Database\Seeder;
 
-class CategorySeeder extends Seeder
+class CategorySeeder extends BaseSeeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        CategoryFactory::new()->count(20)->create();
+        $categories = CategoryFactory::new()->count(20)->make();
+        $this->syncToDb($categories->toArray());
     }
 }

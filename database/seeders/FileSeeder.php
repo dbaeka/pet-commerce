@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 use Database\Factories\FileFactory;
-use Illuminate\Database\Seeder;
 
-class FileSeeder extends Seeder
+class FileSeeder extends BaseSeeder
 {
     /**
      * Run the database seeds.
@@ -13,6 +12,7 @@ class FileSeeder extends Seeder
     public function run(): void
     {
         // File Seeder specifically for images for promotions and posts
-        FileFactory::new()->count(6)->create();
+        $files = FileFactory::new()->count(6)->make();
+        $this->syncToDb($files->toArray());
     }
 }

@@ -18,7 +18,7 @@ return new class () extends Migration {
             $table->string('size');
             $table->string('type');
             $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrentOnUpdate();
+            $table->timestamp('updated_at')->useCurrent();
         });
     }
 
