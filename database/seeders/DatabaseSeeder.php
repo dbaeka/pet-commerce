@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             OrderStatusSeeder::class,
             PostSeeder::class,
             PromotionSeeder::class,
+            PaymentSeeder::class,
+            ProductSeeder::class,
             OrderSeeder::class
         ]);
     }

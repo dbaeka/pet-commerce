@@ -19,7 +19,7 @@ return new class () extends Migration {
             $table->string('gateway')->nullable();
             $table->json('gateway_metadata')->nullable();
             $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrentOnUpdate();
+            $table->timestamp('updated_at')->useCurrent();
         });
     }
 

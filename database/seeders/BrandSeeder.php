@@ -3,15 +3,15 @@
 namespace Database\Seeders;
 
 use Database\Factories\BrandFactory;
-use Illuminate\Database\Seeder;
 
-class BrandSeeder extends Seeder
+class BrandSeeder extends BaseSeeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        BrandFactory::new()->count(5)->create();
+        $brands = BrandFactory::new()->count(5)->make();
+        $this->syncToDb($brands->toArray());
     }
 }

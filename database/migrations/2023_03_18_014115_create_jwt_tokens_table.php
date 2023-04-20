@@ -18,7 +18,7 @@ return new class () extends Migration {
             $table->json('restrictions')->nullable();
             $table->json('permissions')->nullable();
             $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrentOnUpdate();
+            $table->timestamp('updated_at')->useCurrent();
             $table->timestamp('expires_at')->nullable();
             $table->timestamp('last_used_at')->nullable();
             $table->timestamp('refreshed_at')->nullable();
